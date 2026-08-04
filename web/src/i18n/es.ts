@@ -49,7 +49,7 @@ export const es = {
     weight: "peso (kg)",
     reps: "reps",
     setsProgress: (done: number, total: number) => `${done} de ${total} series`,
-    offline: "sin conexión · se guardará al recuperar red",
+    offline: "cambios sin sincronizar · se guardan al recuperar red",
   },
   substitutions: {
     title: "alternativas",

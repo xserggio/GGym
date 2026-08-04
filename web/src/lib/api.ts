@@ -16,6 +16,8 @@ export type VolumeGroup = Schemas["VolumeGroup"];
 export type RecordOut = Schemas["RecordOut"];
 export type SessionIn = Schemas["SessionIn"];
 export type SetLogIn = Schemas["SetLogIn"];
+export type BodyWeightIn = Schemas["BodyWeightIn"];
+export type TreadmillIn = Schemas["TreadmillIn"];
 export type SyncPush = Schemas["SyncPush"];
 export type SyncResult = Schemas["SyncResult"];
 

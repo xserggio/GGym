@@ -22,7 +22,7 @@ import {
   swapExercise,
   type ActiveSession,
 } from "./lib/session";
-import { pushEvents, resetCursor } from "./lib/sync";
+import { enqueue, flush, startSync, subscribePending } from "./lib/sync";
 import { useRestTimer } from "./lib/useRestTimer";
 import { useStopwatch } from "./lib/useStopwatch";
 import { Historial } from "./screens/Historial";
@@ -58,6 +58,7 @@ export function App() {
   const [user, setUser] = useState<UserOut | null | undefined>(undefined);
 
   useEffect(() => {
+    startSync(); // flush the offline queue on load, on reconnect, and periodically
     api.me().then(setUser).catch(() => setUser(null));
   }, []);
 
@@ -93,7 +94,7 @@ function Shell({ onLogout }: ShellProps) {
   const [today, setToday] = useState<TodayOut | null>(null);
   const [positions, setPositions] = useState(5);
   const [session, setSession] = useState<ActiveSession | null>(null);
-  const [offline, setOffline] = useState(false);
+  const [pending, setPending] = useState(0);
   const [sheetExIdx, setSheetExIdx] = useState<number | null>(null);
   const [alts, setAlts] = useState<AlternativeOut[]>([]);
   const [bodyweight, setBodyweight] = useState<BodyWeightSummary | null>(null);
@@ -126,23 +127,13 @@ function Shell({ onLogout }: ShellProps) {
     });
   }, [load, onLogout]);
 
-  const safePush = useCallback(
-    async (events: Parameters<typeof pushEvents>[0]) => {
-      try {
-        await pushEvents(events);
-        setOffline(false);
-      } catch {
-        setOffline(true); // phase 8: enqueue in IndexedDB and retry on reconnect
-      }
-    },
-    [],
-  );
+  useEffect(() => subscribePending(setPending), []);
 
   const start = () => {
     if (!today) return;
     const active = buildSession(today.day);
     setActive(active);
-    void safePush({ sessions: [sessionIn(active, "in_progress")] });
+    void enqueue({ sessions: [sessionIn(active, "in_progress")] });
   };
 
   const onWeight = (exIdx: number, setIdx: number, next: number) => {
@@ -167,11 +158,11 @@ function Shell({ onLogout }: ShellProps) {
       const nextEx = next.exercises[exIdx]!;
       setActive(next);
       rest.start(nextEx.restS); // absolute-timestamp rest countdown (regla 5)
-      void safePush({ set_logs: [setLogIn(next, nextEx, nextEx.sets[setIdx]!)] });
+      void enqueue({ set_logs: [setLogIn(next, nextEx, nextEx.sets[setIdx]!)] });
     } else {
       // Append-only: void the logged set and give the row a fresh id so a later
       // re-check inserts a new set rather than trying to un-void (spec regla 1).
-      void safePush({ set_logs: [{ ...setLogIn(current, ex, set), voided: true }] });
+      void enqueue({ set_logs: [{ ...setLogIn(current, ex, set), voided: true }] });
       setActive(patchSet(current, exIdx, setIdx, { done: false, id: crypto.randomUUID() }));
     }
   };
@@ -200,7 +191,7 @@ function Shell({ onLogout }: ShellProps) {
     if (treadmill.running) {
       const result = treadmill.stop();
       if (result && result.durationS > 0) {
-        void safePush({
+        void enqueue({
           treadmill_sessions: [
             {
               id: crypto.randomUUID(),
@@ -223,7 +214,7 @@ function Shell({ onLogout }: ShellProps) {
 
   const saveWeight = async () => {
     setWeightSheetOpen(false);
-    await safePush({
+    await enqueue({
       body_weights: [
         {
           id: crypto.randomUUID(),
@@ -232,6 +223,7 @@ function Shell({ onLogout }: ShellProps) {
         },
       ],
     });
+    await flush();
     setBodyweight(await api.bodyweight().catch(() => bodyweight));
   };
 
@@ -242,10 +234,10 @@ function Shell({ onLogout }: ShellProps) {
 
   const end = async () => {
     const active = sessionRef.current;
-    if (active) await safePush({ sessions: [sessionIn(active, "completed")] });
+    if (active) await enqueue({ sessions: [sessionIn(active, "completed")] });
     setActive(null);
     rest.skip();
-    resetCursor();
+    await flush(); // ensure the completion reaches the server before reloading
     await load().catch(() => undefined);
   };
 
@@ -263,7 +255,7 @@ function Shell({ onLogout }: ShellProps) {
         <Sesion
           session={session}
           positionLabel={`${es.today.session} ${today.next_position} · ${today.day.name}`}
-          offline={offline}
+          offline={pending > 0}
           onWeight={onWeight}
           onReps={onReps}
           onCheck={onCheck}
