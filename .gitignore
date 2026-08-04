@@ -18,6 +18,9 @@ web/dist/
 .env
 .env.*
 
+# Design export is tracked (/design); the raw zip drop is not.
+docs/*.zip
+
 # OS / editor
 .DS_Store
 Thumbs.db

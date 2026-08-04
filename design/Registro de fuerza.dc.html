@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  body { margin: 0; background: #D6D3CC; font-family: Inter, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: #2B5FD9; text-decoration: none; }
+  a:hover { color: #14161A; }
+  * { -webkit-tap-highlight-color: transparent; }
+  [data-app] { --bg: #E9E7E2; --paper: #F7F6F3; --ink: #14161A; --gris: #6B7076; --line: rgba(107,112,118,0.2); --blue: #2B5FD9; --green: #2E8B57; --yellow: #F2C230; --red: #D2333C; --tint: rgba(46,139,87,0.16); --thumbA: #DCD9D2; --thumbB: #E9E7E2; --plate5: #FBFAF7; }
+  [data-app][data-tema="oscura"] { --bg: #16181A; --paper: #1E2124; --ink: #F1EFEA; --gris: #9BA1A8; --line: rgba(155,161,168,0.24); --tint: rgba(46,139,87,0.26); --thumbA: #262A2E; --thumbB: #1E2124; --plate5: #E8E6E1; }
+  @keyframes fillRight { from { background-size: 0% 100%; } to { background-size: 100% 100%; } }
+  @keyframes pulseBox { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.03); } }
+  @keyframes slideDisc { from { transform: translateX(14px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+</helmet>
+
+<div style="min-height: 100vh; display: flex; flex-direction: column; align-items: center; gap: 18px; padding: 40px 20px 60px; box-sizing: border-box;">
+
+  <div style="display: flex; align-items: baseline; gap: 14px; width: 390px;">
+    <span style="font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 19px; letter-spacing: 0; color: #14161A;">registro de fuerza</span>
+    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #6B7076;">390 × 844 · pantalla 378</span>
+    <div style="margin-left: auto; display: flex; gap: 6px;">
+      <button type="button" onClick="{{ setLight }}" style="font: 500 10px 'IBM Plex Mono', monospace; padding: 5px 8px; border-radius: 6px; border: 1px solid rgba(20,22,26,0.2); background: #F7F6F3; color: #14161A; cursor: pointer;">clara</button>
+      <button type="button" onClick="{{ setDark }}" style="font: 500 10px 'IBM Plex Mono', monospace; padding: 5px 8px; border-radius: 6px; border: 1px solid rgba(20,22,26,0.2); background: #14161A; color: #F7F6F3; cursor: pointer;">oscura</button>
+    </div>
+  </div>
+
+  <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" width="390" height="844" dark="{{ isDark }}" hint-size="390px,844px">
+
+    <div data-app="" data-tema="{{ tema }}" style="height: 832px; max-height: 100%; width: 378px; max-width: 100%; display: flex; flex-direction: column; background: var(--bg); color: var(--ink); font-family: Inter, sans-serif; position: relative; overflow: hidden;">
+
+      <div style="flex: 1; min-height: 0; min-width: 0; overflow-y: auto; overflow-x: hidden; padding-top: 54px;">
+
+        <!-- ── INICIO ──────────────────────────── -->
+        <sc-if value="{{ isInicio }}" hint-placeholder-val="{{ true }}">
+          <div style="padding: 4px 16px 28px; display: flex; flex-direction: column; gap: 22px;">
+
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <div style="width: 30px; height: 30px; border-radius: 15px; background: var(--ink); color: var(--bg); display: flex; align-items: center; justify-content: center; font: 500 12px 'IBM Plex Mono', monospace;">{{ perfilInicial }}</div>
+              <div style="flex: 1; min-width: 0;">
+                <div style="font-size: 14px; font-weight: 500; line-height: 1.2;">{{ perfilCorto }}</div>
+                <div style="font: 400 10px 'IBM Plex Mono', monospace; color: var(--gris); letter-spacing: 0.04em; margin-top: 2px;">semana 12 del bloque</div>
+              </div>
+              <button type="button" onClick="{{ goAjustes }}" style="height: 34px; padding: 0 12px; border-radius: 10px; border: 1px solid var(--line); background: transparent; color: var(--gris); font: 400 12px 'IBM Plex Mono', monospace; cursor: pointer;">ajustes</button>
+            </div>
+
+            <div>
+              <div style="font: 500 9px 'IBM Plex Mono', monospace; color: var(--gris); letter-spacing: 0.14em; padding-bottom: 8px; border-bottom: 1px solid var(--line);">siguiente</div>
+              <div style="padding-top: 14px;">
+                <div style="font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 40px; line-height: 1; letter-spacing: -0.015em;">sesión 2</div>
+                <div style="font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 26px; line-height: 1.1; letter-spacing: -0.01em; color: var(--gris); margin-top: 2px; font-style: italic;">pierna · fuerza</div>
+                <div style="font: 400 12px 'IBM Plex Mono', monospace; color: var(--gris); margin-top: 10px;">5 ejercicios · 18 series · ~55 min</div>
+                <div style="display: flex; gap: 8px; margin-top: 14px;">
+                  <button type="button" onClick="{{ start }}" style="flex: 1; height: 52px; border-radius: 10px; border: none; background: var(--blue); color: #F7F6F3; font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 19px; cursor: pointer;">empezar</button>
+                  <button type="button" onClick="{{ goHoyTab }}" style="height: 52px; padding: 0 18px; border-radius: 10px; border: 1px solid var(--line); background: transparent; color: var(--ink); font-size: 14px; cursor: pointer;">ver la sesión</button>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <div style="font: 500 9px 'IBM Plex Mono', monospace; color: var(--gris); letter-spacing: 0.14em; padding-bottom: 8px; border-bottom: 1px solid var(--line);">cuatro semanas</div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); margin-top: 1px;">
+
+                <div style="background: var(--bg); padding: 14px 12px 12px;">
+                  <div style="font: 400 10px 'IBM Plex Mono', monospace; color: var(--gris); letter-spacing: 0.06em;">adherencia</div>
+                  <div style="display: flex; align-items: baseline; gap: 5px; margin: 8px 0 10px;">
+                    <span style="font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 42px; line-height: 0.9; letter-spacing: -0.02em;">88</span>
+                    <span style="font: 400 13px 'IBM Plex Mono', monospace; color: var(--gris);">%</span>
+                  </div>
+                  <div style="display: grid; grid-template-columns: repeat(8, 1fr); gap: 3px;">
+                    <sc-for list="{{ grid }}" as="g" hint-placeholder-count="16">
+                      <span style="height: 10px; border-radius: 2px; border: 1px solid var(--line); background: {{ g.bg }};"></span>
+                    </sc-for>
+                  </div>
+                  <div style="font: 400 10px 'IBM Plex Mono', monospace; color: var(--gris); margin-top: 8px;">14 de 16 sesiones</div>
+                </div>
+
+                <div style="background: var(--bg); padding: 14px 12px 12px;">
+                  <div style="font: 400 10px 'IBM Plex Mono', monospace; color: var(--gris); letter-spacing: 0.06em;">volumen semanal</div>
+                  <div style="display: flex; align-items: baseline; gap: 5px; margin: 8px 0 10px;">
+                    <span style="font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 42px; line-height: 0.9; letter-spacing: -0.02em;">18,4</span>
+                    <span style="font: 400 13px 'IBM Plex Mono', monospace; color: var(--gris);">t</span>
+                  </div>
+                  <div style="display: flex; align-items: flex-end; gap: 3px; height: 26px;">
+                    <sc-for list="{{ vol }}" as="v" hint-placeholder-count="8">
+                      <div style="flex: 1; height: 100%; display: flex; align-items: flex-end;">
+                        <span style="display: block; width: 100%; border-radius: 2px 2px 0 0; background: {{ v.color }}; height: {{ v.h }};"></span>
+                      </div>
+                    </sc-for>
+                  </div>
+                  <div style="font: 400 10px 'IBM Plex Mono', monospace; color: var(--gris); margin-top: 8px;">+1,2 t sobre la media</div>
+                </div>
+
+                <div style="background: var(--bg); padding: 14px 12px 12px;">
+                  <div style="font: 400 10px 'IBM Plex Mono', monospace; color: var(--gris); letter-spacing: 0.06em;">peso corporal</div>
+                  <div style="display: flex; align-items: baseline; gap: 5px; margin: 8px 0 10px;">
+                    <span style="font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 42px; line-height: 0.9; letter-spacing: -0.02em;">78,4</span>
+                    <span style="font: 400 13px 'IBM Plex Mono', monospace; color: var(--gris);">kg</span>
+                  </div>
+                  <div style="position: relative; height: 26px;">
+                    <svg viewBox="0 0 100 26" preserveAspectRatio="none" style="position: absolute; inset: 0; width: 100%; height: 100%;">
+                      <polyline points="{{ bwMini }}" fill="none" stroke="#2B5FD9" stroke-width="1.4" vector-effect="non-scaling-stroke"></polyline>
+                    </svg>
+                  </div>
+                  <div style="font: 400 10px 'IBM Plex Mono', monospace; color: var(--gris); margin-top: 8px;">−0,3 en cuatro semanas</div>
+                </div>
+
+                <div style="background: var(--bg); padding: 14px 12px 12px;">
+                  <div style="font: 400 10px 'IBM Plex Mono', monospace; color: var(--gris); letter-spacing: 0.06em;">récords</div>
+                  <div style="display: flex; align-items: baseline; gap: 5px; margin: 8px 0 10px;">
+                    <span style="font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 42px; line-height: 0.9; letter-spacing: -0.02em;">3</span>
+                    <span style="font: 400 13px 'IBM Plex Mono', monospace; color: var(--gris);">este mes</span>
+                  </div>
+                  <div style="display: flex; align-items: center; height: 26px; gap: 1px;">
+                    <sc-for list="{{ prPlates }}" as="p" hint-placeholder-count="0">
+                      <span style="display: block; width: 4px; border-radius: 1px; border: 1px solid rgba(20,22,26,0.5); box-sizing: border-box; height: {{ p.h }}; background: {{ p.c }};"></span>
+                    </sc-for>
+                    <span style="display: block; width: 12px; height: 2px; background: var(--gris);"></span>
+                    <sc-for list="{{ prPlatesR }}" as="p" hint-placeholder-count="0">
+                      <span style="display: block; width: 4px; border-radius: 1px; border: 1px solid rgba(20,22,26,0.5); box-sizing: border-box; height: {{ p.h }}; background: {{ p.c }};"></span>
+                    </sc-for>
+                  </div>
+                  <div style="font: 400 10px 'IBM Plex Mono', monospace; color: var(--gris); margin-top: 8px;">sentadilla 82,5 kg</div>
+                </div>
+
+              </div>
+            </div>
+
+            <div>
+              <div style="font: 500 9px 'IBM Plex Mono', monospace; color: var(--gris); letter-spacing: 0.14em; padding-bottom: 8px; border-bottom: 1px solid var(--line);">últimas sesiones</div>
+              <sc-for list="{{ ultimas }}" as="p" hint-placeholder-count="3">
+                <div onClick="{{ p.open }}" style="display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); cursor: pointer;">
+                  <span style="font: 400 11px 'IBM Plex Mono', monospace; color: var(--gris); width: 44px;">{{ p.date }}</span>
+                  <span style="flex: 1; font-size: 14px; min-width: 0;">{{ p.name }}</span>
+                  <span style="font: 400 11px 'IBM Plex Mono', monospace; color: var(--gris);">{{ p.short }}</span>
+                </div>
+              </sc-for>
+            </div>
+
+            <div style="font-size: 13px; color: var(--gris); line-height: 1.5; text-wrap: pretty;">llevas tres días seguidos entrenando. descansar también forma parte del plan.</div>
+
+          </div>
+        </sc-if>
+
+        <!-- ── HOY ─────────────────────────────── -->
+        <sc-if value="{{ isHoy }}" hint-placeholder-val="{{ true }}">
+          <div style="padding: 8px 16px 24px; display: flex; flex-direction: column; gap: 14px;">
+
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 27px; letter-spacing: -0.005em;">hoy</span>
+              <div style="margin-left: auto; display: flex; align-items: center; gap: 5px;">
+                <sc-for list="{{ rueda }}" as="m" hint-placeholder-count="5">
+                  <span style="font: 500 10px 'IBM Plex Mono', monospace; width: 18px; height: 18px; border-radius: 5px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--line); background: {{ m.bg }}; color: {{ m.fg }};">{{ m.n }}</span>
+                </sc-for>
+              </div>
+              <button type="button" onClick="{{ goAjustes }}" style="height: 34px; padding: 0 12px; border-radius: 10px; border: 1px solid var(--line); background: transparent; color: var(--gris); font: 400 12px 'IBM Plex Mono', monospace; cursor: pointer;">ajustes</button>
+            </div>
+
+            <div style="background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 16px 14px 14px;">
+              <div style="font: 500 9px 'IBM Plex Mono', monospace; color: var(--gris); letter-spacing: 0.14em;">toca ahora</div>
+              <div style="font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 33px; line-height: 1.05; letter-spacing: -0.01em; margin: 8px 0 4px; text-wrap: pretty;">sesión 2 · pierna</div>
+              <div style="font-size: 13px; color: var(--gris);">fuerza · 5 ejercicios · 18 series</div>
+
+              <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 14px;">
+                <sc-for list="{{ hoyList }}" as="ex" hint-placeholder-count="5">
+                  <div onClick="{{ ex.open }}" style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
+                    <div style="width: 64px; height: 64px; border-radius: 8px; flex: none; box-sizing: border-box; padding: 5px; border: 1px solid var(--line); background: repeating-linear-gradient(135deg, var(--thumbA) 0 3px, var(--thumbB) 3px 6px); display: flex; align-items: flex-end;">
+                      <span style="font: 500 7px 'IBM Plex Mono', monospace; color: var(--gris); line-height: 1.15;">{{ ex.slug }}</span>
+                    </div>
+                    <div style="flex: 1; min-width: 0;">
+                      <div style="font-size: 14px; font-weight: 500; line-height: 1.25;">{{ ex.name }}</div>
+                      <div style="font: 400 11px 'IBM Plex Mono', monospace; color: var(--gris); margin-top: 3px;">{{ ex.plan }}</div>
+                      <div style="display: flex; align-items: center; gap: 7px; margin-top: 5px;">
+                        <div style="display: flex; align-items: center; height: 22px; gap: 1px;">
+                          <sc-for list="{{ ex.plates }}" as="p" hint-placeholder-count="0">
+                            <span style="display: block; width: 4px; border-radius: 1px; border: 1px solid rgba(20,22,26,0.5); box-sizing: border-box; height: {{ p.h }}; background: {{ p.c }};"></span>
+                          </sc-for>
+                          <span style="display: block; width: 14px; height: 2px; background: var(--gris);"></span>
+                          <sc-for list="{{ ex.platesR }}" as="p" hint-placeholder-count="0">
+                            <span style="display: block; width: 4px; border-radius: 1px; border: 1px solid rgba(20,22,26,0.5); box-sizing: border-box; height: {{ p.h }}; background: {{ p.c }};"></span>
+                          </sc-for>
+                        </div>
+                        <span style="font: 500 13px 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums;">{{ ex.wLabel }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+              <div style="background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 12px;">
+                <div style="font: 500 9px 'IBM Plex Mono', monospace; color: var(--gris); letter-spacing: 0.14em;">cinta</div>
+                <div style="font: 500 28px 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums; margin: 6px 0 10px; color: {{ cintaColor }};">{{ cintaLabel }}</div>
+                <button type="button" onClick="{{ toggleCinta }}" style="width: 100%; height: 44px; border-radius: 10px; border: 1px solid var(--ink); background: var(--ink); color: var(--paper); font-size: 14px; font-weight: 500; cursor: pointer;">{{ cintaBtn }}</button>
+              </div>
+              <div style="background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 12px;">
+                <div style="font: 500 9px 'IBM Plex Mono', monospace; color: var(--gris); letter-spacing: 0.14em;">peso corporal</div>
+                <div style="font: 500 28px 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums; margin: 6px 0 2px;">78,4</div>
+                <div style="font-size: 12px; color: var(--gris);">kg · media de la semana</div>
+                <div style="font: 500 12px 'IBM Plex Mono', monospace; color: var(--gris); margin-top: 8px;">−0,3 frente a la anterior</div>
+              </div>
+            </div>
+
+          </div>
+        </sc-if>
+
+        <!-- ── SESIÓN ACTIVA ───────────────────── -->
+        <sc-if value="{{ isSesion }}" hint-placeholder-val="{{ false }}">
+          <div style="padding: 8px 16px 130px; display: flex; flex-direction: column; gap: 12px;">
+
+            <div style="display: flex; align-items: flex-start; gap: 10px;">
+              <div style="flex: 1;">
+                <div style="font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 26px; letter-spacing: -0.005em;">sesión 2 · pierna</div>
+                <div style="font: 400 12px 'IBM Plex Mono', monospace; color: var(--gris); margin-top: 3px;">{{ progresoLabel }} · {{ elapsedLabel }}</div>
+              </div>
+              <button type="button" onClick="{{ goHoy }}" style="height: 36px; padding: 0 12px; border-radius: 10px; border: 1px solid var(--line); background: transparent; color: var(--ink); font-size: 13px; cursor: pointer;">terminar sesión</button>
+            </div>
+
+            <sc-for list="{{ sesionList }}" as="ex" hint-placeholder-count="5">
+              <div style="background: var(--paper); border: 1px solid var(--line); border-radius: 10px; overflow: hidden;">
+                <div onClick="{{ ex.toggle }}" style="display: flex; align-items: center; gap: 12px; padding: 10px; cursor: pointer;">
+                  <div style="width: 64px; height: 64px; border-radius: 8px; flex: none; box-sizing: border-box; padding: 5px; border: 1px solid var(--line); background: repeating-linear-gradient(135deg, var(--thumbA) 0 3px, var(--thumbB) 3px 6px); display: flex; align-items: flex-end;">
+                    <span style="font: 500 7px 'IBM Plex Mono', monospace; color: var(--gris); line-height: 1.15;">{{ ex.slug }}</span>
+                  </div>
+                  <div style="flex: 1; min-width: 0;">
+                    <div style="font-size: 15px; font-weight: 500; line-height: 1.25;">{{ ex.name }}</div>
+                    <div style="font: 400 11px 'IBM Plex Mono', monospace; color: var(--gris); margin-top: 4px;">{{ ex.state }}</div>
+                  </div>
+                  <span style="font: 500 12px 'IBM Plex Mono', monospace; color: var(--gris); width: 16px; text-align: center;">{{ ex.caret }}</span>
+                </div>
+
+                <sc-if value="{{ ex.open }}" hint-placeholder-val="{{ false }}">
+                  <div style="padding: 0 10px 10px; display: flex; flex-direction: column; gap: 6px;">
+
+                    <sc-if value="{{ ex.suggest }}" hint-placeholder-val="{{ false }}">
+                      <div style="font-size: 13px; line-height: 1.45; color: var(--ink); background: rgba(43,95,217,0.08); border-left: 2px solid var(--blue); border-radius: 0 8px 8px 0; padding: 9px 11px; text-wrap: pretty;">{{ ex.suggest }}</div>
+                    </sc-if>
+
+                    <div style="display: flex; align-items: center; gap: 4px; padding: 0 2px;">
+                      <span style="width: 18px; font: 400 9px 'IBM Plex Mono', monospace; color: var(--gris);">serie</span>
+                      <span style="width: 108px; font: 400 9px 'IBM Plex Mono', monospace; color: var(--gris); text-align: center;">peso (kg)</span>
+                      <span style="width: 90px; font: 400 9px 'IBM Plex Mono', monospace; color: var(--gris); text-align: center;">reps</span>
+                    </div>
+
+                    <sc-for list="{{ ex.sets }}" as="s" hint-placeholder-count="4">
+                      <div style="display: flex; align-items: center; gap: 4px; border-radius: 10px; padding: 6px; box-sizing: border-box; border-left: 3px solid {{ s.edge }}; background-color: var(--bg); background-image: {{ s.grad }}; background-repeat: no-repeat; background-size: 100% 100%; animation: {{ s.anim }};">
+                        <span style="width: 18px; text-align: center; font: 500 14px 'IBM Plex Mono', monospace; color: var(--gris);">{{ s.n }}</span>
+
+                        <div style="width: 108px; display: flex; flex-direction: column; align-items: center; gap: 2px;">
+                          <div style="display: flex; align-items: center;">
+                            <button type="button" onClick="{{ s.wDown }}" style="width: 30px; height: 44px; border-radius: 8px 0 0 8px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); font: 500 18px 'IBM Plex Mono', monospace; cursor: pointer;">−</button>
+                            <span style="width: 48px; text-align: center; font: 500 18px 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); height: 44px; line-height: 42px; background: var(--paper); box-sizing: border-box;">{{ s.w }}</span>
+                            <button type="button" onClick="{{ s.wUp }}" style="width: 30px; height: 44px; border-radius: 0 8px 8px 0; border: 1px solid var(--line); background: var(--paper); color: var(--ink); font: 500 18px 'IBM Plex Mono', monospace; cursor: pointer;">+</button>
+                          </div>
+                          <div style="display: flex; align-items: center; justify-content: center; height: 16px; gap: 1px;">
+                            <sc-for list="{{ s.plates }}" as="p" hint-placeholder-count="0">
+                              <span style="display: block; width: 3px; border-radius: 1px; border: 1px solid rgba(20,22,26,0.5); box-sizing: border-box; height: {{ p.h2 }}; background: {{ p.c }}; animation: {{ p.anim }};"></span>
+                            </sc-for>
+                            <span style="display: block; width: 10px; height: 2px; background: var(--gris);"></span>
+                            <sc-for list="{{ s.platesR }}" as="p" hint-placeholder-count="0">
+                              <span style="display: block; width: 3px; border-radius: 1px; border: 1px solid rgba(20,22,26,0.5); box-sizing: border-box; height: {{ p.h2 }}; background: {{ p.c }}; animation: {{ p.anim }};"></span>
+                            </sc-for>
+                          </div>
+                        </div>
+
+                        <div style="width: 90px; display: flex; align-items: center; justify-content: center;">
+                          <button type="button" onClick="{{ s.rDown }}" style="width: 28px; height: 44px; border-radius: 8px 0 0 8px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); font: 500 18px 'IBM Plex Mono', monospace; cursor: pointer;">−</button>
+                          <span style="width: 34px; text-align: center; font: 500 18px 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); height: 44px; line-height: 42px; background: var(--paper); box-sizing: border-box;">{{ s.r }}</span>
+                          <button type="button" onClick="{{ s.rUp }}" style="width: 28px; height: 44px; border-radius: 0 8px 8px 0; border: 1px solid var(--line); background: var(--paper); color: var(--ink); font: 500 18px 'IBM Plex Mono', monospace; cursor: pointer;">+</button>
+                        </div>
+
+                        <button type="button" onClick="{{ s.check }}" style="width: 44px; height: 44px; margin-left: auto; border-radius: 8px; border: 1px solid {{ s.checkBorder }}; background: {{ s.checkBg }}; color: {{ s.checkFg }}; font-size: 19px; line-height: 1; cursor: pointer;">✓</button>
+                      </div>
+                    </sc-for>
+
+                    <div style="display: flex; gap: 8px; margin-top: 4px;">
+                      <button type="button" onClick="{{ ex.busy }}" style="flex: 1; height: 44px; border-radius: 10px; border: 1px solid var(--line); background: transparent; color: var(--ink); font-size: 14px; cursor: pointer;">ocupada</button>
+                      <button type="button" onClick="{{ ex.detail }}" style="flex: 1; height: 44px; border-radius: 10px; border: 1px solid var(--line); background: transparent; color: var(--ink); font-size: 14px; cursor: pointer;">ver ejercicio</button>
+                    </div>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <!-- ── DETALLE ─────────────────────────── -->
+        <sc-if value="{{ isDetalle }}" hint-placeholder-val="{{ false }}">
+          <div style="padding-bottom: 24px;">
+            <div style="position: relative; width: 100%; aspect-ratio: 4 / 3; background: repeating-linear-gradient(135deg, var(--thumbA) 0 5px, var(--thumbB) 5px 10px); display: flex; align-items: flex-end; padding: 12px; box-sizing: border-box;">
+              <span style="font: 500 10px 'IBM Plex Mono', monospace; color: var(--gris);">foto 4:3 · duotono tinta/cemento · {{ det.slug }}</span>
+              <button type="button" onClick="{{ back }}" style="position: absolute; top: 12px; left: 12px; height: 36px; padding: 0 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); font-size: 13px; cursor: pointer;">volver</button>
+            </div>
+            <div style="padding: 16px; display: flex; flex-direction: column; gap: 14px;">
+              <div>
+                <div style="font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 29px; letter-spacing: -0.005em; line-height: 1.15;">{{ det.name }}</div>
+                <div style="font: 400 11px 'IBM Plex Mono', monospace; color: var(--gris); margin-top: 5px;">{{ det.pattern }}</div>
+              </div>
+              <p style="margin: 0; font-size: 15px; line-height: 1.5; text-wrap: pretty;">{{ det.desc }}</p>
+
+              <div style="border: 1px solid var(--line); border-radius: 10px; padding: 12px;">
+                <div style="font: 500 9px 'IBM Plex Mono', monospace; color: var(--gris); letter-spacing: 0.14em; margin-bottom: 10px;">historial de pesos</div>
+                <div style="display: flex; align-items: flex-end; gap: 6px; height: 64px; margin-bottom: 12px;">
+                  <sc-for list="{{ det.trend }}" as="t" hint-placeholder-count="6">
+                    <div style="flex: 1; display: flex; flex-direction: column; justify-content: flex-end; height: 100%;">
+                      <span style="display: block; width: 100%; border-radius: 2px 2px 0 0; background: {{ t.color }}; height: {{ t.h }};"></span>
+                    </div>
+                  </sc-for>
+                </div>
+                <div style="display: flex; flex-direction: column;">
+                  <sc-for list="{{ det.history }}" as="h" hint-placeholder-count="4">
+                    <div style="display: flex; align-items: center; gap: 10px; padding: 9px 0; border-top: 1px solid var(--line);">
+                      <span style="font: 400 11px 'IBM Plex Mono', monospace; color: var(--gris); width: 52px;">{{ h.date }}</span>
+                      <div style="display: flex; align-items: center; height: 18px; gap: 1px;">
+                        <sc-for list="{{ h.plates }}" as="p" hint-placeholder-count="0">
+                          <span style="display: block; width: 3px; border-radius: 1px; border: 1px solid rgba(20,22,26,0.5); box-sizing: border-box; height: {{ p.h2 }}; background: {{ p.c }};"></span>
+                        </sc-for>
+                        <span style="display: block; width: 10px; height: 2px; background: var(--gris);"></span>
+                        <sc-for list="{{ h.platesR }}" as="p" hint-placeholder-count="0">
+                          <span style="display: block; width: 3px; border-radius: 1px; border: 1px solid rgba(20,22,26,0.5); box-sizing: border-box; height: {{ p.h2 }}; background: {{ p.c }};"></span>
+                        </sc-for>
+                      </div>
+                      <span style="font: 500 14px 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums; margin-left: auto;">{{ h.w }}</span>
+                      <span style="font: 400 12px 'IBM Plex Mono', monospace; color: var(--gris); width: 34px; text-align: right;">{{ h.reps }}</span>
+                      <span style="font: 500 9px 'IBM Plex Mono', monospace; color: var(--red); width: 18px;">{{ h.pr }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- ── HISTORIAL ───────────────────────── -->
+        <sc-if value="{{ isHist }}" hint-placeholder-val="{{ false }}">
+          <div style="padding: 8px 16px 24px; display: flex; flex-direction: column; gap: 14px;">
+            <div style="display: flex; align-items: center; gap: 10px;"><div style="font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 29px; letter-spacing: -0.005em;">historial</div><button type="button" onClick="{{ goAjustes }}" style="margin-left: auto; height: 34px; padding: 0 12px; border-radius: 10px; border: 1px solid var(--line); background: transparent; color: var(--gris); font: 400 12px 'IBM Plex Mono', monospace; cursor: pointer;">ajustes</button></div>
+
+            <sc-if value="{{ vacio }}" hint-placeholder-val="{{ false }}">
+              <div style="border: 1px solid var(--line); border-radius: 10px; padding: 22px 16px; display: flex; flex-direction: column; gap: 10px;">
+                <div style="display: flex; gap: 4px;">
+                  <sc-for list="{{ rueda }}" as="m" hint-placeholder-count="5">
+                    <span style="width: 22px; height: 22px; border-radius: 5px; border: 1px dashed var(--line);"></span>
+                  </sc-for>
+                </div>
+                <p style="margin: 0; font-size: 15px; line-height: 1.5; color: var(--gris); text-wrap: pretty;">aún no hay sesiones registradas. la primera aparecerá aquí en cuanto termines una.</p>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ conDatos }}" hint-placeholder-val="{{ true }}">
+              <div style="display: flex; flex-direction: column; gap: 14px;">
+                <div style="background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 14px;">
+                  <div style="font: 500 9px 'IBM Plex Mono', monospace; color: var(--gris); letter-spacing: 0.14em;">adherencia · últimas 4 semanas</div>
+                  <div style="display: flex; align-items: baseline; gap: 8px; margin: 6px 0 12px;">
+                    <span style="font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 50px; letter-spacing: -0.02em; line-height: 0.9;">14</span>
+                    <span style="font: 400 14px 'IBM Plex Mono', monospace; color: var(--gris);">de 16 sesiones</span>
+                  </div>
+                  <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px;">
+                    <sc-for list="{{ grid }}" as="g" hint-placeholder-count="16">
+                      <span style="height: 26px; border-radius: 6px; border: 1px solid var(--line); background: {{ g.bg }};"></span>
+                    </sc-for>
+                  </div>
+                </div>
+
+                <div style="display: flex; flex-direction: column;">
+                  <sc-for list="{{ pasadas }}" as="p" hint-placeholder-count="5">
+                    <div onClick="{{ p.open }}" style="display: flex; align-items: center; gap: 12px; padding: 12px 2px; border-bottom: 1px solid var(--line); cursor: pointer;">
+                      <span style="font: 400 11px 'IBM Plex Mono', monospace; color: var(--gris); width: 48px;">{{ p.date }}</span>
+                      <div style="flex: 1; min-width: 0;">
+                        <div style="font-size: 14px; font-weight: 500;">{{ p.name }}</div>
+                        <div style="font: 400 11px 'IBM Plex Mono', monospace; color: var(--gris); margin-top: 3px;">{{ p.meta }}</div>
+                      </div>
+                      <span style="font: 500 9px 'IBM Plex Mono', monospace; color: var(--red);">{{ p.pr }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+
+                <div style="background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 14px;">
+                  <div style="font: 500 9px 'IBM Plex Mono', monospace; color: var(--gris); letter-spacing: 0.14em; margin-bottom: 12px;">peso corporal · media móvil 7 días</div>
+                  <div style="position: relative; height: 92px; display: flex; align-items: flex-end; gap: 2px;">
+                    <sc-for list="{{ bw }}" as="b" hint-placeholder-count="28">
+                      <div style="flex: 1; height: 100%; display: flex; align-items: flex-end;">
+                        <span style="display: block; width: 100%; background: var(--thumbA); border-radius: 1px; height: {{ b.h }};"></span>
+                      </div>
+                    </sc-for>
+                    <svg viewBox="0 0 100 92" preserveAspectRatio="none" style="position: absolute; inset: 0; width: 100%; height: 100%;">
+                      <polyline points="{{ bwLine }}" fill="none" stroke="#2B5FD9" stroke-width="1.4" vector-effect="non-scaling-stroke"></polyline>
+                    </svg>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; margin-top: 8px; font: 400 10px 'IBM Plex Mono', monospace; color: var(--gris);">
+                    <span>hace 4 semanas</span>
+                    <span>78,4 kg</span>
+                  </div>
+                </div>
+              </div>
+            </sc-if>
+          </div>
+        </sc-if>
+
+        <!-- ── RUTINA ──────────────────────────── -->
+        <sc-if value="{{ isRutina }}" hint-placeholder-val="{{ false }}">
+          <div style="padding: 8px 16px 24px; display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; align-items: center; gap: 10px;"><div style="font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 29px; letter-spacing: -0.005em;">rutina</div><button type="button" onClick="{{ goAjustes }}" style="margin-left: auto; height: 34px; padding: 0 12px; border-radius: 10px; border: 1px solid var(--line); background: transparent; color: var(--gris); font: 400 12px 'IBM Plex Mono', monospace; cursor: pointer;">ajustes</button></div>
+            <div style="font-size: 13px; color: var(--gris);">cinco sesiones en rueda. arrastra para reordenar.</div>
+            <sc-for list="{{ rutina }}" as="r" hint-placeholder-count="5">
+              <div style="background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 12px;">
+                <div onClick="{{ r.toggle }}" style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                  <span style="font: 500 12px 'IBM Plex Mono', monospace; color: var(--gris);">⠿</span>
+                  <span style="font: 500 11px 'IBM Plex Mono', monospace; width: 20px; height: 20px; border-radius: 5px; background: {{ r.bg }}; color: {{ r.fg }}; display: flex; align-items: center; justify-content: center;">{{ r.n }}</span>
+                  <div style="flex: 1;">
+                    <div style="font-size: 15px; font-weight: 500;">{{ r.name }}</div>
+                    <div style="font: 400 11px 'IBM Plex Mono', monospace; color: var(--gris); margin-top: 3px;">{{ r.meta }}</div>
+                  </div>
+                  <span style="font: 500 12px 'IBM Plex Mono', monospace; color: var(--gris);">{{ r.caret }}</span>
+                </div>
+                <sc-if value="{{ r.open }}" hint-placeholder-val="{{ false }}">
+                  <div style="margin-top: 10px; display: flex; flex-direction: column;">
+                    <sc-for list="{{ r.items }}" as="i" hint-placeholder-count="4">
+                      <div style="display: flex; align-items: center; gap: 10px; padding: 9px 0; border-top: 1px solid var(--line);">
+                        <span style="font: 500 12px 'IBM Plex Mono', monospace; color: var(--gris);">⠿</span>
+                        <span style="flex: 1; font-size: 14px;">{{ i.name }}</span>
+                        <span style="font: 400 12px 'IBM Plex Mono', monospace; color: var(--gris);">{{ i.plan }}</span>
+                      </div>
+                    </sc-for>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <!-- ── AJUSTES ─────────────────────────── -->
+        <sc-if value="{{ isAjustes }}" hint-placeholder-val="{{ false }}">
+          <div style="padding: 8px 16px 24px; display: flex; flex-direction: column; gap: 14px;">
+            <div style="font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 29px; letter-spacing: -0.005em;">ajustes</div>
+
+            <div style="background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 12px; display: flex; flex-direction: column; gap: 12px;">
+              <div style="font: 500 9px 'IBM Plex Mono', monospace; color: var(--gris); letter-spacing: 0.14em;">perfil</div>
+              <div style="display: flex; gap: 8px;">
+                <sc-for list="{{ perfiles }}" as="u" hint-placeholder-count="2">
+                  <button type="button" onClick="{{ u.pick }}" style="flex: 1; height: 52px; border-radius: 10px; border: 1px solid {{ u.border }}; background: {{ u.bg }}; color: {{ u.fg }}; font-size: 15px; font-weight: 500; cursor: pointer;">{{ u.name }}</button>
+                </sc-for>
+              </div>
+            </div>
+
+            <div style="background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 12px; display: flex; flex-direction: column; gap: 10px;">
+              <div style="font: 500 9px 'IBM Plex Mono', monospace; color: var(--gris); letter-spacing: 0.14em;">descanso por defecto</div>
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <button type="button" onClick="{{ restDown }}" style="width: 52px; height: 44px; border-radius: 10px; border: 1px solid var(--line); background: transparent; color: var(--ink); font: 500 18px 'IBM Plex Mono', monospace; cursor: pointer;">−</button>
+                <span style="flex: 1; text-align: center; font: 500 26px 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums;">{{ restLabel }}</span>
+                <button type="button" onClick="{{ restUp }}" style="width: 52px; height: 44px; border-radius: 10px; border: 1px solid var(--line); background: transparent; color: var(--ink); font: 500 18px 'IBM Plex Mono', monospace; cursor: pointer;">+</button>
+              </div>
+            </div>
+
+            <div style="background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 12px; display: flex; flex-direction: column; gap: 10px;">
+              <div style="font: 500 9px 'IBM Plex Mono', monospace; color: var(--gris); letter-spacing: 0.14em;">apariencia</div>
+              <div style="display: flex; gap: 8px;">
+                <button type="button" onClick="{{ setLight }}" style="flex: 1; height: 44px; border-radius: 10px; border: 1px solid {{ lightBorder }}; background: {{ lightBg }}; color: {{ lightFg }}; font-size: 14px; cursor: pointer;">clara</button>
+                <button type="button" onClick="{{ setDark }}" style="flex: 1; height: 44px; border-radius: 10px; border: 1px solid {{ darkBorder }}; background: {{ darkBg }}; color: {{ darkFg }}; font-size: 14px; cursor: pointer;">oscura</button>
+              </div>
+            </div>
+
+            <button type="button" style="height: 48px; border-radius: 10px; border: 1px solid var(--line); background: transparent; color: var(--ink); font-size: 15px; cursor: pointer;">exportar datos (csv)</button>
+            <div style="font: 400 10px 'IBM Plex Mono', monospace; color: var(--gris);">v0.4 · datos en el dispositivo</div>
+          </div>
+        </sc-if>
+
+      </div>
+
+      <!-- ── EMPEZAR / CRONÓMETRO / NAV ───────── -->
+      <sc-if value="{{ isHoy }}" hint-placeholder-val="{{ true }}">
+        <div style="padding: 10px 16px; border-top: 1px solid var(--line); background: var(--bg);">
+          <button type="button" onClick="{{ start }}" style="width: 100%; height: 56px; border-radius: 10px; border: none; background: var(--blue); color: #F7F6F3; font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 20px; letter-spacing: 0.01em; cursor: pointer;">empezar</button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ restOn }}" hint-placeholder-val="{{ false }}">
+        <div style="margin: 0 12px 8px; border-radius: 10px; background: var(--yellow); color: #14161A; padding: 10px 12px; display: flex; align-items: center; gap: 10px; animation: {{ restPulse }};">
+          <span style="font: 400 10px 'IBM Plex Mono', monospace; letter-spacing: 0.06em;">descanso</span>
+          <span style="font: 700 30px 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums; line-height: 1;">{{ restCount }}</span>
+          <div style="margin-left: auto; display: flex; gap: 6px;">
+            <button type="button" onClick="{{ rest15 }}" style="height: 44px; padding: 0 12px; border-radius: 8px; border: 1px solid rgba(20,22,26,0.3); background: transparent; color: #14161A; font: 500 13px 'IBM Plex Mono', monospace; cursor: pointer;">+15</button>
+            <button type="button" onClick="{{ restSkip }}" style="height: 44px; padding: 0 12px; border-radius: 8px; border: none; background: #14161A; color: #F7F6F3; font-size: 13px; cursor: pointer;">saltar</button>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ showNav }}" hint-placeholder-val="{{ true }}">
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); background: var(--paper);">
+          <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4">
+            <button type="button" onClick="{{ t.go }}" style="height: 56px; border: none; border-top: 2px solid {{ t.rule }}; margin-top: -1px; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; color: {{ t.color }};">
+              <span style="font: 500 11px 'IBM Plex Mono', monospace; letter-spacing: 0.04em;">{{ t.label }}</span>
+            </button>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <!-- ── HOJA: MÁQUINA OCUPADA ───────────── -->
+      <sc-if value="{{ sheetOpen }}" hint-placeholder-val="{{ false }}">
+        <div style="position: absolute; inset: 0; background: rgba(20,22,26,0.35); display: flex; align-items: flex-end;">
+          <div onClick="{{ noop }}" style="width: 100%; background: var(--bg); border-radius: 14px 14px 0 0; padding: 16px 16px 22px; box-sizing: border-box;">
+            <div style="display: flex; align-items: baseline; gap: 8px; margin-bottom: 4px;">
+              <span style="font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 24px;">alternativas</span>
+              <span style="font: 400 11px 'IBM Plex Mono', monospace; color: var(--gris);">{{ sheetPattern }}</span>
+              <button type="button" onClick="{{ closeSheet }}" style="margin-left: auto; height: 36px; padding: 0 12px; border-radius: 10px; border: 1px solid var(--line); background: transparent; color: var(--ink); font-size: 13px; cursor: pointer;">cerrar</button>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;">
+              <sc-for list="{{ sheetAlts }}" as="a" hint-placeholder-count="3">
+                <div onClick="{{ a.pick }}" style="display: flex; align-items: center; gap: 12px; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 10px; cursor: pointer;">
+                  <div style="width: 64px; height: 64px; border-radius: 8px; flex: none; box-sizing: border-box; padding: 5px; border: 1px solid var(--line); background: repeating-linear-gradient(135deg, var(--thumbA) 0 3px, var(--thumbB) 3px 6px); display: flex; align-items: flex-end;">
+                    <span style="font: 500 7px 'IBM Plex Mono', monospace; color: var(--gris); line-height: 1.15;">{{ a.slug }}</span>
+                  </div>
+                  <div style="flex: 1;">
+                    <div style="font-size: 15px; font-weight: 500;">{{ a.name }}</div>
+                    <div style="font: 400 11px 'IBM Plex Mono', monospace; color: var(--gris); margin-top: 4px;">{{ a.note }}</div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+    </div>
+  </x-import>
+
+  <div style="width: 390px; font: 400 11px 'IBM Plex Mono', monospace; color: #6B7076; line-height: 1.6;">prototipo funcional: empezar → desplegar ejercicio → ajustar peso y reps → marcar serie (arranca el descanso) → ocupada. las áreas rayadas son marcadores de foto.</div>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;: {&quot;width&quot;: 470, &quot;height&quot;: 1010}, &quot;tema&quot;: {&quot;editor&quot;: &quot;enum&quot;, &quot;options&quot;: [&quot;clara&quot;, &quot;oscura&quot;], &quot;default&quot;: &quot;clara&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Apariencia&quot;}, &quot;demoVacio&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: false, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Estados&quot;}, &quot;descanso&quot;: {&quot;editor&quot;: &quot;int&quot;, &quot;default&quot;: 90, &quot;min&quot;: 30, &quot;max&quot;: 240, &quot;step&quot;: 15, &quot;unit&quot;: &quot;s&quot;, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Comportamiento&quot;}, &quot;perfil&quot;: {&quot;editor&quot;: &quot;enum&quot;, &quot;options&quot;: [&quot;Marta&quot;, &quot;Diego&quot;], &quot;default&quot;: &quot;Marta&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Comportamiento&quot;}}">
+const PLATES = [
+  [25, '#D2333C', 24], [20, '#2B5FD9', 21], [15, '#F2C230', 18],
+  [10, '#2E8B57', 15], [5, 'var(--plate5)', 12], [2.5, '#D2333C', 9], [1.25, '#8A9099', 7]
+];
+
+function platesFor(w, bar) {
+  let per = (w - (bar === undefined ? 20 : bar)) / 2;
+  const out = [];
+  if (per <= 0) return out;
+  for (const [v, c, h] of PLATES) {
+    while (per >= v - 0.001) { out.push({ c, h: h + 'px', h2: Math.round(h * 0.72) + 'px', anim: 'none' }); per = Math.round((per - v) * 100) / 100; }
+  }
+  return out;
+}
+const num = n => String(n).replace('.', ',');
+const mmss = s => Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+
+const EJ = [
+  { id: 'sq', name: 'sentadilla con barra', slug: 'sentadilla', pattern: 'empuje de pierna · bilateral', bar: 20, w: 82.5, r: 8, n: 4, last: '4×8 a 80 kg',
+    desc: 'te colocas la barra sobre la espalda alta, bajas doblando rodillas y caderas hasta que el muslo pasa la paralela y subes. trabaja cuádriceps y glúteo, y el tronco sostiene la carga.',
+    alts: [['prensa de piernas 45°', 'misma carga relativa, sin barra'], ['sentadilla en máquina hack', 'recorrido guiado'], ['sentadilla búlgara con mancuernas', 'una pierna, menos peso']] },
+  { id: 'pr', name: 'prensa de piernas', slug: 'prensa', pattern: 'empuje de pierna · guiado', bar: 0, w: 140, r: 10, n: 3, last: '3×10 a 135 kg',
+    desc: 'sentado, empujas la plataforma con los pies hasta estirar casi del todo la rodilla. carga cuádriceps y glúteo con la espalda apoyada.',
+    alts: [['prensa horizontal', 'otra sala, mismo patrón'], ['sentadilla en multipower', 'con barra guiada'], ['zancadas caminando', 'sin máquina']] },
+  { id: 'pm', name: 'peso muerto rumano', slug: 'p. muerto rum.', pattern: 'bisagra de cadera', bar: 20, w: 70, r: 10, n: 3, last: '3×10 a 67,5 kg',
+    desc: 'con la barra delante, echas la cadera atrás bajando el peso por la pierna con la espalda recta. trabaja isquiotibiales y glúteo.',
+    alts: [['peso muerto rumano con mancuernas', 'mismo patrón'], ['curl femoral tumbado', 'aislado'], ['hip thrust en máquina', 'más glúteo']] },
+  { id: 'cx', name: 'extensión de cuádriceps', slug: 'extensión', pattern: 'extensión de rodilla · aislado', bar: 0, w: 45, r: 12, n: 3, last: '3×12 a 45 kg',
+    desc: 'sentado, estiras las rodillas contra el rodillo hasta arriba y bajas controlando. aísla el cuádriceps al final del recorrido.',
+    alts: [['extensión unilateral', 'una pierna cada vez'], ['sentadilla goblet', 'con mancuerna'], ['prensa de piernas ligera', 'series largas']] },
+  { id: 'gm', name: 'elevación de gemelos', slug: 'gemelos', pattern: 'flexión plantar', bar: 0, w: 90, r: 15, n: 3, last: '3×15 a 90 kg',
+    desc: 'de pie en la máquina, subes los talones todo lo que puedas y bajas hasta estirar. trabaja el gemelo y el sóleo.',
+    alts: [['gemelo sentado', 'más sóleo'], ['gemelo en prensa', 'sin máquina específica'], ['gemelo a una pierna', 'con el propio peso']] }
+];
+
+const RUTINA = [
+  ['empuje (fuerza)', 'press banca · press militar · fondos · elevaciones', ['press de banca|4×6', 'press militar con barra|4×6', 'fondos en paralelas|3×8', 'elevaciones laterales|3×12']],
+  ['pierna (fuerza)', 'sentadilla · prensa · p. muerto rum. · cuádriceps · gemelos', ['sentadilla con barra|4×8', 'prensa de piernas|3×10', 'peso muerto rumano|3×10', 'extensión de cuádriceps|3×12', 'elevación de gemelos|3×15']],
+  ['tirón (fuerza)', 'dominadas · remo · jalón · curl', ['dominadas lastradas|4×5', 'remo con barra|4×8', 'jalón al pecho|3×10', 'curl con barra z|3×10']],
+  ['pierna (volumen)', 'búlgara · curl femoral · hip thrust · gemelos', ['sentadilla búlgara|3×12', 'curl femoral|3×12', 'hip thrust|3×12', 'elevación de gemelos|4×15']],
+  ['empuje/tirón (volumen)', 'inclinado · remo polea · aperturas · face pull', ['press inclinado con mancuernas|3×12', 'remo en polea baja|3×12', 'aperturas en máquina|3×15', 'face pull|3×15']]
+];
+
+const PASADAS = [
+  ['30 jul', 'sesión 1 · empuje (fuerza)', '4 ejercicios · 15 series · 48 min', ''],
+  ['28 jul', 'sesión 5 · empuje/tirón (volumen)', '4 ejercicios · 12 series · 41 min', ''],
+  ['26 jul', 'sesión 4 · pierna (volumen)', '4 ejercicios · 13 series · 52 min', 'rp'],
+  ['24 jul', 'sesión 3 · tirón (fuerza)', '4 ejercicios · 14 series · 46 min', ''],
+  ['22 jul', 'sesión 2 · pierna (fuerza)', '5 ejercicios · 18 series · 57 min', 'rp']
+];
+
+const BW = [79.4, 79.2, 79.5, 79.1, 78.9, 79.2, 79.0, 78.9, 79.1, 78.8, 78.7, 78.9, 78.6, 78.8, 78.7, 78.5, 78.6, 78.4, 78.7, 78.5, 78.3, 78.4, 78.2, 78.5, 78.3, 78.2, 78.4, 78.4];
+
+const DARKVARS = { '--bg': '#16181A', '--paper': '#1E2124', '--ink': '#F1EFEA', '--gris': '#9BA1A8', '--line': 'rgba(155,161,168,0.24)', '--tint': 'rgba(46,139,87,0.26)', '--thumbA': '#262A2E', '--thumbB': '#1E2124', '--plate5': '#E8E6E1' };
+const LIGHTVARS = { '--bg': '#E9E7E2', '--paper': '#F7F6F3', '--ink': '#14161A', '--gris': '#6B7076', '--line': 'rgba(107,112,118,0.2)', '--tint': 'rgba(46,139,87,0.16)', '--thumbA': '#DCD9D2', '--thumbB': '#E9E7E2', '--plate5': '#FBFAF7' };
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.rootRef = React.createRef();
+    this.state = {
+      screen: 'inicio', dark: props.tema === 'oscura', perfil: props.perfil || 'Marta',
+      open: 'sq', detail: null, sheet: null, from: 'hoy',
+      rest: 0, restRun: false, restPulse: false, elapsed: 0, cinta: 0, cintaRun: false,
+      rutinaOpen: 1, restDefault: props.descanso || 90,
+      sets: EJ.reduce((a, e) => { a[e.id] = Array.from({ length: e.n }, () => ({ w: e.w, r: e.r, done: false, anim: false, grow: false })); return a; }, {}),
+      swapped: {}
+    };
+  }
+
+  componentDidMount() { this.timer = setInterval(() => this.tick(), 1000); }
+  componentWillUnmount() { clearInterval(this.timer); }
+
+  tick() {
+    const st = {};
+    if (this.state.cintaRun) st.cinta = this.state.cinta + 1;
+    if (this.state.screen === 'sesion') st.elapsed = this.state.elapsed + 1;
+    if (this.state.restRun) {
+      const r = this.state.rest - 1;
+      if (r <= 0) { st.rest = 0; st.restRun = false; st.restPulse = true; if (navigator.vibrate) navigator.vibrate(180); setTimeout(() => this.setState({ restPulse: false }), 900); }
+      else st.rest = r;
+    }
+    if (Object.keys(st).length) this.setState(st);
+  }
+
+  exName(e) { const s = this.state.swapped[e.id]; return s ? s[0] : e.name; }
+  exSlug(e) { const s = this.state.swapped[e.id]; return s ? s[0].slice(0, 14) : e.slug; }
+
+  bump(id, i, key, d) {
+    this.setState(st => {
+      const sets = { ...st.sets, [id]: st.sets[id].map((s, j) => j === i ? { ...s, [key]: Math.max(key === 'w' ? 0 : 1, Math.round((s[key] + d) * 100) / 100) } : s) };
+      return { sets };
+    });
+  }
+
+  check(id, i) {
+    this.setState(st => {
+      const row = st.sets[id][i];
+      const done = !row.done;
+      const sets = { ...st.sets, [id]: st.sets[id].map((s, j) => j === i ? { ...s, done, anim: done } : s) };
+      return { sets, rest: done ? st.restDefault : st.rest, restRun: done ? true : st.restRun };
+    });
+  }
+
+  renderVals() {
+    const st = this.state;
+    const tabDefs = [['inicio', 'inicio'], ['hoy', 'hoy'], ['historial', 'historial'], ['rutina', 'rutina']];
+    const tabScreens = ['inicio', 'hoy', 'historial', 'rutina', 'ajustes'];
+    const activeTab = tabScreens.includes(st.screen) ? st.screen : st.from;
+
+    const mkPlates = (w, bar, grow) => {
+      const p = platesFor(w, bar);
+      if (grow && p.length) p[p.length - 1] = { ...p[p.length - 1], anim: 'slideDisc 260ms ease-out' };
+      return p;
+    };
+
+    const hoyList = EJ.map(e => {
+      const first = st.sets[e.id][0];
+      return {
+        name: this.exName(e), slug: this.exSlug(e), plan: e.n + '×' + e.r + ' · última vez ' + e.last,
+        wLabel: num(first.w) + ' kg',
+        plates: mkPlates(first.w, e.bar).slice().reverse(), platesR: mkPlates(first.w, e.bar),
+        open: () => this.setState({ screen: 'detalle', detail: e.id, from: 'hoy' })
+      };
+    });
+
+    const sesionList = EJ.map(e => {
+      const rows = st.sets[e.id];
+      const hechas = rows.filter(r => r.done).length;
+      return {
+        name: this.exName(e), slug: this.exSlug(e), open: st.open === e.id, caret: st.open === e.id ? '−' : '+',
+        state: hechas + ' de ' + rows.length + ' series · ' + num(rows[0].w) + ' kg',
+        suggest: e.id === 'sq' && hechas === 0 ? 'la última vez completaste las 4 series a 8 repeticiones. prueba con 2,5 kg más.' : null,
+        toggle: () => this.setState({ open: st.open === e.id ? null : e.id }),
+        busy: () => this.setState({ sheet: e.id }),
+        detail: () => this.setState({ screen: 'detalle', detail: e.id, from: 'sesion' }),
+        sets: rows.map((s, i) => ({
+          n: i + 1, w: num(s.w), r: s.r,
+          grad: s.done ? 'linear-gradient(90deg, var(--tint), var(--tint))' : 'none',
+          anim: s.done && s.anim ? 'fillRight 180ms ease-out' : 'none',
+          edge: s.done ? '#2E8B57' : 'transparent',
+          checkBg: s.done ? '#2E8B57' : 'transparent',
+          checkFg: s.done ? '#F7F6F3' : 'var(--gris)',
+          checkBorder: s.done ? '#2E8B57' : 'var(--line)',
+          plates: mkPlates(s.w, e.bar).slice().reverse(), platesR: mkPlates(s.w, e.bar),
+          wUp: () => this.bump(e.id, i, 'w', 2.5), wDown: () => this.bump(e.id, i, 'w', -2.5),
+          rUp: () => this.bump(e.id, i, 'r', 1), rDown: () => this.bump(e.id, i, 'r', -1),
+          check: () => this.check(e.id, i)
+        }))
+      };
+    });
+
+    const det = EJ.find(e => e.id === (st.detail || 'sq'));
+    const hist = [['22 jul', det.w, det.n + '×' + det.r, 'pr'], ['15 jul', det.w - 2.5, det.n + '×' + det.r, ''], ['8 jul', det.w - 2.5, det.n + '×' + (det.r - 1), ''], ['1 jul', det.w - 5, det.n + '×' + det.r, '']];
+    const trendVals = hist.map(h => h[1]).reverse();
+    const tmax = Math.max(...trendVals);
+    const tmin = Math.min(...trendVals) - 5;
+
+    const bwMax = Math.max(...BW), bwMin = Math.min(...BW) - 0.6;
+    const avg = BW.map((_, i) => { const w = BW.slice(Math.max(0, i - 6), i + 1); return w.reduce((a, b) => a + b, 0) / w.length; });
+    const bwLine = avg.map((v, i) => (i / (BW.length - 1) * 100).toFixed(1) + ',' + (92 - (v - bwMin) / (bwMax - bwMin) * 88).toFixed(1)).join(' ');
+
+    const doneGrid = [1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1];
+
+    return {
+      tema: st.dark ? 'oscura' : 'clara', isDark: st.dark, noop: () => {},
+      isInicio: st.screen === 'inicio', isHoy: st.screen === 'hoy', isSesion: st.screen === 'sesion', isDetalle: st.screen === 'detalle',
+      isHist: st.screen === 'historial', isRutina: st.screen === 'rutina', isAjustes: st.screen === 'ajustes',
+      showNav: tabScreens.includes(st.screen),
+      perfilCorto: st.perfil,
+      goAjustes: () => this.setState({ screen: 'ajustes' }),
+      goHoyTab: () => this.setState({ screen: 'hoy' }),
+      vol: [14.8, 16.2, 15.4, 17.1, 16.6, 18.0, 17.4, 18.4].map((v, i, a) => ({ h: Math.max(4, (v - 12) / (18.6 - 12) * 26) + 'px', color: i === a.length - 1 ? 'var(--blue)' : 'var(--thumbA)' })),
+      prPlates: platesFor(82.5, 20).slice().reverse(), prPlatesR: platesFor(82.5, 20),
+      ultimas: PASADAS.slice(0, 3).map(p => ({ date: p[0], name: p[1].replace(/^sesión \d+ · /, ''), short: p[2].split(' · ')[1], open: () => this.setState({ screen: 'historial' }) })),
+      vacio: !!this.props.demoVacio, conDatos: !this.props.demoVacio,
+
+      perfilNombre: st.perfil + ' · rueda de 5 sesiones', perfilInicial: st.perfil[0],
+      rueda: [1, 2, 3, 4, 5].map(n => ({ n, bg: n === 2 ? 'var(--ink)' : 'transparent', fg: n === 2 ? 'var(--bg)' : 'var(--gris)' })),
+
+      hoyList, sesionList,
+      progresoLabel: EJ.reduce((a, e) => a + st.sets[e.id].filter(s => s.done).length, 0) + ' de 16 series',
+      elapsedLabel: mmss(st.elapsed),
+      start: () => this.setState({ screen: 'sesion', elapsed: 0 }),
+      goHoy: () => this.setState({ screen: 'inicio', restRun: false, rest: 0 }),
+      back: () => this.setState({ screen: st.from }),
+
+      cintaLabel: mmss(st.cinta), cintaBtn: st.cintaRun ? 'parar' : 'empezar',
+      cintaColor: st.cintaRun ? 'var(--blue)' : 'var(--ink)',
+      toggleCinta: () => this.setState({ cintaRun: !st.cintaRun }),
+
+      restOn: st.screen === 'sesion' && (st.restRun || st.restPulse),
+      restCount: mmss(st.rest), restPulse: st.restPulse ? 'pulseBox 320ms ease-in-out 2' : 'none',
+      rest15: () => this.setState({ rest: st.rest + 15, restRun: true }),
+      restSkip: () => this.setState({ rest: 0, restRun: false }),
+
+      sheetOpen: !!st.sheet,
+      sheetPattern: st.sheet ? (EJ.find(e => e.id === st.sheet) || {}).pattern : '',
+      sheetAlts: (st.sheet ? (EJ.find(e => e.id === st.sheet) || {}).alts : []).map(a => ({
+        name: a[0], note: a[1], slug: a[0].slice(0, 14),
+        pick: () => this.setState({ swapped: { ...st.swapped, [st.sheet]: a }, sheet: null })
+      })),
+      closeSheet: () => this.setState({ sheet: null }),
+
+      det: {
+        name: this.exName(det), slug: this.exSlug(det), pattern: det.pattern, desc: det.desc,
+        history: hist.map(h => ({ date: h[0], w: num(h[1]) + ' kg', reps: h[2], pr: h[3], plates: platesFor(h[1], det.bar).slice().reverse(), platesR: platesFor(h[1], det.bar) })),
+        trend: trendVals.map((v, i) => ({ h: Math.max(6, (v - tmin) / (tmax - tmin) * 60) + 'px', color: i === trendVals.length - 1 ? 'var(--blue)' : 'var(--thumbA)' }))
+      },
+
+      grid: doneGrid.map(d => ({ bg: d ? 'var(--green)' : 'transparent' })),
+      pasadas: PASADAS.map(p => ({ date: p[0], name: p[1], meta: p[2], pr: p[3], open: () => this.setState({ screen: 'detalle', detail: 'sq', from: 'historial' }) })),
+      bw: BW.map(v => ({ h: Math.max(4, (v - bwMin) / (bwMax - bwMin) * 88) + 'px' })),
+      bwLine,
+      bwMini: avg.map((v, i) => (i / (BW.length - 1) * 100).toFixed(1) + ',' + (25 - (v - bwMin) / (bwMax - bwMin) * 23).toFixed(1)).join(' '),
+
+      rutina: RUTINA.map((r, i) => ({
+        n: i + 1, name: r[0], meta: r[1], open: st.rutinaOpen === i, caret: st.rutinaOpen === i ? '−' : '+',
+        bg: i === 1 ? 'var(--blue)' : 'transparent', fg: i === 1 ? '#F7F6F3' : 'var(--gris)',
+        items: r[2].map(s => ({ name: s.split('|')[0], plan: s.split('|')[1] })),
+        toggle: () => this.setState({ rutinaOpen: st.rutinaOpen === i ? null : i })
+      })),
+
+      perfiles: ['Marta', 'Diego'].map(n => ({
+        name: n, pick: () => this.setState({ perfil: n }),
+        bg: st.perfil === n ? 'var(--ink)' : 'transparent', fg: st.perfil === n ? 'var(--bg)' : 'var(--ink)',
+        border: st.perfil === n ? 'var(--ink)' : 'var(--line)'
+      })),
+      restLabel: mmss(st.restDefault),
+      restUp: () => this.setState({ restDefault: st.restDefault + 15 }),
+      restDown: () => this.setState({ restDefault: Math.max(30, st.restDefault - 15) }),
+
+      setLight: () => this.setState({ dark: false }), setDark: () => this.setState({ dark: true }),
+      lightBg: st.dark ? 'transparent' : 'var(--ink)', lightFg: st.dark ? 'var(--ink)' : 'var(--bg)', lightBorder: st.dark ? 'var(--line)' : 'var(--ink)',
+      darkBg: st.dark ? 'var(--ink)' : 'transparent', darkFg: st.dark ? 'var(--bg)' : 'var(--ink)', darkBorder: st.dark ? 'var(--ink)' : 'var(--line)',
+
+      tabs: tabDefs.map(t => ({
+        label: t[1], go: () => this.setState({ screen: t[0] }),
+        color: activeTab === t[0] ? 'var(--ink)' : 'var(--gris)',
+        rule: activeTab === t[0] ? 'var(--ink)' : 'transparent'
+      }))
+    };
+  }
+}
+
+</script>
+</body>
+</html>

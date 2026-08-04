@@ -1,0 +1,79 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Theme tokens from the prototype (/design). Light is the default; dark swaps
+ * via [data-tema="oscura"] on the app root. Plate colours (barbell) are fixed
+ * across themes except --plate5 (the near-white plate) which brightens in dark.
+ */
+:root {
+  --bg: #e9e7e2;
+  --paper: #f7f6f3;
+  --ink: #14161a;
+  --gris: #6b7076;
+  --line: rgba(107, 112, 118, 0.2);
+  --blue: #2b5fd9;
+  --green: #2e8b57;
+  --yellow: #f2c230;
+  --red: #d2333c;
+  --tint: rgba(46, 139, 87, 0.16);
+  --thumbA: #dcd9d2;
+  --thumbB: #e9e7e2;
+  --plate5: #fbfaf7;
+  --plate-grey: #8a9099;
+}
+
+[data-tema="oscura"] {
+  --bg: #16181a;
+  --paper: #1e2124;
+  --ink: #f1efea;
+  --gris: #9ba1a8;
+  --line: rgba(155, 161, 168, 0.24);
+  --tint: rgba(46, 139, 87, 0.26);
+  --thumbA: #262a2e;
+  --thumbB: #1e2124;
+  --plate5: #e8e6e1;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: Inter, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@keyframes fillRight {
+  from {
+    background-size: 0% 100%;
+  }
+  to {
+    background-size: 100% 100%;
+  }
+}
+
+@keyframes slideDisc {
+  from {
+    transform: translateX(14px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
