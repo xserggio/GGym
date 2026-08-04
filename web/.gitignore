@@ -3,3 +3,6 @@ dist/
 dist-ssr/
 *.local
 .vite/
+
+# Intermediate dump from the backend; api-types.ts (generated from it) is tracked.
+openapi.json

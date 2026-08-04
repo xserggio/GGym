@@ -16,6 +16,23 @@ export const es = {
     settings: "ajustes",
     back: "volver",
     close: "cerrar",
+    logout: "salir",
+  },
+  login: {
+    user: "usuario",
+    password: "contraseña",
+    enter: "entrar",
+    error: "usuario o contraseña incorrectos",
+    loading: "entrando…",
+  },
+  today: {
+    now: "toca ahora",
+    treadmill: "cinta",
+    bodyweight: "peso corporal",
+    weekAverage: "media de la semana",
+    session: "sesión",
+    exercises: "ejercicios",
+    sets: "series",
   },
   session: {
     rest: "descanso",
@@ -24,16 +41,8 @@ export const es = {
     set: "serie",
     weight: "peso (kg)",
     reps: "reps",
-  },
-  today: {
-    now: "toca ahora",
-    treadmill: "cinta",
-    bodyweight: "peso corporal",
-    weekAverage: "media de la semana",
-  },
-  history: {
-    empty:
-      "aún no hay sesiones registradas. la primera aparecerá aquí en cuanto termines una.",
+    setsProgress: (done: number, total: number) => `${done} de ${total} series`,
+    offline: "sin conexión · se guardará al recuperar red",
   },
   units: {
     kg: "kg",
