@@ -1,0 +1,11 @@
+# Normalize line endings: LF in the repo, checkout as-is per platform.
+* text=auto eol=lf
+
+# Binary / data — never touch.
+*.db binary
+*.db-wal binary
+*.db-shm binary
+*.png binary
+*.jpg binary
+*.gif binary
+*.webp binary
