@@ -5,16 +5,18 @@ from sqlalchemy import func, select
 from sqlalchemy.orm import Session as OrmSession
 
 from ..deps import get_current_user, get_db
-from ..models import Session, SetLog, User
+from ..models import RoutineDay, Session, SetLog, User
 from ..models.enums import SessionStatus
 from ..schemas import (
     BodyWeightSummary,
+    RecordOut,
     RoutineOut,
     SessionOut,
     StateOut,
     TodayOut,
+    VolumeGroup,
 )
-from ..services import bodyweight, wheel
+from ..services import bodyweight, stats, wheel
 
 router = APIRouter(prefix="/me", tags=["me"])
 
@@ -57,7 +59,8 @@ def get_history(
     user: User = Depends(get_current_user), db: OrmSession = Depends(get_db)
 ) -> list[SessionOut]:
     rows = db.execute(
-        select(Session, func.count(SetLog.id))
+        select(Session, RoutineDay, func.count(SetLog.id))
+        .join(RoutineDay, RoutineDay.id == Session.routine_day_id)
         .outerjoin(
             SetLog,
             (SetLog.session_id == Session.id) & (SetLog.voided.is_(False)),
@@ -74,11 +77,27 @@ def get_history(
         SessionOut(
             id=s.id,
             routine_day_id=s.routine_day_id,
+            position=day.position,
+            day_name=day.name,
             started_at=s.started_at,
             ended_at=s.ended_at,
             status=s.status,
             notes=s.notes,
             set_count=count,
         )
-        for s, count in rows
+        for s, day, count in rows
     ]
+
+
+@router.get("/volume", response_model=list[VolumeGroup])
+def get_volume(
+    user: User = Depends(get_current_user), db: OrmSession = Depends(get_db)
+) -> list[VolumeGroup]:
+    return stats.weekly_volume(db, user.id)
+
+
+@router.get("/records", response_model=list[RecordOut])
+def get_records(
+    user: User = Depends(get_current_user), db: OrmSession = Depends(get_db)
+) -> list[RecordOut]:
+    return stats.records(db, user.id)

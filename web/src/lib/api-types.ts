@@ -191,6 +191,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/me/volume": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Volume */
+        get: operations["get_volume_me_volume_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/records": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Records */
+        get: operations["get_records_me_records_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/sync": {
         parameters: {
             query?: never;
@@ -333,6 +367,27 @@ export interface components {
          * @enum {string}
          */
         MovementPattern: "empuje_horizontal" | "empuje_vertical" | "tiron_horizontal" | "tiron_vertical" | "cuadriceps" | "cadena_posterior" | "gluteo" | "gemelo" | "deltoides_lateral" | "triceps" | "biceps" | "core";
+        /**
+         * RecordOut
+         * @description Personal record per exercise: best estimated 1RM (Epley, spec §7.2).
+         */
+        RecordOut: {
+            /** Exercise Id */
+            exercise_id: string;
+            /** Exercise Name */
+            exercise_name: string;
+            /** Weight Kg */
+            weight_kg: number;
+            /** Reps */
+            reps: number;
+            /** One Rm */
+            one_rm: number;
+            /**
+             * Achieved On
+             * Format: date
+             */
+            achieved_on: string;
+        };
         /** RoutineDayExerciseOut */
         RoutineDayExerciseOut: {
             /** Id */
@@ -397,6 +452,10 @@ export interface components {
             id: string;
             /** Routine Day Id */
             routine_day_id: string;
+            /** Position */
+            position: number;
+            /** Day Name */
+            day_name: string;
             /**
              * Started At
              * Format: date-time
@@ -546,6 +605,16 @@ export interface components {
             input?: unknown;
             /** Context */
             ctx?: Record<string, never>;
+        };
+        /**
+         * VolumeGroup
+         * @description Effective (non-voided) working sets for a movement pattern in the last 7
+         *     days (spec §7.1; useful range 10-20 per group).
+         */
+        VolumeGroup: {
+            pattern: components["schemas"]["MovementPattern"];
+            /** Sets */
+            sets: number;
         };
     };
     responses: never;
@@ -805,6 +874,46 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SessionOut"][];
+                };
+            };
+        };
+    };
+    get_volume_me_volume_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VolumeGroup"][];
+                };
+            };
+        };
+    };
+    get_records_me_records_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecordOut"][];
                 };
             };
         };

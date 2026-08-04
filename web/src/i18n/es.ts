@@ -56,6 +56,25 @@ export const es = {
     empty: "no hay alternativas para este patrón",
     oftenSwap: "sustituyes esto a menudo · plantéate cambiarlo en la rutina",
   },
+  nav: {
+    today: "hoy",
+    history: "historial",
+  },
+  history: {
+    title: "historial",
+    empty:
+      "aún no hay sesiones registradas. la primera aparecerá aquí en cuanto termines una.",
+    adherence: "adherencia · últimas 4 semanas",
+    sessionsIn4w: (n: number) => `${n} sesiones · 4 semanas`,
+    volume: "volumen semanal · series por grupo",
+    volumeHint: "rango útil 10-20",
+    records: "récords · mejor 1rm estimado",
+    sessions: "sesiones",
+    bodyweight: "peso corporal · media móvil 7 días",
+    minutes: (n: number) => `${n} min`,
+    session: "sesión",
+    loading: "cargando…",
+  },
   units: {
     kg: "kg",
   },

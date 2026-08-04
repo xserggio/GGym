@@ -110,11 +110,33 @@ class BodyWeightSummary(BaseModel):
 class SessionOut(_Orm):
     id: str
     routine_day_id: str
+    position: int
+    day_name: str
     started_at: datetime
     ended_at: datetime | None
     status: SessionStatus
     notes: str | None
     set_count: int = 0
+
+
+# ---------- stats (volume, records) ----------
+class VolumeGroup(BaseModel):
+    """Effective (non-voided) working sets for a movement pattern in the last 7
+    days (spec §7.1; useful range 10-20 per group)."""
+
+    pattern: MovementPattern
+    sets: int
+
+
+class RecordOut(BaseModel):
+    """Personal record per exercise: best estimated 1RM (Epley, spec §7.2)."""
+
+    exercise_id: str
+    exercise_name: str
+    weight_kg: float
+    reps: int
+    one_rm: float
+    achieved_on: date
 
 
 # ---------- sync (push) ----------

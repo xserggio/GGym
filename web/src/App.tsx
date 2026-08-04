@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { BottomNav, type Tab } from "./components/BottomNav";
 import { BottomSheet } from "./components/BottomSheet";
 import { Button } from "./components/Button";
 import { ExerciseThumb } from "./components/ExerciseThumb";
@@ -24,6 +25,7 @@ import {
 import { pushEvents, resetCursor } from "./lib/sync";
 import { useRestTimer } from "./lib/useRestTimer";
 import { useStopwatch } from "./lib/useStopwatch";
+import { Historial } from "./screens/Historial";
 import { Hoy } from "./screens/Hoy";
 import { Login } from "./screens/Login";
 import { Sesion } from "./screens/Sesion";
@@ -97,6 +99,7 @@ function Shell({ onLogout }: ShellProps) {
   const [bodyweight, setBodyweight] = useState<BodyWeightSummary | null>(null);
   const [weightSheetOpen, setWeightSheetOpen] = useState(false);
   const [weightInput, setWeightInput] = useState(70);
+  const [tab, setTab] = useState<Tab>("hoy");
   const sessionRef = useRef<ActiveSession | null>(null);
   const rest = useRestTimer();
   const treadmill = useStopwatch();
@@ -308,18 +311,27 @@ function Shell({ onLogout }: ShellProps) {
 
   return (
     <>
-      <Hoy
-        today={today}
-        positions={positions}
-        bodyweight={bodyweight}
-        treadmillSeconds={treadmill.seconds}
-        treadmillRunning={treadmill.running}
-        treadmillKcal={treadmillKcal}
-        onTreadmillToggle={toggleTreadmill}
-        onLogWeight={openWeightSheet}
-        onStart={start}
-        onLogout={onLogout}
-      />
+      <div className="flex h-full flex-col">
+        <div className="min-h-0 flex-1">
+          {tab === "hoy" ? (
+            <Hoy
+              today={today}
+              positions={positions}
+              bodyweight={bodyweight}
+              treadmillSeconds={treadmill.seconds}
+              treadmillRunning={treadmill.running}
+              treadmillKcal={treadmillKcal}
+              onTreadmillToggle={toggleTreadmill}
+              onLogWeight={openWeightSheet}
+              onStart={start}
+              onLogout={onLogout}
+            />
+          ) : (
+            <Historial onLogout={onLogout} />
+          )}
+        </div>
+        <BottomNav active={tab} onSelect={setTab} />
+      </div>
       {weightSheetOpen && (
         <BottomSheet title={es.today.bodyweight} onClose={() => setWeightSheetOpen(false)}>
           <div className="flex items-center justify-between gap-3 py-2">
