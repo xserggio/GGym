@@ -1,14 +1,25 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { BottomSheet } from "./components/BottomSheet";
+import { ExerciseThumb } from "./components/ExerciseThumb";
+import { RestBar } from "./components/RestBar";
 import { es } from "./i18n/es";
-import { ApiError, api, type TodayOut, type UserOut } from "./lib/api";
+import {
+  ApiError,
+  api,
+  type AlternativeOut,
+  type TodayOut,
+  type UserOut,
+} from "./lib/api";
 import {
   buildSession,
   sessionIn,
   setLogIn,
+  swapExercise,
   type ActiveSession,
 } from "./lib/session";
 import { pushEvents, resetCursor } from "./lib/sync";
+import { useRestTimer } from "./lib/useRestTimer";
 import { Hoy } from "./screens/Hoy";
 import { Login } from "./screens/Login";
 import { Sesion } from "./screens/Sesion";
@@ -73,7 +84,10 @@ function Shell({ onLogout }: ShellProps) {
   const [positions, setPositions] = useState(5);
   const [session, setSession] = useState<ActiveSession | null>(null);
   const [offline, setOffline] = useState(false);
+  const [sheetExIdx, setSheetExIdx] = useState<number | null>(null);
+  const [alts, setAlts] = useState<AlternativeOut[]>([]);
   const sessionRef = useRef<ActiveSession | null>(null);
+  const rest = useRestTimer();
 
   const setActive = (next: ActiveSession | null) => {
     sessionRef.current = next;
@@ -132,6 +146,7 @@ function Shell({ onLogout }: ShellProps) {
       const next = patchSet(current, exIdx, setIdx, { done: true });
       const nextEx = next.exercises[exIdx]!;
       setActive(next);
+      rest.start(nextEx.restS); // absolute-timestamp rest countdown (regla 5)
       void safePush({ set_logs: [setLogIn(next, nextEx, nextEx.sets[setIdx]!)] });
     } else {
       // Append-only: void the logged set and give the row a fresh id so a later
@@ -141,10 +156,31 @@ function Shell({ onLogout }: ShellProps) {
     }
   };
 
+  const openSheet = (exIdx: number) => {
+    const ex = sessionRef.current?.exercises[exIdx];
+    if (!ex) return;
+    setSheetExIdx(exIdx);
+    setAlts([]);
+    api.alternatives(ex.exerciseId).then(setAlts).catch(() => setAlts([]));
+  };
+
+  const closeSheet = () => {
+    setSheetExIdx(null);
+    setAlts([]);
+  };
+
+  const pick = (alt: AlternativeOut) => {
+    if (sessionRef.current && sheetExIdx !== null) {
+      setActive(swapExercise(sessionRef.current, sheetExIdx, alt));
+    }
+    closeSheet();
+  };
+
   const end = async () => {
     const active = sessionRef.current;
     if (active) await safePush({ sessions: [sessionIn(active, "completed")] });
     setActive(null);
+    rest.skip();
     resetCursor();
     await load().catch(() => undefined);
   };
@@ -159,15 +195,53 @@ function Shell({ onLogout }: ShellProps) {
 
   if (session) {
     return (
-      <Sesion
-        session={session}
-        positionLabel={`${es.today.session} ${today.next_position} · ${today.day.name}`}
-        offline={offline}
-        onWeight={onWeight}
-        onReps={onReps}
-        onCheck={onCheck}
-        onEnd={() => void end()}
-      />
+      <>
+        <Sesion
+          session={session}
+          positionLabel={`${es.today.session} ${today.next_position} · ${today.day.name}`}
+          offline={offline}
+          onWeight={onWeight}
+          onReps={onReps}
+          onCheck={onCheck}
+          onBusy={openSheet}
+          onEnd={() => void end()}
+        />
+        {rest.running && (
+          <RestBar seconds={rest.seconds} onAdd={() => rest.add(15)} onSkip={rest.skip} />
+        )}
+        {sheetExIdx !== null && (
+          <BottomSheet
+            title={es.substitutions.title}
+            subtitle={alts[0]?.pattern}
+            onClose={closeSheet}
+          >
+            {alts.length === 0 ? (
+              <p className="py-4 text-sm text-gris">{es.substitutions.empty}</p>
+            ) : (
+              <div className="flex flex-col gap-2">
+                {alts.map((alt) => (
+                  <button
+                    key={alt.id}
+                    type="button"
+                    onClick={() => pick(alt)}
+                    className="flex items-center gap-3 rounded-card border border-line bg-paper p-2.5 text-left"
+                  >
+                    <ExerciseThumb name={alt.name} />
+                    <div className="min-w-0 flex-1">
+                      <div className="text-[15px] font-medium">{alt.name}</div>
+                      <div className="mt-1 font-mono text-[11px] text-gris">
+                        {alt.substitution_count >= 2
+                          ? es.substitutions.oftenSwap
+                          : alt.equipment}
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
+          </BottomSheet>
+        )}
+      </>
     );
   }
 

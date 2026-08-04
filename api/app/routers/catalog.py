@@ -6,7 +6,8 @@ from sqlalchemy.orm import Session as OrmSession
 
 from ..deps import get_current_user, get_db
 from ..models import Exercise, User
-from ..schemas import ExerciseOut
+from ..schemas import AlternativeOut, ExerciseOut
+from ..services import substitutions
 
 router = APIRouter(prefix="/exercises", tags=["catalogue"])
 
@@ -28,3 +29,23 @@ def get_exercise(
     if exercise is None:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "exercise not found")
     return exercise
+
+
+@router.get("/{exercise_id}/alternatives", response_model=list[AlternativeOut])
+def get_alternatives(
+    exercise_id: str,
+    user: User = Depends(get_current_user),
+    db: OrmSession = Depends(get_db),
+) -> list[AlternativeOut]:
+    return [
+        AlternativeOut(
+            id=ex.id,
+            name=ex.name,
+            pattern=ex.pattern,
+            equipment=ex.equipment,
+            media_url=ex.media_url,
+            default_rest_s=ex.default_rest_s,
+            substitution_count=count,
+        )
+        for ex, count in substitutions.alternatives(db, user.id, exercise_id)
+    ]

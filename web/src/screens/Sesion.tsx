@@ -19,6 +19,7 @@ interface SesionProps {
   onWeight: (exerciseIdx: number, setIdx: number, next: number) => void;
   onReps: (exerciseIdx: number, setIdx: number, next: number) => void;
   onCheck: (exerciseIdx: number, setIdx: number) => void;
+  onBusy: (exerciseIdx: number) => void;
   onEnd: () => void;
 }
 
@@ -36,6 +37,7 @@ export function Sesion({
   onWeight,
   onReps,
   onCheck,
+  onBusy,
   onEnd,
 }: SesionProps) {
   const [open, setOpen] = useState(0);
@@ -97,6 +99,13 @@ export function Sesion({
                       onCheck={() => onCheck(exIdx, setIdx)}
                     />
                   ))}
+                  <button
+                    type="button"
+                    onClick={() => onBusy(exIdx)}
+                    className="mt-1 h-touch rounded-card border border-line text-sm text-ink"
+                  >
+                    {es.actions.busy}
+                  </button>
                 </div>
               )}
             </Card>

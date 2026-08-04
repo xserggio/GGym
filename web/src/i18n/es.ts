@@ -44,6 +44,11 @@ export const es = {
     setsProgress: (done: number, total: number) => `${done} de ${total} series`,
     offline: "sin conexión · se guardará al recuperar red",
   },
+  substitutions: {
+    title: "alternativas",
+    empty: "no hay alternativas para este patrón",
+    oftenSwap: "sustituyes esto a menudo · plantéate cambiarlo en la rutina",
+  },
   units: {
     kg: "kg",
   },

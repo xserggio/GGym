@@ -12,7 +12,7 @@ import json
 from datetime import datetime
 from decimal import Decimal
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session as OrmSession
 
 from ..models import (
@@ -36,7 +36,7 @@ from ..schemas import (
     SyncResult,
     TreadmillIn,
 )
-from . import wheel
+from . import substitutions, wheel
 
 _PULL_LIMIT = 500
 
@@ -163,6 +163,7 @@ def _apply_set_log(db: OrmSession, user: User, data: SetLogIn) -> bool:
 
     existing = db.get(SetLog, data.id)
     if existing is None:
+        _maybe_record_substitution(db, user, data)
         obj = SetLog(
             id=data.id,
             session_id=data.session_id,
@@ -185,6 +186,25 @@ def _apply_set_log(db: OrmSession, user: User, data: SetLogIn) -> bool:
         _emit(db, user.id, "set_log", existing.id, _set_log_payload(existing))
         return True
     return False
+
+
+def _maybe_record_substitution(db: OrmSession, user: User, data: SetLogIn) -> None:
+    """Count a substitution once per (session, planned -> preferred) pair, on the
+    first set of the swap (spec §5.3). Later sets of the same swap don't recount."""
+    planned = data.planned_exercise_id
+    if not planned or planned == data.exercise_id:
+        return
+    prior = db.scalar(
+        select(func.count())
+        .select_from(SetLog)
+        .where(
+            SetLog.session_id == data.session_id,
+            SetLog.exercise_id == data.exercise_id,
+            SetLog.planned_exercise_id == planned,
+        )
+    )
+    if not prior:
+        substitutions.record_substitution(db, user.id, planned, data.exercise_id)
 
 
 def _apply_body_weight(db: OrmSession, user: User, data: BodyWeightIn) -> bool:

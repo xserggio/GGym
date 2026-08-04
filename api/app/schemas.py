@@ -43,6 +43,14 @@ class ExerciseOut(ExerciseSummary):
     default_rest_s: int
 
 
+class AlternativeOut(ExerciseSummary):
+    """A same-pattern swap candidate (spec §5.3). `substitution_count` is how
+    often this user has already swapped the planned exercise for this one."""
+
+    substitution_count: int
+    default_rest_s: int
+
+
 # ---------- routine ----------
 class RoutineDayExerciseOut(BaseModel):
     id: str

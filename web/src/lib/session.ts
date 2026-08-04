@@ -1,4 +1,4 @@
-import type { RoutineDayOut, SessionIn, SetLogIn } from "./api";
+import type { AlternativeOut, RoutineDayOut, SessionIn, SetLogIn } from "./api";
 
 /** Client-side model of the session in progress. */
 export interface LocalSet {
@@ -11,8 +11,10 @@ export interface LocalSet {
 
 export interface LocalExercise {
   rdeId: string;
-  exerciseId: string;
+  exerciseId: string; // performed exercise (changes on substitution)
+  plannedExerciseId: string; // what the routine planned (stable)
   name: string;
+  restS: number;
   targetSets: number;
   repMin: number;
   repMax: number;
@@ -36,7 +38,9 @@ export function buildSession(day: RoutineDayOut): ActiveSession {
     exercises: day.exercises.map((rde) => ({
       rdeId: rde.id,
       exerciseId: rde.exercise.id,
+      plannedExerciseId: rde.exercise.id,
       name: rde.exercise.name,
+      restS: rde.rest_s,
       targetSets: rde.target_sets,
       repMin: rde.rep_min,
       repMax: rde.rep_max,
@@ -69,16 +73,33 @@ export function setLogIn(
   exercise: LocalExercise,
   set: LocalSet,
 ): SetLogIn {
+  const substituted = exercise.exerciseId !== exercise.plannedExerciseId;
   return {
     id: set.id,
     session_id: session.id,
     exercise_id: exercise.exerciseId,
-    planned_exercise_id: null,
+    planned_exercise_id: substituted ? exercise.plannedExerciseId : null,
     set_number: set.setNumber,
     weight_kg: set.weightKg,
     reps: set.reps,
     voided: false,
     created_at: new Date().toISOString(),
+  };
+}
+
+/** Swap the performed exercise for an alternative, keeping the planned one. */
+export function swapExercise(
+  session: ActiveSession,
+  exerciseIdx: number,
+  alt: AlternativeOut,
+): ActiveSession {
+  return {
+    ...session,
+    exercises: session.exercises.map((ex, i) =>
+      i !== exerciseIdx
+        ? ex
+        : { ...ex, exerciseId: alt.id, name: alt.name, restS: alt.default_rest_s },
+    ),
   };
 }
 

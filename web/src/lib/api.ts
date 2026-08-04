@@ -9,6 +9,7 @@ export type RoutineOut = Schemas["RoutineOut"];
 export type RoutineDayOut = Schemas["RoutineDayOut"];
 export type RoutineDayExerciseOut = Schemas["RoutineDayExerciseOut"];
 export type ExerciseSummary = Schemas["ExerciseSummary"];
+export type AlternativeOut = Schemas["AlternativeOut"];
 export type SessionOut = Schemas["SessionOut"];
 export type SessionIn = Schemas["SessionIn"];
 export type SetLogIn = Schemas["SetLogIn"];
@@ -60,6 +61,8 @@ export const api = {
   routine: () => request<RoutineOut>("/me/routine"),
   history: () => request<SessionOut[]>("/me/history"),
   exercises: () => request<ExerciseSummary[]>("/exercises"),
+  alternatives: (exerciseId: string) =>
+    request<AlternativeOut[]>(`/exercises/${exerciseId}/alternatives`),
   sync: (push: SyncPush) =>
     request<SyncResult>("/sync", { method: "POST", body: JSON.stringify(push) }),
 };
