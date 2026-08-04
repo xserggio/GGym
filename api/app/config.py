@@ -1,22 +1,45 @@
-"""Runtime configuration.
+"""Runtime configuration (pydantic-settings).
 
-Kept intentionally small for phase 1: a single SQLite database path,
-overridable through the DATABASE_URL environment variable. Pydantic-settings
-takes over in phase 3 when the API and auth land.
+Environment variables use the GYM_ prefix, e.g. GYM_JWT_SECRET. `DATA_DIR` and
+`database_url()` are kept as module-level names because Alembic's env.py imports
+them directly.
 """
 from __future__ import annotations
 
-import os
+from functools import lru_cache
 from pathlib import Path
+
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 # /api  (this file lives at /api/app/config.py)
 API_DIR = Path(__file__).resolve().parents[1]
 DATA_DIR = API_DIR / "data"
 
 
+class Settings(BaseSettings):
+    model_config = SettingsConfigDict(
+        env_prefix="GYM_", env_file=".env", extra="ignore"
+    )
+
+    database_url: str = f"sqlite:///{(DATA_DIR / 'gym.db').as_posix()}"
+
+    # Auth. The default secret is for local dev only; override in production.
+    jwt_secret: str = "dev-insecure-change-me"
+    jwt_algorithm: str = "HS256"
+    access_token_ttl_min: int = 60 * 24 * 14  # 14 days
+
+    cookie_name: str = "access_token"
+    cookie_secure: bool = False  # True behind HTTPS (Caddy) in production
+    cookie_samesite: str = "lax"
+
+    # Browsers the mobile PWA/dev server are served from (CORS with credentials).
+    cors_origins: list[str] = ["http://localhost:5173"]
+
+
+@lru_cache
+def get_settings() -> Settings:
+    return Settings()
+
+
 def database_url() -> str:
-    """SQLite file by default; override with DATABASE_URL for tests or Postgres."""
-    override = os.environ.get("DATABASE_URL")
-    if override:
-        return override
-    return f"sqlite:///{(DATA_DIR / 'gym.db').as_posix()}"
+    return get_settings().database_url

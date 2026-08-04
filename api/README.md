@@ -34,6 +34,29 @@ cd api
 Omit `--password` for a hidden interactive prompt. Passwords are hashed with
 Argon2id.
 
+## Run the API
+
+```bash
+cd api
+GYM_JWT_SECRET="<32+ byte secret>" ../.venv/Scripts/python -m uvicorn app.main:app --reload
+```
+
+Config is via `GYM_`-prefixed env vars (see `app/config.py`): `GYM_DATABASE_URL`,
+`GYM_JWT_SECRET` (use ≥32 bytes in production), `GYM_COOKIE_SECURE=true` behind
+HTTPS, `GYM_CORS_ORIGINS`. Interactive docs at `/docs`, OpenAPI at `/openapi.json`
+(the frontend types are generated from it).
+
+Auth is a JWT in an httpOnly cookie: `POST /auth/login`, `POST /auth/logout`,
+`GET /auth/me`. Reads: `/me/state`, `/me/routine`, `/me/today`, `/me/history`,
+`/exercises`. Writes from an active session go through `POST /sync`.
+
+## Tests
+
+```bash
+cd api
+../.venv/Scripts/python -m pytest -q
+```
+
 ## Layout
 
 ```

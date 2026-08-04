@@ -9,6 +9,7 @@ from .preference import ExercisePreference
 from .routine import Routine, RoutineDay, RoutineDayExercise
 from .session import Session, SetLog
 from .state import UserState
+from .sync import SyncEvent
 from .tracking import BodyWeight, TreadmillSession
 from .user import User
 
@@ -25,6 +26,7 @@ __all__ = [
     "Session",
     "SetLog",
     "UserState",
+    "SyncEvent",
     "BodyWeight",
     "TreadmillSession",
     "User",

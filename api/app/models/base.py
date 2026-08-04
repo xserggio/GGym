@@ -30,4 +30,13 @@ def new_uuid() -> str:
 
 
 def utcnow() -> datetime:
-    return datetime.now(timezone.utc)
+    """Naive UTC. SQLite has no tz storage, so we keep everything naive-UTC to
+    avoid mixing aware and naive datetimes in comparisons."""
+    return datetime.now(timezone.utc).replace(tzinfo=None)
+
+
+def to_naive_utc(value: datetime) -> datetime:
+    """Normalize a possibly tz-aware datetime (e.g. from a client) to naive UTC."""
+    if value.tzinfo is not None:
+        value = value.astimezone(timezone.utc).replace(tzinfo=None)
+    return value
