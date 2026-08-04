@@ -7,8 +7,14 @@ from sqlalchemy.orm import Session as OrmSession
 from ..deps import get_current_user, get_db
 from ..models import Session, SetLog, User
 from ..models.enums import SessionStatus
-from ..schemas import RoutineOut, SessionOut, StateOut, TodayOut
-from ..services import wheel
+from ..schemas import (
+    BodyWeightSummary,
+    RoutineOut,
+    SessionOut,
+    StateOut,
+    TodayOut,
+)
+from ..services import bodyweight, wheel
 
 router = APIRouter(prefix="/me", tags=["me"])
 
@@ -37,6 +43,13 @@ def get_today(
         last_session_at=state.last_session_at,
         day=wheel.current_day_out(db, user.id),
     )
+
+
+@router.get("/bodyweight", response_model=BodyWeightSummary)
+def get_bodyweight(
+    user: User = Depends(get_current_user), db: OrmSession = Depends(get_db)
+) -> BodyWeightSummary:
+    return bodyweight.summary(db, user.id)
 
 
 @router.get("/history", response_model=list[SessionOut])

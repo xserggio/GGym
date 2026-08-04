@@ -11,6 +11,7 @@ export type RoutineDayExerciseOut = Schemas["RoutineDayExerciseOut"];
 export type ExerciseSummary = Schemas["ExerciseSummary"];
 export type AlternativeOut = Schemas["AlternativeOut"];
 export type SessionOut = Schemas["SessionOut"];
+export type BodyWeightSummary = Schemas["BodyWeightSummary"];
 export type SessionIn = Schemas["SessionIn"];
 export type SetLogIn = Schemas["SetLogIn"];
 export type SyncPush = Schemas["SyncPush"];
@@ -60,6 +61,7 @@ export const api = {
   state: () => request<StateOut>("/me/state"),
   routine: () => request<RoutineOut>("/me/routine"),
   history: () => request<SessionOut[]>("/me/history"),
+  bodyweight: () => request<BodyWeightSummary>("/me/bodyweight"),
   exercises: () => request<ExerciseSummary[]>("/exercises"),
   alternatives: (exerciseId: string) =>
     request<AlternativeOut[]>(`/exercises/${exerciseId}/alternatives`),

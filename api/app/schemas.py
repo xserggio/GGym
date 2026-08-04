@@ -90,6 +90,22 @@ class TodayOut(BaseModel):
     day: RoutineDayOut
 
 
+# ---------- body weight ----------
+class BodyWeightPoint(_Orm):
+    measured_on: date
+    weight_kg: float
+
+
+class BodyWeightSummary(BaseModel):
+    """7-day moving average is the only accionable value (spec §5.6); the raw
+    latest is exposed only for the treadmill estimate (spec §5.5)."""
+
+    latest: float | None
+    avg7: float | None
+    delta_week: float | None
+    points: list[BodyWeightPoint]
+
+
 # ---------- history ----------
 class SessionOut(_Orm):
     id: str

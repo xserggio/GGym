@@ -157,6 +157,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/me/bodyweight": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Bodyweight */
+        get: operations["get_bodyweight_me_bodyweight_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/me/history": {
         parameters: {
             query?: never;
@@ -242,6 +259,31 @@ export interface components {
             measured_on: string;
             /** Weight Kg */
             weight_kg: number;
+        };
+        /** BodyWeightPoint */
+        BodyWeightPoint: {
+            /**
+             * Measured On
+             * Format: date
+             */
+            measured_on: string;
+            /** Weight Kg */
+            weight_kg: number;
+        };
+        /**
+         * BodyWeightSummary
+         * @description 7-day moving average is the only accionable value (spec §5.6); the raw
+         *     latest is exposed only for the treadmill estimate (spec §5.5).
+         */
+        BodyWeightSummary: {
+            /** Latest */
+            latest: number | null;
+            /** Avg7 */
+            avg7: number | null;
+            /** Delta Week */
+            delta_week: number | null;
+            /** Points */
+            points: components["schemas"]["BodyWeightPoint"][];
         };
         /**
          * Equipment
@@ -723,6 +765,26 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["TodayOut"];
+                };
+            };
+        };
+    };
+    get_bodyweight_me_bodyweight_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BodyWeightSummary"];
                 };
             };
         };

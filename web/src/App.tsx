@@ -1,13 +1,16 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { BottomSheet } from "./components/BottomSheet";
+import { Button } from "./components/Button";
 import { ExerciseThumb } from "./components/ExerciseThumb";
+import { NumberStepper } from "./components/NumberStepper";
 import { RestBar } from "./components/RestBar";
 import { es } from "./i18n/es";
 import {
   ApiError,
   api,
   type AlternativeOut,
+  type BodyWeightSummary,
   type TodayOut,
   type UserOut,
 } from "./lib/api";
@@ -20,9 +23,14 @@ import {
 } from "./lib/session";
 import { pushEvents, resetCursor } from "./lib/sync";
 import { useRestTimer } from "./lib/useRestTimer";
+import { useStopwatch } from "./lib/useStopwatch";
 import { Hoy } from "./screens/Hoy";
 import { Login } from "./screens/Login";
 import { Sesion } from "./screens/Sesion";
+
+function todayISODate(): string {
+  return new Date().toISOString().slice(0, 10);
+}
 
 type Tema = "clara" | "oscura";
 
@@ -86,8 +94,12 @@ function Shell({ onLogout }: ShellProps) {
   const [offline, setOffline] = useState(false);
   const [sheetExIdx, setSheetExIdx] = useState<number | null>(null);
   const [alts, setAlts] = useState<AlternativeOut[]>([]);
+  const [bodyweight, setBodyweight] = useState<BodyWeightSummary | null>(null);
+  const [weightSheetOpen, setWeightSheetOpen] = useState(false);
+  const [weightInput, setWeightInput] = useState(70);
   const sessionRef = useRef<ActiveSession | null>(null);
   const rest = useRestTimer();
+  const treadmill = useStopwatch();
 
   const setActive = (next: ActiveSession | null) => {
     sessionRef.current = next;
@@ -95,9 +107,14 @@ function Shell({ onLogout }: ShellProps) {
   };
 
   const load = useCallback(async () => {
-    const [t, routine] = await Promise.all([api.today(), api.routine()]);
+    const [t, routine, bw] = await Promise.all([
+      api.today(),
+      api.routine(),
+      api.bodyweight(),
+    ]);
     setToday(t);
     setPositions(routine.days.length);
+    setBodyweight(bw);
   }, []);
 
   useEffect(() => {
@@ -176,6 +193,50 @@ function Shell({ onLogout }: ShellProps) {
     closeSheet();
   };
 
+  const toggleTreadmill = () => {
+    if (treadmill.running) {
+      const result = treadmill.stop();
+      if (result && result.durationS > 0) {
+        void safePush({
+          treadmill_sessions: [
+            {
+              id: crypto.randomUUID(),
+              started_at: result.startedAt,
+              ended_at: result.endedAt,
+              duration_s: result.durationS,
+            },
+          ],
+        });
+      }
+    } else {
+      treadmill.start();
+    }
+  };
+
+  const openWeightSheet = () => {
+    setWeightInput(bodyweight?.latest ?? 70);
+    setWeightSheetOpen(true);
+  };
+
+  const saveWeight = async () => {
+    setWeightSheetOpen(false);
+    await safePush({
+      body_weights: [
+        {
+          id: crypto.randomUUID(),
+          measured_on: todayISODate(),
+          weight_kg: weightInput,
+        },
+      ],
+    });
+    setBodyweight(await api.bodyweight().catch(() => bodyweight));
+  };
+
+  const treadmillKcal =
+    bodyweight?.latest != null
+      ? Math.round((treadmill.seconds / 60) * 0.053 * bodyweight.latest)
+      : null;
+
   const end = async () => {
     const active = sessionRef.current;
     if (active) await safePush({ sessions: [sessionIn(active, "completed")] });
@@ -246,6 +307,35 @@ function Shell({ onLogout }: ShellProps) {
   }
 
   return (
-    <Hoy today={today} positions={positions} onStart={start} onLogout={onLogout} />
+    <>
+      <Hoy
+        today={today}
+        positions={positions}
+        bodyweight={bodyweight}
+        treadmillSeconds={treadmill.seconds}
+        treadmillRunning={treadmill.running}
+        treadmillKcal={treadmillKcal}
+        onTreadmillToggle={toggleTreadmill}
+        onLogWeight={openWeightSheet}
+        onStart={start}
+        onLogout={onLogout}
+      />
+      {weightSheetOpen && (
+        <BottomSheet title={es.today.bodyweight} onClose={() => setWeightSheetOpen(false)}>
+          <div className="flex items-center justify-between gap-3 py-2">
+            <NumberStepper
+              label={es.today.bodyweight}
+              value={weightInput}
+              step={0.1}
+              onChange={setWeightInput}
+              valueWidth={72}
+            />
+            <Button variant="primary" onClick={() => void saveWeight()} className="flex-1">
+              {es.today.save}
+            </Button>
+          </div>
+        </BottomSheet>
+      )}
+    </>
   );
 }

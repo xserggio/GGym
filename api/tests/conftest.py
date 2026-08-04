@@ -29,8 +29,11 @@ from seed.__main__ import seed_catalog, seed_routine_for_user  # noqa: E402
 TEST_PASSWORD = "pw-test"
 
 
-@pytest.fixture(scope="session", autouse=True)
+@pytest.fixture(autouse=True)
 def _schema() -> None:
+    # Fresh schema + seed per test: the sync outbox accumulates, so tests must
+    # not share a database or their event/cursor assertions leak into each other.
+    Base.metadata.drop_all(engine)
     Base.metadata.create_all(engine)
     with SessionLocal() as db:
         user = User(
