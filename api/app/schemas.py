@@ -104,6 +104,10 @@ class OrderBody(BaseModel):
     ids: list[str]  # a permutation of the current ids, in the new order
 
 
+class DayRename(BaseModel):
+    name: str
+
+
 # ---------- state / today ----------
 class StateOut(_Orm):
     routine_id: str

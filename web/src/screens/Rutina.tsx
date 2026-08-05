@@ -156,6 +156,8 @@ export function Rutina({ onSettings }: RutinaProps) {
     void api.reorderExercises(dayId, ids).then(setRoutine);
   const reorderDays = (ids: string[]) => void api.reorderDays(ids).then(setRoutine);
   const removeEx = (rdeId: string) => void api.removeExercise(rdeId).then(setRoutine);
+  const renameDay = (dayId: string, name: string) =>
+    void api.renameDay(dayId, name).then(setRoutine);
   const addEx = (dayId: string, exId: string) =>
     void api.addExercise(dayId, exId).then((r) => {
       setRoutine(r);
@@ -208,6 +210,16 @@ export function Rutina({ onSettings }: RutinaProps) {
 
               {isOpen && (
                 <div className="mt-3 flex flex-col gap-2">
+                  <input
+                    key={day.name}
+                    defaultValue={day.name}
+                    aria-label="nombre de la sesión"
+                    onBlur={(e) => {
+                      const v = e.target.value.trim();
+                      if (v && v !== day.name) renameDay(day.id, v);
+                    }}
+                    className="h-touch w-full rounded-field border border-line bg-paper px-3 text-sm font-medium text-ink"
+                  />
                   {day.exercises.length === 0 && (
                     <p className="text-[13px] text-gris">{es.routine.empty}</p>
                   )}

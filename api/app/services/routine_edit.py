@@ -112,6 +112,14 @@ def reorder_exercises(
         r.order_index = position[r.id]
 
 
+def rename_day(db: OrmSession, user_id: str, day_id: str, name: str) -> None:
+    day = _get_day(db, user_id, day_id)
+    cleaned = name.strip()
+    if not cleaned:
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, "name cannot be empty")
+    day.name = cleaned[:120]
+
+
 def reorder_days(db: OrmSession, user_id: str, ids: list[str]) -> None:
     rid = active_routine_id(db, user_id)
     days = db.scalars(

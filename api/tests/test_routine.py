@@ -62,6 +62,17 @@ def test_reorder_days_reassigns_positions(client) -> None:
     assert [d["position"] for d in days] == [1, 2, 3, 4, 5]
 
 
+def test_rename_day(client) -> None:
+    day = _first_day(client)
+    resp = client.patch(f"/me/routine/days/{day['id']}", json={"name": "Empuje pesado"})
+    assert resp.status_code == 200
+    renamed = next(d for d in resp.json()["days"] if d["id"] == day["id"])
+    assert renamed["name"] == "Empuje pesado"
+
+    empty = client.patch(f"/me/routine/days/{day['id']}", json={"name": "  "})
+    assert empty.status_code == 400
+
+
 def test_reorder_rejects_non_permutation(client) -> None:
     day = _first_day(client)
     resp = client.put(

@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session as OrmSession
 
 from ..deps import get_current_user, get_db
 from ..models import User
-from ..schemas import ExerciseAdd, ExerciseUpdate, OrderBody, RoutineOut
+from ..schemas import DayRename, ExerciseAdd, ExerciseUpdate, OrderBody, RoutineOut
 from ..services import routine_edit, wheel
 
 router = APIRouter(prefix="/me/routine", tags=["routine"])
@@ -62,6 +62,18 @@ def reorder_exercises(
     db: OrmSession = Depends(get_db),
 ) -> RoutineOut:
     routine_edit.reorder_exercises(db, user.id, day_id, body.ids)
+    db.commit()
+    return _routine_out(db, user)
+
+
+@router.patch("/days/{day_id}", response_model=RoutineOut)
+def rename_day(
+    day_id: str,
+    body: DayRename,
+    user: User = Depends(get_current_user),
+    db: OrmSession = Depends(get_db),
+) -> RoutineOut:
+    routine_edit.rename_day(db, user.id, day_id, body.name)
     db.commit()
     return _routine_out(db, user)
 

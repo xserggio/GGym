@@ -294,6 +294,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/me/routine/days/{day_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Rename Day */
+        patch: operations["rename_day_me_routine_days__day_id__patch"];
+        trace?: never;
+    };
     "/me/routine/day-order": {
         parameters: {
             query?: never;
@@ -404,6 +421,11 @@ export interface components {
             delta_week: number | null;
             /** Points */
             points: components["schemas"]["BodyWeightPoint"][];
+        };
+        /** DayRename */
+        DayRename: {
+            /** Name */
+            name: string;
         };
         /**
          * Equipment
@@ -1191,6 +1213,41 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["OrderBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoutineOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    rename_day_me_routine_days__day_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                day_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DayRename"];
             };
         };
         responses: {

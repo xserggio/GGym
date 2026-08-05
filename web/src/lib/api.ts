@@ -119,6 +119,11 @@ export const api = {
       method: "PUT",
       body: JSON.stringify({ ids }),
     }),
+  renameDay: (dayId: string, name: string) =>
+    request<RoutineOut>(`/me/routine/days/${dayId}`, {
+      method: "PATCH",
+      body: JSON.stringify({ name }),
+    }),
   exercises: () => request<ExerciseSummary[]>("/exercises"),
   alternatives: (exerciseId: string) =>
     request<AlternativeOut[]>(`/exercises/${exerciseId}/alternatives`),

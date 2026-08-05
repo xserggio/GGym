@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+
 import { numEs } from "../lib/format";
 
 interface NumberStepperProps {
@@ -12,8 +14,9 @@ interface NumberStepperProps {
 }
 
 /**
- * −/+ stepper with 44px touch targets (spec §6). Used one-handed, sweaty; the
- * value is monospaced with tabular figures so it never shifts.
+ * −/+ stepper with 44px touch targets (spec §6). The centre is a real input, so
+ * a value can also be typed (Spanish comma accepted) — quicker than tapping +
+ * many times. Used one-handed, sweaty; figures are monospaced and tabular.
  */
 export function NumberStepper({
   value,
@@ -24,6 +27,17 @@ export function NumberStepper({
   valueWidth = 48,
 }: NumberStepperProps) {
   const clamp = (n: number) => Math.max(min, Math.round(n * 100) / 100);
+  const [text, setText] = useState(() => numEs(value));
+
+  // Keep the field in sync when the value changes via the buttons or a re-render.
+  useEffect(() => setText(numEs(value)), [value]);
+
+  const commit = () => {
+    const parsed = Number.parseFloat(text.replace(",", "."));
+    if (Number.isFinite(parsed)) onChange(clamp(parsed));
+    else setText(numEs(value));
+  };
+
   return (
     <div className="flex items-center">
       <button
@@ -34,13 +48,18 @@ export function NumberStepper({
       >
         −
       </button>
-      <span
+      <input
+        inputMode="decimal"
         aria-label={`${label}: ${numEs(value)}`}
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        onBlur={commit}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") e.currentTarget.blur();
+        }}
         style={{ width: valueWidth }}
-        className="h-touch border-y border-line bg-paper text-center font-mono text-lg leading-[42px] tabular-nums"
-      >
-        {numEs(value)}
-      </span>
+        className="h-touch border-y border-line bg-paper text-center font-mono text-lg tabular-nums text-ink outline-none"
+      />
       <button
         type="button"
         aria-label={`${label}: más`}
