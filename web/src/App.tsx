@@ -27,6 +27,7 @@ import { useRestTimer } from "./lib/useRestTimer";
 import { useStopwatch } from "./lib/useStopwatch";
 import { Ajustes } from "./screens/Ajustes";
 import { Historial } from "./screens/Historial";
+import { Rutina } from "./screens/Rutina";
 import { Hoy } from "./screens/Hoy";
 import { Login } from "./screens/Login";
 import { Sesion } from "./screens/Sesion";
@@ -335,8 +336,10 @@ function Shell({ user, tema, onToggleTema, onLogout }: ShellProps) {
               onStart={start}
               onSettings={() => setAjustes(true)}
             />
-          ) : (
+          ) : tab === "historial" ? (
             <Historial onSettings={() => setAjustes(true)} />
+          ) : (
+            <Rutina onSettings={() => setAjustes(true)} />
           )}
         </div>
         <BottomNav active={tab} onSelect={setTab} />

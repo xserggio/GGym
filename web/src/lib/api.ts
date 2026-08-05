@@ -94,6 +94,31 @@ export const api = {
   volume: () => request<VolumeGroup[]>("/me/volume"),
   records: () => request<RecordOut[]>("/me/records"),
   exportData: () => request<Record<string, unknown>>("/me/export"),
+  updateExercise: (
+    rdeId: string,
+    body: { target_sets: number; rep_min: number; rep_max: number; rest_s: number | null },
+  ) =>
+    request<RoutineOut>(`/me/routine/exercises/${rdeId}`, {
+      method: "PATCH",
+      body: JSON.stringify(body),
+    }),
+  removeExercise: (rdeId: string) =>
+    request<RoutineOut>(`/me/routine/exercises/${rdeId}`, { method: "DELETE" }),
+  addExercise: (dayId: string, exerciseId: string) =>
+    request<RoutineOut>(`/me/routine/days/${dayId}/exercises`, {
+      method: "POST",
+      body: JSON.stringify({ exercise_id: exerciseId }),
+    }),
+  reorderExercises: (dayId: string, ids: string[]) =>
+    request<RoutineOut>(`/me/routine/days/${dayId}/exercise-order`, {
+      method: "PUT",
+      body: JSON.stringify({ ids }),
+    }),
+  reorderDays: (ids: string[]) =>
+    request<RoutineOut>("/me/routine/day-order", {
+      method: "PUT",
+      body: JSON.stringify({ ids }),
+    }),
   exercises: () => request<ExerciseSummary[]>("/exercises"),
   alternatives: (exerciseId: string) =>
     request<AlternativeOut[]>(`/exercises/${exerciseId}/alternatives`),

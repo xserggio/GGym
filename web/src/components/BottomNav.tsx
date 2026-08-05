@@ -1,6 +1,6 @@
 import { es } from "../i18n/es";
 
-export type Tab = "hoy" | "historial";
+export type Tab = "hoy" | "historial" | "rutina";
 
 interface BottomNavProps {
   active: Tab;
@@ -10,13 +10,14 @@ interface BottomNavProps {
 const TABS: { key: Tab; label: string }[] = [
   { key: "hoy", label: es.nav.today },
   { key: "historial", label: es.nav.history },
+  { key: "rutina", label: es.nav.routine },
 ];
 
 /** Flat tab bar, no icons: a 2px rule marks the active destination (prototype).
- * Max four destinations (brief); two for now. */
+ * Max four destinations (brief). */
 export function BottomNav({ active, onSelect }: BottomNavProps) {
   return (
-    <div className="grid grid-cols-2 border-t border-line bg-paper">
+    <div className="grid grid-cols-3 border-t border-line bg-paper">
       {TABS.map((tab) => {
         const isActive = tab.key === active;
         return (

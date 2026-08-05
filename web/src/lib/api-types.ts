@@ -191,6 +191,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/me/export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Export */
+        get: operations["get_export_me_export_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/me/volume": {
         parameters: {
             query?: never;
@@ -218,6 +235,75 @@ export interface paths {
         /** Get Records */
         get: operations["get_records_me_records_get"];
         put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/routine/exercises/{rde_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Remove Exercise */
+        delete: operations["remove_exercise_me_routine_exercises__rde_id__delete"];
+        options?: never;
+        head?: never;
+        /** Update Exercise */
+        patch: operations["update_exercise_me_routine_exercises__rde_id__patch"];
+        trace?: never;
+    };
+    "/me/routine/days/{day_id}/exercises": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Add Exercise */
+        post: operations["add_exercise_me_routine_days__day_id__exercises_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/routine/days/{day_id}/exercise-order": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Reorder Exercises */
+        put: operations["reorder_exercises_me_routine_days__day_id__exercise_order_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/routine/day-order": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Reorder Days */
+        put: operations["reorder_days_me_routine_day_order_put"];
         post?: never;
         delete?: never;
         options?: never;
@@ -324,6 +410,26 @@ export interface components {
          * @enum {string}
          */
         Equipment: "barra" | "mancuernas" | "maquina" | "polea" | "peso_corporal";
+        /** ExerciseAdd */
+        ExerciseAdd: {
+            /** Exercise Id */
+            exercise_id: string;
+            /**
+             * Target Sets
+             * @default 3
+             */
+            target_sets: number;
+            /**
+             * Rep Min
+             * @default 8
+             */
+            rep_min: number;
+            /**
+             * Rep Max
+             * @default 12
+             */
+            rep_max: number;
+        };
         /** ExerciseOut */
         ExerciseOut: {
             /** Id */
@@ -349,6 +455,17 @@ export interface components {
             equipment: components["schemas"]["Equipment"];
             /** Media Url */
             media_url?: string | null;
+        };
+        /** ExerciseUpdate */
+        ExerciseUpdate: {
+            /** Target Sets */
+            target_sets: number;
+            /** Rep Min */
+            rep_min: number;
+            /** Rep Max */
+            rep_max: number;
+            /** Rest S */
+            rest_s: number | null;
         };
         /** HTTPValidationError */
         HTTPValidationError: {
@@ -383,6 +500,11 @@ export interface components {
          * @enum {string}
          */
         MovementPattern: "empuje_horizontal" | "empuje_vertical" | "tiron_horizontal" | "tiron_vertical" | "cuadriceps" | "cadena_posterior" | "gluteo" | "gemelo" | "deltoides_lateral" | "triceps" | "biceps" | "core";
+        /** OrderBody */
+        OrderBody: {
+            /** Ids */
+            ids: string[];
+        };
         /**
          * RecordOut
          * @description Personal record per exercise: best estimated 1RM (Epley, spec §7.2).
@@ -894,6 +1016,28 @@ export interface operations {
             };
         };
     };
+    get_export_me_export_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+        };
+    };
     get_volume_me_volume_get: {
         parameters: {
             query?: never;
@@ -930,6 +1074,175 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["RecordOut"][];
+                };
+            };
+        };
+    };
+    remove_exercise_me_routine_exercises__rde_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                rde_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoutineOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_exercise_me_routine_exercises__rde_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                rde_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ExerciseUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoutineOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    add_exercise_me_routine_days__day_id__exercises_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                day_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ExerciseAdd"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoutineOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    reorder_exercises_me_routine_days__day_id__exercise_order_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                day_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["OrderBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoutineOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    reorder_days_me_routine_day_order_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["OrderBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoutineOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

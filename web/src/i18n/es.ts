@@ -60,6 +60,18 @@ export const es = {
   nav: {
     today: "hoy",
     history: "historial",
+    routine: "rutina",
+  },
+  routine: {
+    title: "rutina",
+    hint: "cinco sesiones en rueda. usa las flechas para reordenar.",
+    sets: "series",
+    reps: "reps",
+    rest: "descanso",
+    add: "añadir ejercicio",
+    addTitle: "añadir ejercicio",
+    remove: "quitar",
+    empty: "sesión sin ejercicios",
   },
   settings: {
     title: "ajustes",

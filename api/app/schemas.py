@@ -85,6 +85,25 @@ class RoutineOut(BaseModel):
     days: list[RoutineDayOut]
 
 
+# ---------- routine editing ----------
+class ExerciseUpdate(BaseModel):
+    target_sets: int
+    rep_min: int
+    rep_max: int
+    rest_s: int | None  # null => use the exercise default
+
+
+class ExerciseAdd(BaseModel):
+    exercise_id: str
+    target_sets: int = 3
+    rep_min: int = 8
+    rep_max: int = 12
+
+
+class OrderBody(BaseModel):
+    ids: list[str]  # a permutation of the current ids, in the new order
+
+
 # ---------- state / today ----------
 class StateOut(_Orm):
     routine_id: str
