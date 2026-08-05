@@ -44,6 +44,7 @@ class ExerciseSummary(_Orm):
     pattern: MovementPattern
     equipment: Equipment
     media_url: str | None = None
+    per_side: bool = False
 
 
 class ExerciseOut(ExerciseSummary):

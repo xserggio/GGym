@@ -380,6 +380,11 @@ export interface components {
             equipment: components["schemas"]["Equipment"];
             /** Media Url */
             media_url?: string | null;
+            /**
+             * Per Side
+             * @default false
+             */
+            per_side: boolean;
             /** Substitution Count */
             substitution_count: number;
             /** Default Rest S */
@@ -462,6 +467,11 @@ export interface components {
             equipment: components["schemas"]["Equipment"];
             /** Media Url */
             media_url?: string | null;
+            /**
+             * Per Side
+             * @default false
+             */
+            per_side: boolean;
             /** Description */
             description: string;
             /** Default Rest S */
@@ -477,6 +487,11 @@ export interface components {
             equipment: components["schemas"]["Equipment"];
             /** Media Url */
             media_url?: string | null;
+            /**
+             * Per Side
+             * @default false
+             */
+            per_side: boolean;
         };
         /** ExerciseUpdate */
         ExerciseUpdate: {

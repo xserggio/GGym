@@ -24,7 +24,7 @@ from app.db import SessionLocal, engine  # noqa: E402
 from app.main import app  # noqa: E402
 from app.models import Base, Exercise, RoutineDay, User  # noqa: E402
 from app.security import hash_password  # noqa: E402
-from seed.__main__ import seed_catalog, seed_routine_for_user  # noqa: E402
+from seed.load import load_catalog, load_data, load_routine_for_user  # noqa: E402
 
 TEST_PASSWORD = "pw-test"
 
@@ -43,8 +43,9 @@ def _schema() -> None:
         )
         db.add(user)
         db.flush()
-        catalog = seed_catalog(db)
-        seed_routine_for_user(db, user, catalog)
+        data = load_data()
+        load_catalog(db, data)
+        load_routine_for_user(db, user, data)
         db.commit()
 
 

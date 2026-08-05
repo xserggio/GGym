@@ -1,10 +1,9 @@
-"""Seed data: shared exercise catalogue and the initial routine (spec §8).
+"""Seed the shared exercise catalogue and the initial routine from the canonical
+JSON file (`routine.json`). Run from the `api/` directory:
 
-Run from the `api/` directory:
+    ../.venv/Scripts/python -m seed             # bundled routine.json, all users
+    ../.venv/Scripts/python -m seed --user sergio
 
-    ../.venv/Scripts/python -m seed            # catalogue + a routine per user
-    ../.venv/Scripts/python -m seed --user marta
-
-Idempotent: exercises are keyed by name, routines are skipped for users that
-already have one.
+Idempotent: exercises are upserted by their stable slug id; a user keeps any
+routine they already have. See `seed/load.py`.
 """

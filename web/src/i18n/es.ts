@@ -41,6 +41,7 @@ export const es = {
     session: "sesión",
     exercises: "ejercicios",
     sets: "series",
+    perSide: "por pierna",
   },
   session: {
     rest: "descanso",

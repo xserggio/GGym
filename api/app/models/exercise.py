@@ -1,7 +1,8 @@
 from __future__ import annotations
 
+from sqlalchemy import Boolean
 from sqlalchemy import Enum as SAEnum
-from sqlalchemy import Integer, String, Text
+from sqlalchemy import Integer, String, Text, text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from .base import Base, new_uuid
@@ -9,7 +10,8 @@ from .enums import Equipment, MovementPattern
 
 
 class Exercise(Base):
-    """Shared catalogue entry (spec §4). `pattern` drives substitutions."""
+    """Shared catalogue entry (spec §4). `pattern` drives substitutions. `id` is
+    a stable slug from the seed (e.g. "press-banca"), never regenerated."""
 
     __tablename__ = "exercises"
 
@@ -24,3 +26,7 @@ class Exercise(Base):
     description: Mapped[str] = mapped_column(Text, default="")
     media_url: Mapped[str | None] = mapped_column(String(255), nullable=True)
     default_rest_s: Mapped[int] = mapped_column(Integer)
+    # Logged/performed per leg or per side (e.g. bulgarian split squat).
+    per_side: Mapped[bool] = mapped_column(
+        Boolean, default=False, server_default=text("0")
+    )
