@@ -242,6 +242,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/me/exercises/{exercise_id}/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Exercise History */
+        get: operations["get_exercise_history_me_exercises__exercise_id__history_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/me/volume": {
         parameters: {
             query?: never;
@@ -490,6 +507,21 @@ export interface components {
              * @default 12
              */
             rep_max: number;
+        };
+        /**
+         * ExerciseHistoryEntry
+         * @description The top set of an exercise per past session (spec pantalla 3).
+         */
+        ExerciseHistoryEntry: {
+            /**
+             * Session On
+             * Format: date
+             */
+            session_on: string;
+            /** Weight Kg */
+            weight_kg: number;
+            /** Reps */
+            reps: number;
         };
         /** ExerciseOut */
         ExerciseOut: {
@@ -1181,6 +1213,37 @@ export interface operations {
                     "application/json": {
                         [key: string]: unknown;
                     };
+                };
+            };
+        };
+    };
+    get_exercise_history_me_exercises__exercise_id__history_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                exercise_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExerciseHistoryEntry"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

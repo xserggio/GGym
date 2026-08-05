@@ -10,6 +10,8 @@ export type RoutineOut = Schemas["RoutineOut"];
 export type RoutineDayOut = Schemas["RoutineDayOut"];
 export type RoutineDayExerciseOut = Schemas["RoutineDayExerciseOut"];
 export type ExerciseSummary = Schemas["ExerciseSummary"];
+export type ExerciseOut = Schemas["ExerciseOut"];
+export type ExerciseHistoryEntry = Schemas["ExerciseHistoryEntry"];
 export type AlternativeOut = Schemas["AlternativeOut"];
 export type SessionOut = Schemas["SessionOut"];
 export type BodyWeightSummary = Schemas["BodyWeightSummary"];
@@ -129,6 +131,10 @@ export const api = {
       body: JSON.stringify({ name }),
     }),
   exercises: () => request<ExerciseSummary[]>("/exercises"),
+  exercise: (exerciseId: string) =>
+    request<ExerciseOut>(`/exercises/${exerciseId}`),
+  exerciseHistory: (exerciseId: string) =>
+    request<ExerciseHistoryEntry[]>(`/me/exercises/${exerciseId}/history`),
   alternatives: (exerciseId: string) =>
     request<AlternativeOut[]>(`/exercises/${exerciseId}/alternatives`),
   sync: (push: SyncPush) =>

@@ -13,9 +13,10 @@ from sqlalchemy.orm import Session as OrmSession
 
 from ..models import Exercise, Session, SetLog
 from ..models.base import utcnow
-from ..schemas import RecordOut, VolumeGroup
+from ..schemas import ExerciseHistoryEntry, RecordOut, VolumeGroup
 
 _RECORDS_LIMIT = 12
+_HISTORY_LIMIT = 16
 
 
 def weekly_volume(db: OrmSession, user_id: str) -> list[VolumeGroup]:
@@ -37,6 +38,40 @@ def weekly_volume(db: OrmSession, user_id: str) -> list[VolumeGroup]:
 
 def epley_1rm(weight_kg: float, reps: int) -> float:
     return weight_kg * (1 + reps / 30)
+
+
+def exercise_history(
+    db: OrmSession, user_id: str, exercise_id: str
+) -> list[ExerciseHistoryEntry]:
+    """Top set (heaviest, then most reps) of the exercise per past session,
+    oldest first, capped at the last _HISTORY_LIMIT sessions."""
+    rows = db.execute(
+        select(
+            SetLog.session_id,
+            Session.started_at,
+            SetLog.weight_kg,
+            SetLog.reps,
+        )
+        .join(Session, Session.id == SetLog.session_id)
+        .where(
+            Session.user_id == user_id,
+            SetLog.exercise_id == exercise_id,
+            SetLog.voided.is_(False),
+        )
+    ).all()
+
+    best: dict[str, tuple] = {}
+    for session_id, started_at, weight, reps in rows:
+        w = float(weight)
+        current = best.get(session_id)
+        if current is None or (w, reps) > (current[1], current[2]):
+            best[session_id] = (started_at, w, reps)
+
+    ordered = sorted(best.values(), key=lambda x: x[0])[-_HISTORY_LIMIT:]
+    return [
+        ExerciseHistoryEntry(session_on=started.date(), weight_kg=w, reps=reps)
+        for started, w, reps in ordered
+    ]
 
 
 def records(db: OrmSession, user_id: str) -> list[RecordOut]:

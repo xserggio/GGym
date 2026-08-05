@@ -63,6 +63,13 @@ export const es = {
     notesLabel: "notas de la sesión",
     notesPlaceholder: "dolor, sueño, energía…",
   },
+  detail: {
+    photoNote: "foto 4:3 · duotono tinta/cemento",
+    weightHistory: "historial de pesos",
+    empty: "aún no has registrado este ejercicio",
+    viewExercise: "ver ejercicio",
+    pr: "pr",
+  },
   substitutions: {
     title: "alternativas",
     empty: "no hay alternativas para este patrón",

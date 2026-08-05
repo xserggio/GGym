@@ -9,6 +9,7 @@ from ..models import RoutineDay, Session, SetLog, User
 from ..models.enums import SessionStatus
 from ..schemas import (
     BodyWeightSummary,
+    ExerciseHistoryEntry,
     RecordOut,
     RoutineOut,
     SessionOut,
@@ -117,6 +118,15 @@ def get_export(
     user: User = Depends(get_current_user), db: OrmSession = Depends(get_db)
 ) -> dict:
     return export.export_all(db, user)
+
+
+@router.get("/exercises/{exercise_id}/history", response_model=list[ExerciseHistoryEntry])
+def get_exercise_history(
+    exercise_id: str,
+    user: User = Depends(get_current_user),
+    db: OrmSession = Depends(get_db),
+) -> list[ExerciseHistoryEntry]:
+    return stats.exercise_history(db, user.id, exercise_id)
 
 
 @router.get("/volume", response_model=list[VolumeGroup])

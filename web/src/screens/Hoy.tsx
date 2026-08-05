@@ -17,6 +17,7 @@ interface HoyProps {
   onLogWeight: () => void;
   onStart: () => void;
   onSkip: () => void;
+  onExercise: (exerciseId: string) => void;
   onSettings: () => void;
 }
 
@@ -37,6 +38,7 @@ export function Hoy({
   onLogWeight,
   onStart,
   onSkip,
+  onExercise,
   onSettings,
 }: HoyProps) {
   const { day } = today;
@@ -86,7 +88,12 @@ export function Hoy({
 
             <div className="mt-4 flex flex-col gap-2.5">
               {day.exercises.map((rde) => (
-                <div key={rde.id} className="flex items-center gap-3">
+                <button
+                  key={rde.id}
+                  type="button"
+                  onClick={() => onExercise(rde.exercise.id)}
+                  className="flex w-full items-center gap-3 text-left"
+                >
                   <ExerciseThumb name={rde.exercise.name} />
                   <div className="min-w-0 flex-1">
                     <div className="text-sm font-medium leading-tight">
@@ -96,7 +103,7 @@ export function Hoy({
                       {planLabel(rde)}
                     </div>
                   </div>
-                </div>
+                </button>
               ))}
             </div>
           </Card>

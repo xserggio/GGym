@@ -20,6 +20,7 @@ interface SesionProps {
   onReps: (exerciseIdx: number, setIdx: number, next: number) => void;
   onCheck: (exerciseIdx: number, setIdx: number) => void;
   onBusy: (exerciseIdx: number) => void;
+  onExercise: (exerciseId: string) => void;
   onNotes: (value: string) => void;
   onEnd: () => void;
 }
@@ -40,6 +41,7 @@ export function Sesion({
   onReps,
   onCheck,
   onBusy,
+  onExercise,
   onNotes,
   onEnd,
 }: SesionProps) {
@@ -118,13 +120,22 @@ export function Sesion({
                       onCheck={() => onCheck(exIdx, setIdx)}
                     />
                   ))}
-                  <button
-                    type="button"
-                    onClick={() => onBusy(exIdx)}
-                    className="mt-1 h-touch rounded-card border border-line text-sm text-ink"
-                  >
-                    {es.actions.busy}
-                  </button>
+                  <div className="mt-1 flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => onBusy(exIdx)}
+                      className="h-touch flex-1 rounded-card border border-line text-sm text-ink"
+                    >
+                      {es.actions.busy}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => onExercise(ex.exerciseId)}
+                      className="h-touch flex-1 rounded-card border border-line text-sm text-ink"
+                    >
+                      {es.detail.viewExercise}
+                    </button>
+                  </div>
                 </div>
               )}
             </Card>

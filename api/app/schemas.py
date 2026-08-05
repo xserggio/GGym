@@ -150,6 +150,15 @@ class Suggestion(BaseModel):
     last_session_on: date | None
 
 
+# ---------- exercise detail ----------
+class ExerciseHistoryEntry(BaseModel):
+    """The top set of an exercise per past session (spec pantalla 3)."""
+
+    session_on: date
+    weight_kg: float
+    reps: int
+
+
 # ---------- history ----------
 class SessionOut(_Orm):
     id: str

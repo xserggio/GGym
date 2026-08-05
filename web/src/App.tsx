@@ -26,6 +26,7 @@ import { enqueue, flush, startSync, subscribePending } from "./lib/sync";
 import { useRestTimer } from "./lib/useRestTimer";
 import { useStopwatch } from "./lib/useStopwatch";
 import { Ajustes } from "./screens/Ajustes";
+import { Detalle } from "./screens/Detalle";
 import { Historial } from "./screens/Historial";
 import { Rutina } from "./screens/Rutina";
 import { Hoy } from "./screens/Hoy";
@@ -107,6 +108,7 @@ function Shell({ user, tema, onToggleTema, onLogout }: ShellProps) {
   const [weightInput, setWeightInput] = useState(70);
   const [tab, setTab] = useState<Tab>("hoy");
   const [ajustes, setAjustes] = useState(false);
+  const [detailId, setDetailId] = useState<string | null>(null);
   const sessionRef = useRef<ActiveSession | null>(null);
   const rest = useRestTimer();
   const treadmill = useStopwatch();
@@ -266,6 +268,10 @@ function Shell({ user, tema, onToggleTema, onLogout }: ShellProps) {
     );
   }
 
+  if (detailId) {
+    return <Detalle exerciseId={detailId} onBack={() => setDetailId(null)} />;
+  }
+
   if (session) {
     return (
       <>
@@ -277,6 +283,7 @@ function Shell({ user, tema, onToggleTema, onLogout }: ShellProps) {
           onReps={onReps}
           onCheck={onCheck}
           onBusy={openSheet}
+          onExercise={setDetailId}
           onNotes={onNotes}
           onEnd={() => void end()}
         />
@@ -347,6 +354,7 @@ function Shell({ user, tema, onToggleTema, onLogout }: ShellProps) {
               onLogWeight={openWeightSheet}
               onStart={() => void start()}
               onSkip={() => void skip()}
+              onExercise={setDetailId}
               onSettings={() => setAjustes(true)}
             />
           ) : tab === "historial" ? (
