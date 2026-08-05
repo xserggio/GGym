@@ -27,7 +27,8 @@ function exerciseState(ex: LocalExercise): string {
   const done = ex.sets.filter((s) => s.done).length;
   const first = ex.sets[0];
   const weight = first ? `${numEs(first.weightKg)} ${es.units.kg}` : "";
-  return `${done} de ${ex.sets.length} ${es.today.sets} · ${weight}`;
+  const perSide = ex.perSide ? ` · ${es.today.perSide}` : "";
+  return `${done} de ${ex.sets.length} ${es.today.sets} · ${weight}${perSide}`;
 }
 
 export function Sesion({

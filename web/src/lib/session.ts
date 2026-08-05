@@ -23,6 +23,7 @@ export interface LocalExercise {
   plannedExerciseId: string; // what the routine planned (stable)
   name: string;
   restS: number;
+  perSide: boolean;
   targetSets: number;
   repMin: number;
   repMax: number;
@@ -72,6 +73,7 @@ export function buildSession(
         plannedExerciseId: rde.exercise.id,
         name: rde.exercise.name,
         restS: rde.rest_s,
+        perSide: rde.exercise.per_side,
         targetSets: rde.target_sets,
         repMin: rde.rep_min,
         repMax: rde.rep_max,
@@ -136,6 +138,7 @@ export function swapExercise(
             exerciseId: alt.id,
             name: alt.name,
             restS: alt.default_rest_s,
+            perSide: alt.per_side,
             suggestion: null,
           },
     ),
