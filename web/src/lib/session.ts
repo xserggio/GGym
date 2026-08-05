@@ -8,23 +8,25 @@ import type {
 } from "./api";
 import { numEs } from "./format";
 
-/** Client-side model of the session in progress. */
+/** Client-side model of the session in progress. Each set carries its own
+ * performed exercise, so a mid-slot substitution (machine busy after a couple of
+ * sets) keeps the earlier sets attributed to the original exercise. */
 export interface LocalSet {
   id: string; // client UUID, the sync idempotency key
   setNumber: number;
   weightKg: number;
   reps: number;
   done: boolean;
+  exerciseId: string; // exercise actually performed for this set
+  exerciseName: string;
+  perSide: boolean;
 }
 
 export interface LocalExercise {
   rdeId: string;
-  exerciseId: string; // performed exercise (changes on substitution)
-  plannedExerciseId: string; // what the routine planned (stable)
-  plannedName: string; // the planned exercise's name, for the "en lugar de" tag
-  name: string;
+  plannedExerciseId: string; // what the routine planned (stable, the slot identity)
+  plannedName: string;
   restS: number;
-  perSide: boolean;
   targetSets: number;
   repMin: number;
   repMax: number;
@@ -72,12 +74,9 @@ export function buildSession(
       const startWeight = sug?.suggested_weight_kg ?? DEFAULT_START_WEIGHT;
       return {
         rdeId: rde.id,
-        exerciseId: rde.exercise.id,
         plannedExerciseId: rde.exercise.id,
         plannedName: rde.exercise.name,
-        name: rde.exercise.name,
         restS: rde.rest_s,
-        perSide: rde.exercise.per_side,
         targetSets: rde.target_sets,
         repMin: rde.rep_min,
         repMax: rde.rep_max,
@@ -88,6 +87,9 @@ export function buildSession(
           weightKg: startWeight,
           reps: rde.rep_max,
           done: false,
+          exerciseId: rde.exercise.id,
+          exerciseName: rde.exercise.name,
+          perSide: rde.exercise.per_side,
         })),
       };
     }),
@@ -110,15 +112,15 @@ export function sessionIn(
 
 export function setLogIn(
   session: ActiveSession,
-  exercise: LocalExercise,
+  slot: LocalExercise,
   set: LocalSet,
 ): SetLogIn {
-  const substituted = exercise.exerciseId !== exercise.plannedExerciseId;
+  const substituted = set.exerciseId !== slot.plannedExerciseId;
   return {
     id: set.id,
     session_id: session.id,
-    exercise_id: exercise.exerciseId,
-    planned_exercise_id: substituted ? exercise.plannedExerciseId : null,
+    exercise_id: set.exerciseId,
+    planned_exercise_id: substituted ? slot.plannedExerciseId : null,
     set_number: set.setNumber,
     weight_kg: set.weightKg,
     reps: set.reps,
@@ -127,24 +129,31 @@ export function setLogIn(
   };
 }
 
-/** Swap the performed exercise for an alternative, keeping the planned one. */
-export function swapExercise(
+/** Substitute the remaining (not-yet-done) sets of a slot for an alternative
+ * (machine busy). Sets already done keep the exercise they were logged as, so
+ * the record shows which sets were which exercise. */
+export function substitute(
   session: ActiveSession,
-  exerciseIdx: number,
+  slotIdx: number,
   alt: AlternativeOut,
 ): ActiveSession {
   return {
     ...session,
-    exercises: session.exercises.map((ex, i) =>
-      i !== exerciseIdx
-        ? ex
+    exercises: session.exercises.map((slot, i) =>
+      i !== slotIdx
+        ? slot
         : {
-            ...ex,
-            exerciseId: alt.id,
-            name: alt.name,
-            restS: alt.default_rest_s,
-            perSide: alt.per_side,
-            suggestion: null,
+            ...slot,
+            sets: slot.sets.map((s) =>
+              s.done
+                ? s
+                : {
+                    ...s,
+                    exerciseId: alt.id,
+                    exerciseName: alt.name,
+                    perSide: alt.per_side,
+                  },
+            ),
           },
     ),
   };

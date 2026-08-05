@@ -19,7 +19,7 @@ import {
   buildSession,
   sessionIn,
   setLogIn,
-  swapExercise,
+  substitute,
   type ActiveSession,
 } from "./lib/session";
 import { enqueue, flush, startSync, subscribePending } from "./lib/sync";
@@ -191,7 +191,7 @@ function Shell({ user, tema, onToggleTema, onLogout }: ShellProps) {
     if (!ex) return;
     setSheetExIdx(exIdx);
     setAlts([]);
-    api.alternatives(ex.exerciseId).then(setAlts).catch(() => setAlts([]));
+    api.alternatives(ex.plannedExerciseId).then(setAlts).catch(() => setAlts([]));
   };
 
   const closeSheet = () => {
@@ -201,7 +201,7 @@ function Shell({ user, tema, onToggleTema, onLogout }: ShellProps) {
 
   const pick = (alt: AlternativeOut) => {
     if (sessionRef.current && sheetExIdx !== null) {
-      setActive(swapExercise(sessionRef.current, sheetExIdx, alt));
+      setActive(substitute(sessionRef.current, sheetExIdx, alt));
     }
     closeSheet();
   };

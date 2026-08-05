@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Fragment, useState } from "react";
 
 import { Card } from "../components/Card";
 import { ExerciseThumb } from "../components/ExerciseThumb";
@@ -29,7 +29,10 @@ function exerciseState(ex: LocalExercise): string {
   const done = ex.sets.filter((s) => s.done).length;
   const first = ex.sets[0];
   const weight = first ? `${numEs(first.weightKg)} ${es.units.kg}` : "";
-  const perSide = ex.perSide ? ` · ${es.today.perSide}` : "";
+  const substituted = ex.sets.some((s) => s.exerciseId !== ex.plannedExerciseId);
+  // Per-side only shows here when the whole slot is the planned exercise; a
+  // substitution is shown per group of sets instead.
+  const perSide = !substituted && first?.perSide ? ` · ${es.today.perSide}` : "";
   return `${done} de ${ex.sets.length} ${es.today.sets} · ${weight}${perSide}`;
 }
 
@@ -81,14 +84,11 @@ export function Sesion({
                 onClick={() => setOpen(isOpen ? -1 : exIdx)}
                 className="flex w-full items-center gap-3 p-2.5 text-left"
               >
-                <ExerciseThumb name={ex.name} />
+                <ExerciseThumb name={ex.plannedName} />
                 <div className="min-w-0 flex-1">
-                  <div className="text-[15px] font-medium leading-tight">{ex.name}</div>
-                  {ex.exerciseId !== ex.plannedExerciseId && (
-                    <div className="mt-0.5 font-mono text-[10px] text-blue">
-                      {es.session.insteadOf(ex.plannedName)}
-                    </div>
-                  )}
+                  <div className="text-[15px] font-medium leading-tight">
+                    {ex.plannedName}
+                  </div>
                   <div className="mt-1 font-mono text-[11px] text-gris">
                     {exerciseState(ex)}
                   </div>
@@ -111,15 +111,36 @@ export function Sesion({
                       {ex.suggestion}
                     </div>
                   )}
-                  {ex.sets.map((set, setIdx) => (
-                    <SetRow
-                      key={set.id}
-                      set={set}
-                      onWeight={(next) => onWeight(exIdx, setIdx, next)}
-                      onReps={(next) => onReps(exIdx, setIdx, next)}
-                      onCheck={() => onCheck(exIdx, setIdx)}
-                    />
-                  ))}
+                  {ex.sets.map((set, setIdx) => {
+                    const substituted = set.exerciseId !== ex.plannedExerciseId;
+                    const hasSub = ex.sets.some(
+                      (s) => s.exerciseId !== ex.plannedExerciseId,
+                    );
+                    const groupStart =
+                      setIdx === 0 ||
+                      set.exerciseId !== ex.sets[setIdx - 1]!.exerciseId;
+                    const label = substituted
+                      ? `${set.exerciseName} · ${es.session.insteadOf(ex.plannedName)}`
+                      : ex.plannedName;
+                    return (
+                      <Fragment key={set.id}>
+                        {hasSub && groupStart && (
+                          <div
+                            className={`mt-1 font-mono text-[11px] ${substituted ? "text-blue" : "text-gris"}`}
+                          >
+                            {label}
+                            {set.perSide ? ` · ${es.today.perSide}` : ""}
+                          </div>
+                        )}
+                        <SetRow
+                          set={set}
+                          onWeight={(next) => onWeight(exIdx, setIdx, next)}
+                          onReps={(next) => onReps(exIdx, setIdx, next)}
+                          onCheck={() => onCheck(exIdx, setIdx)}
+                        />
+                      </Fragment>
+                    );
+                  })}
                   <div className="mt-1 flex gap-2">
                     <button
                       type="button"
@@ -130,7 +151,7 @@ export function Sesion({
                     </button>
                     <button
                       type="button"
-                      onClick={() => onExercise(ex.exerciseId)}
+                      onClick={() => onExercise(ex.plannedExerciseId)}
                       className="h-touch flex-1 rounded-card border border-line text-sm text-ink"
                     >
                       {es.detail.viewExercise}
