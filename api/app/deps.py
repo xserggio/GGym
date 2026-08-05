@@ -17,10 +17,21 @@ def get_db() -> Iterator[OrmSession]:
         yield db
 
 
+def _extract_token(request: Request) -> str | None:
+    """Cookie (web/PWA) or `Authorization: Bearer` (native client)."""
+    cookie = request.cookies.get(get_settings().cookie_name)
+    if cookie:
+        return cookie
+    header = request.headers.get("Authorization")
+    if header and header.lower().startswith("bearer "):
+        return header[7:].strip() or None
+    return None
+
+
 def get_current_user(
     request: Request, db: OrmSession = Depends(get_db)
 ) -> User:
-    token = request.cookies.get(get_settings().cookie_name)
+    token = _extract_token(request)
     if not token:
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, "not authenticated")
     user_id = decode_access_token(token)

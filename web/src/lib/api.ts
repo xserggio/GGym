@@ -3,6 +3,7 @@ import type { components } from "./api-types";
 type Schemas = components["schemas"];
 
 export type UserOut = Schemas["UserOut"];
+export type LoginOut = Schemas["LoginOut"];
 export type StateOut = Schemas["StateOut"];
 export type TodayOut = Schemas["TodayOut"];
 export type RoutineOut = Schemas["RoutineOut"];
@@ -21,9 +22,31 @@ export type TreadmillIn = Schemas["TreadmillIn"];
 export type SyncPush = Schemas["SyncPush"];
 export type SyncResult = Schemas["SyncResult"];
 
-// Same-origin API root. Dev: "/api" (Vite proxy). Prod: "<base>api" e.g.
-// "/gym/api" (nginx proxies it to the backend). BASE_URL ends with a slash.
-const BASE = `${import.meta.env.BASE_URL}api`;
+// API root. Web (same-origin): "/api" in dev (Vite proxy), "<base>api" e.g.
+// "/gym/api" in prod (nginx). Native (Capacitor): absolute VITE_API_BASE.
+const BASE = import.meta.env.VITE_API_BASE ?? `${import.meta.env.BASE_URL}api`;
+
+const TOKEN_KEY = "gym.token";
+
+/** Native clients store the JWT and authenticate via Bearer. Web keeps the
+ * httpOnly cookie and never sets this. */
+export function setAuthToken(token: string | null): void {
+  try {
+    if (token) localStorage.setItem(TOKEN_KEY, token);
+    else localStorage.removeItem(TOKEN_KEY);
+  } catch {
+    // storage unavailable — ignore
+  }
+}
+
+function authHeader(): Record<string, string> {
+  try {
+    const token = localStorage.getItem(TOKEN_KEY);
+    return token ? { Authorization: `Bearer ${token}` } : {};
+  } catch {
+    return {};
+  }
+}
 
 export class ApiError extends Error {
   constructor(
@@ -38,7 +61,7 @@ export class ApiError extends Error {
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(BASE + path, {
     credentials: "include",
-    headers: { "Content-Type": "application/json", ...init?.headers },
+    headers: { "Content-Type": "application/json", ...authHeader(), ...init?.headers },
     ...init,
   });
   if (!res.ok) {
@@ -57,7 +80,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 
 export const api = {
   login: (username: string, password: string) =>
-    request<UserOut>("/auth/login", {
+    request<LoginOut>("/auth/login", {
       method: "POST",
       body: JSON.stringify({ username, password }),
     }),

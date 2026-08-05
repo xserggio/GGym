@@ -363,6 +363,22 @@ export interface components {
             password: string;
         };
         /**
+         * LoginOut
+         * @description Login also returns the JWT in the body so a native client (Capacitor) can
+         *     store it and authenticate via `Authorization: Bearer`. Web keeps using the
+         *     httpOnly cookie and ignores this field.
+         */
+        LoginOut: {
+            /** Id */
+            id: string;
+            /** Username */
+            username: string;
+            /** Display Name */
+            display_name: string;
+            /** Token */
+            token: string;
+        };
+        /**
          * MovementPattern
          * @enum {string}
          */
@@ -644,7 +660,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["UserOut"];
+                    "application/json": components["schemas"]["LoginOut"];
                 };
             };
             /** @description Validation Error */

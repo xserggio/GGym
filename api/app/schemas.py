@@ -29,6 +29,14 @@ class UserOut(_Orm):
     display_name: str
 
 
+class LoginOut(UserOut):
+    """Login also returns the JWT in the body so a native client (Capacitor) can
+    store it and authenticate via `Authorization: Bearer`. Web keeps using the
+    httpOnly cookie and ignores this field."""
+
+    token: str
+
+
 # ---------- catalogue ----------
 class ExerciseSummary(_Orm):
     id: str
