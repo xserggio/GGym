@@ -29,8 +29,11 @@ class Settings(BaseSettings):
     access_token_ttl_min: int = 60 * 24 * 14  # 14 days
 
     cookie_name: str = "access_token"
-    cookie_secure: bool = False  # True behind HTTPS (Caddy) in production
+    cookie_secure: bool = False  # True behind HTTPS in production
     cookie_samesite: str = "lax"
+    # Path the auth cookie is scoped to. In production the app is served under a
+    # subpath (e.g. /gym), so the cookie is scoped there.
+    cookie_path: str = "/"
 
     # Browsers the mobile PWA/dev server are served from (CORS with credentials).
     cors_origins: list[str] = ["http://localhost:5173"]

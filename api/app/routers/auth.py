@@ -29,14 +29,15 @@ def login(
         httponly=True,
         secure=settings.cookie_secure,
         samesite=settings.cookie_samesite,
-        path="/",
+        path=settings.cookie_path,
     )
     return user
 
 
 @router.post("/logout", status_code=status.HTTP_204_NO_CONTENT)
 def logout(response: Response) -> None:
-    response.delete_cookie(get_settings().cookie_name, path="/")
+    settings = get_settings()
+    response.delete_cookie(settings.cookie_name, path=settings.cookie_path)
 
 
 @router.get("/me", response_model=UserOut)

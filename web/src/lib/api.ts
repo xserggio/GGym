@@ -21,7 +21,9 @@ export type TreadmillIn = Schemas["TreadmillIn"];
 export type SyncPush = Schemas["SyncPush"];
 export type SyncResult = Schemas["SyncResult"];
 
-const BASE = "/api"; // Vite proxies /api -> the FastAPI backend (same-origin cookies).
+// Same-origin API root. Dev: "/api" (Vite proxy). Prod: "<base>api" e.g.
+// "/gym/api" (nginx proxies it to the backend). BASE_URL ends with a slash.
+const BASE = `${import.meta.env.BASE_URL}api`;
 
 export class ApiError extends Error {
   constructor(

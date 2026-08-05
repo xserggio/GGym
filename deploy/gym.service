@@ -1,0 +1,14 @@
+[Unit]
+Description=Registro de fuerza API
+After=network.target
+
+[Service]
+User=root
+WorkingDirectory=/opt/gym/api
+EnvironmentFile=/opt/gym/.env
+ExecStart=/opt/gym/venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8100
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
