@@ -42,6 +42,11 @@ export const es = {
     exercises: "ejercicios",
     sets: "series",
     perSide: "por pierna",
+    skip: "saltar esta sesión",
+    recovery:
+      "llevas tres días seguidos entrenando. descansar también forma parte del plan.",
+    resume:
+      "llevas más de diez días sin entrenar. bajamos los pesos un 10% para retomar.",
   },
   session: {
     rest: "descanso",
@@ -54,6 +59,9 @@ export const es = {
     offline: "cambios sin sincronizar · se guardan al recuperar red",
     progressionHint: (sets: number, reps: number, bumpKg: string) =>
       `la última vez completaste las ${sets} series a ${reps} repeticiones. prueba con ${bumpKg} kg más.`,
+    insteadOf: (name: string) => `en lugar de ${name}`,
+    notesLabel: "notas de la sesión",
+    notesPlaceholder: "dolor, sueño, energía…",
   },
   substitutions: {
     title: "alternativas",

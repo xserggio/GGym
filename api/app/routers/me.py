@@ -45,7 +45,18 @@ def get_today(
         next_position=state.next_position,
         last_session_at=state.last_session_at,
         day=wheel.current_day_out(db, user.id),
+        recovery_warning=wheel.recovery_warning(db, user.id),
+        resume_after_break=wheel.resume_after_break(db, user.id),
     )
+
+
+@router.post("/skip", response_model=StateOut)
+def skip_session(
+    user: User = Depends(get_current_user), db: OrmSession = Depends(get_db)
+) -> StateOut:
+    state = wheel.skip(db, user.id)
+    db.commit()
+    return StateOut.model_validate(state)
 
 
 @router.get("/day/{day_id}/suggestions", response_model=list[Suggestion])
@@ -54,7 +65,9 @@ def get_suggestions(
     user: User = Depends(get_current_user),
     db: OrmSession = Depends(get_db),
 ) -> list[Suggestion]:
-    return progression.suggestions_for_day(db, user.id, day_id)
+    return progression.suggestions_for_day(
+        db, user.id, day_id, deload=wheel.resume_after_break(db, user.id)
+    )
 
 
 @router.get("/bodyweight", response_model=BodyWeightSummary)

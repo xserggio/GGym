@@ -16,6 +16,7 @@ interface HoyProps {
   onTreadmillToggle: () => void;
   onLogWeight: () => void;
   onStart: () => void;
+  onSkip: () => void;
   onSettings: () => void;
 }
 
@@ -35,6 +36,7 @@ export function Hoy({
   onTreadmillToggle,
   onLogWeight,
   onStart,
+  onSkip,
   onSettings,
 }: HoyProps) {
   const { day } = today;
@@ -53,6 +55,23 @@ export function Hoy({
               {es.actions.settings}
             </Button>
           </header>
+
+          {today.recovery_warning && (
+            <div
+              className="rounded-card px-3 py-2.5 text-[13px] leading-snug text-ink"
+              style={{ background: "rgba(210,51,60,0.08)", borderLeft: "2px solid var(--red)" }}
+            >
+              {es.today.recovery}
+            </div>
+          )}
+          {today.resume_after_break && (
+            <div
+              className="rounded-card px-3 py-2.5 text-[13px] leading-snug text-ink"
+              style={{ background: "rgba(43,95,217,0.08)", borderLeft: "2px solid var(--blue)" }}
+            >
+              {es.today.resume}
+            </div>
+          )}
 
           <Card className="p-4">
             <div className="font-mono text-[9px] uppercase tracking-[0.14em] text-gris">
@@ -130,10 +149,17 @@ export function Hoy({
         </div>
       </div>
 
-      <div className="border-t border-line bg-bg px-4 py-3">
+      <div className="flex flex-col gap-2 border-t border-line bg-bg px-4 py-3">
         <Button variant="primary" onClick={onStart} className="w-full">
           {es.actions.start}
         </Button>
+        <button
+          type="button"
+          onClick={onSkip}
+          className="h-touch rounded-card border border-line text-sm text-gris"
+        >
+          {es.today.skip}
+        </button>
       </div>
     </div>
   );

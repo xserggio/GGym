@@ -20,6 +20,7 @@ interface SesionProps {
   onReps: (exerciseIdx: number, setIdx: number, next: number) => void;
   onCheck: (exerciseIdx: number, setIdx: number) => void;
   onBusy: (exerciseIdx: number) => void;
+  onNotes: (value: string) => void;
   onEnd: () => void;
 }
 
@@ -39,6 +40,7 @@ export function Sesion({
   onReps,
   onCheck,
   onBusy,
+  onNotes,
   onEnd,
 }: SesionProps) {
   const [open, setOpen] = useState(0);
@@ -80,6 +82,11 @@ export function Sesion({
                 <ExerciseThumb name={ex.name} />
                 <div className="min-w-0 flex-1">
                   <div className="text-[15px] font-medium leading-tight">{ex.name}</div>
+                  {ex.exerciseId !== ex.plannedExerciseId && (
+                    <div className="mt-0.5 font-mono text-[10px] text-blue">
+                      {es.session.insteadOf(ex.plannedName)}
+                    </div>
+                  )}
                   <div className="mt-1 font-mono text-[11px] text-gris">
                     {exerciseState(ex)}
                   </div>
@@ -123,6 +130,18 @@ export function Sesion({
             </Card>
           );
         })}
+      </div>
+
+      <div className="mt-3 flex flex-col gap-1">
+        <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-gris">
+          {es.session.notesLabel}
+        </span>
+        <textarea
+          value={session.notes}
+          onChange={(e) => onNotes(e.target.value)}
+          placeholder={es.session.notesPlaceholder}
+          className="min-h-[64px] rounded-card border border-line bg-paper p-3 text-sm text-ink"
+        />
       </div>
     </div>
   );

@@ -22,12 +22,17 @@ INCREMENT_UPPER_KG = 2.5
 INCREMENT_LOWER_KG = 5.0
 
 
+def _round_2_5(weight: float) -> float:
+    return round(weight / 2.5) * 2.5
+
+
 def suggestion(
     db: OrmSession,
     user_id: str,
     exercise_id: str,
     rep_max: int,
     pattern: MovementPattern,
+    deload: bool = False,
 ) -> Suggestion:
     last_session_id = db.scalar(
         select(Session.id)
@@ -64,7 +69,10 @@ def suggestion(
     last_weight = max(weights) if weights else None
     all_at_rep_max = bool(reps) and all(r >= rep_max for r in reps)
 
-    if all_at_rep_max and last_weight is not None:
+    if deload and last_weight is not None:
+        # Resuming after a break (spec §5.1): last weight −10%.
+        suggested = _round_2_5(last_weight * 0.9)
+    elif all_at_rep_max and last_weight is not None:
         increment = (
             INCREMENT_LOWER_KG if pattern in LOWER_PATTERNS else INCREMENT_UPPER_KG
         )
@@ -89,7 +97,7 @@ def suggestion(
 
 
 def suggestions_for_day(
-    db: OrmSession, user_id: str, day_id: str
+    db: OrmSession, user_id: str, day_id: str, deload: bool = False
 ) -> list[Suggestion]:
     rows = db.execute(
         select(RoutineDayExercise, Exercise)
@@ -98,5 +106,6 @@ def suggestions_for_day(
         .order_by(RoutineDayExercise.order_index)
     ).all()
     return [
-        suggestion(db, user_id, ex.id, rde.rep_max, ex.pattern) for rde, ex in rows
+        suggestion(db, user_id, ex.id, rde.rep_max, ex.pattern, deload)
+        for rde, ex in rows
     ]

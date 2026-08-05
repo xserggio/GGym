@@ -91,6 +91,7 @@ export const api = {
   suggestions: (dayId: string) =>
     request<Suggestion[]>(`/me/day/${dayId}/suggestions`),
   state: () => request<StateOut>("/me/state"),
+  skip: () => request<StateOut>("/me/skip", { method: "POST" }),
   routine: () => request<RoutineOut>("/me/routine"),
   history: () => request<SessionOut[]>("/me/history"),
   bodyweight: () => request<BodyWeightSummary>("/me/bodyweight"),

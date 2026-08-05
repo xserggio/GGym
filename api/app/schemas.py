@@ -120,6 +120,8 @@ class TodayOut(BaseModel):
     next_position: int
     last_session_at: datetime | None
     day: RoutineDayOut
+    recovery_warning: bool = False
+    resume_after_break: bool = False
 
 
 # ---------- body weight ----------

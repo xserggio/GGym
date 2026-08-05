@@ -143,6 +143,16 @@ function Shell({ user, tema, onToggleTema, onLogout }: ShellProps) {
     void enqueue({ sessions: [sessionIn(active, "in_progress")] });
   };
 
+  const skip = async () => {
+    await api.skip().catch(() => undefined);
+    await load().catch(() => undefined);
+  };
+
+  const onNotes = (value: string) => {
+    if (!sessionRef.current) return;
+    setActive({ ...sessionRef.current, notes: value });
+  };
+
   const onWeight = (exIdx: number, setIdx: number, next: number) => {
     if (!sessionRef.current) return;
     setActive(patchSet(sessionRef.current, exIdx, setIdx, { weightKg: next }));
@@ -267,6 +277,7 @@ function Shell({ user, tema, onToggleTema, onLogout }: ShellProps) {
           onReps={onReps}
           onCheck={onCheck}
           onBusy={openSheet}
+          onNotes={onNotes}
           onEnd={() => void end()}
         />
         {rest.running && (
@@ -335,6 +346,7 @@ function Shell({ user, tema, onToggleTema, onLogout }: ShellProps) {
               onTreadmillToggle={toggleTreadmill}
               onLogWeight={openWeightSheet}
               onStart={() => void start()}
+              onSkip={() => void skip()}
               onSettings={() => setAjustes(true)}
             />
           ) : tab === "historial" ? (

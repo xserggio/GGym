@@ -21,6 +21,7 @@ export interface LocalExercise {
   rdeId: string;
   exerciseId: string; // performed exercise (changes on substitution)
   plannedExerciseId: string; // what the routine planned (stable)
+  plannedName: string; // the planned exercise's name, for the "en lugar de" tag
   name: string;
   restS: number;
   perSide: boolean;
@@ -36,6 +37,7 @@ export interface ActiveSession {
   id: string;
   routineDayId: string;
   startedAt: string;
+  notes: string;
   exercises: LocalExercise[];
 }
 
@@ -64,6 +66,7 @@ export function buildSession(
     id: crypto.randomUUID(),
     routineDayId: day.id,
     startedAt: new Date().toISOString(),
+    notes: "",
     exercises: day.exercises.map((rde) => {
       const sug = byExercise.get(rde.exercise.id);
       const startWeight = sug?.suggested_weight_kg ?? DEFAULT_START_WEIGHT;
@@ -71,6 +74,7 @@ export function buildSession(
         rdeId: rde.id,
         exerciseId: rde.exercise.id,
         plannedExerciseId: rde.exercise.id,
+        plannedName: rde.exercise.name,
         name: rde.exercise.name,
         restS: rde.rest_s,
         perSide: rde.exercise.per_side,
@@ -100,6 +104,7 @@ export function sessionIn(
     started_at: session.startedAt,
     ended_at: status === "completed" ? new Date().toISOString() : null,
     status,
+    notes: session.notes.trim() || null,
   };
 }
 

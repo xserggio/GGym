@@ -157,6 +157,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/me/skip": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Skip Session */
+        post: operations["skip_session_me_skip_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/me/day/{day_id}/suggestions": {
         parameters: {
             query?: never;
@@ -776,6 +793,16 @@ export interface components {
             /** Last Session At */
             last_session_at: string | null;
             day: components["schemas"]["RoutineDayOut"];
+            /**
+             * Recovery Warning
+             * @default false
+             */
+            recovery_warning: boolean;
+            /**
+             * Resume After Break
+             * @default false
+             */
+            resume_after_break: boolean;
         };
         /** TreadmillIn */
         TreadmillIn: {
@@ -1041,6 +1068,26 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["TodayOut"];
+                };
+            };
+        };
+    };
+    skip_session_me_skip_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StateOut"];
                 };
             };
         };
