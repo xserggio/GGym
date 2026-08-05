@@ -90,6 +90,17 @@ export function Sesion({
 
               {isOpen && (
                 <div className="flex flex-col gap-1.5 px-2.5 pb-2.5">
+                  {ex.suggestion && (
+                    <div
+                      className="rounded-r-field px-3 py-2 text-[13px] leading-snug text-ink"
+                      style={{
+                        background: "rgba(43,95,217,0.08)",
+                        borderLeft: "2px solid var(--blue)",
+                      }}
+                    >
+                      {ex.suggestion}
+                    </div>
+                  )}
                   {ex.sets.map((set, setIdx) => (
                     <SetRow
                       key={set.id}

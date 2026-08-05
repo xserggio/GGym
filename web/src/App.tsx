@@ -135,9 +135,10 @@ function Shell({ user, tema, onToggleTema, onLogout }: ShellProps) {
 
   useEffect(() => subscribePending(setPending), []);
 
-  const start = () => {
+  const start = async () => {
     if (!today) return;
-    const active = buildSession(today.day);
+    const suggestions = await api.suggestions(today.day.id).catch(() => []);
+    const active = buildSession(today.day, suggestions);
     setActive(active);
     void enqueue({ sessions: [sessionIn(active, "in_progress")] });
   };
@@ -333,7 +334,7 @@ function Shell({ user, tema, onToggleTema, onLogout }: ShellProps) {
               treadmillKcal={treadmillKcal}
               onTreadmillToggle={toggleTreadmill}
               onLogWeight={openWeightSheet}
-              onStart={start}
+              onStart={() => void start()}
               onSettings={() => setAjustes(true)}
             />
           ) : tab === "historial" ? (

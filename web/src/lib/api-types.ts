@@ -157,6 +157,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/me/day/{day_id}/suggestions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Suggestions */
+        get: operations["get_suggestions_me_day__day_id__suggestions_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/me/bodyweight": {
         parameters: {
             query?: never;
@@ -688,6 +705,21 @@ export interface components {
             /** Last Session At */
             last_session_at: string | null;
         };
+        /** Suggestion */
+        Suggestion: {
+            /** Exercise Id */
+            exercise_id: string;
+            /** Last Weight Kg */
+            last_weight_kg: number | null;
+            /** Last Reps */
+            last_reps: number[];
+            /** All At Rep Max */
+            all_at_rep_max: boolean;
+            /** Suggested Weight Kg */
+            suggested_weight_kg: number | null;
+            /** Last Session On */
+            last_session_on: string | null;
+        };
         /** SyncEventOut */
         SyncEventOut: {
             /** Seq */
@@ -1009,6 +1041,37 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["TodayOut"];
+                };
+            };
+        };
+    };
+    get_suggestions_me_day__day_id__suggestions_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                day_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Suggestion"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

@@ -52,6 +52,8 @@ export const es = {
     reps: "reps",
     setsProgress: (done: number, total: number) => `${done} de ${total} series`,
     offline: "cambios sin sincronizar · se guardan al recuperar red",
+    progressionHint: (sets: number, reps: number, bumpKg: string) =>
+      `la última vez completaste las ${sets} series a ${reps} repeticiones. prueba con ${bumpKg} kg más.`,
   },
   substitutions: {
     title: "alternativas",

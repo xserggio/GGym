@@ -138,6 +138,16 @@ class BodyWeightSummary(BaseModel):
     points: list[BodyWeightPoint]
 
 
+# ---------- progression (spec §5.2) ----------
+class Suggestion(BaseModel):
+    exercise_id: str
+    last_weight_kg: float | None
+    last_reps: list[int]
+    all_at_rep_max: bool
+    suggested_weight_kg: float | None
+    last_session_on: date | None
+
+
 # ---------- history ----------
 class SessionOut(_Orm):
     id: str

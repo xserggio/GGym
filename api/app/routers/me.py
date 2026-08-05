@@ -13,10 +13,11 @@ from ..schemas import (
     RoutineOut,
     SessionOut,
     StateOut,
+    Suggestion,
     TodayOut,
     VolumeGroup,
 )
-from ..services import bodyweight, export, stats, wheel
+from ..services import bodyweight, export, progression, stats, wheel
 
 router = APIRouter(prefix="/me", tags=["me"])
 
@@ -45,6 +46,15 @@ def get_today(
         last_session_at=state.last_session_at,
         day=wheel.current_day_out(db, user.id),
     )
+
+
+@router.get("/day/{day_id}/suggestions", response_model=list[Suggestion])
+def get_suggestions(
+    day_id: str,
+    user: User = Depends(get_current_user),
+    db: OrmSession = Depends(get_db),
+) -> list[Suggestion]:
+    return progression.suggestions_for_day(db, user.id, day_id)
 
 
 @router.get("/bodyweight", response_model=BodyWeightSummary)

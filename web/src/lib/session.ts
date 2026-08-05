@@ -1,4 +1,12 @@
-import type { AlternativeOut, RoutineDayOut, SessionIn, SetLogIn } from "./api";
+import { es } from "../i18n/es";
+import type {
+  AlternativeOut,
+  RoutineDayOut,
+  SessionIn,
+  SetLogIn,
+  Suggestion,
+} from "./api";
+import { numEs } from "./format";
 
 /** Client-side model of the session in progress. */
 export interface LocalSet {
@@ -18,6 +26,8 @@ export interface LocalExercise {
   targetSets: number;
   repMin: number;
   repMax: number;
+  /** Progression hint (spec §5.2), or null when there's nothing to suggest. */
+  suggestion: string | null;
   sets: LocalSet[];
 }
 
@@ -30,28 +40,51 @@ export interface ActiveSession {
 
 const DEFAULT_START_WEIGHT = 20; // empty olympic bar; the user adjusts with ±2,5
 
-export function buildSession(day: RoutineDayOut): ActiveSession {
+function progressionHint(repMax: number, sug: Suggestion | undefined): string | null {
+  if (
+    !sug ||
+    !sug.all_at_rep_max ||
+    sug.last_weight_kg == null ||
+    sug.suggested_weight_kg == null ||
+    sug.suggested_weight_kg <= sug.last_weight_kg
+  ) {
+    return null;
+  }
+  const bump = sug.suggested_weight_kg - sug.last_weight_kg;
+  return es.session.progressionHint(sug.last_reps.length, repMax, numEs(bump));
+}
+
+export function buildSession(
+  day: RoutineDayOut,
+  suggestions: Suggestion[] = [],
+): ActiveSession {
+  const byExercise = new Map(suggestions.map((s) => [s.exercise_id, s]));
   return {
     id: crypto.randomUUID(),
     routineDayId: day.id,
     startedAt: new Date().toISOString(),
-    exercises: day.exercises.map((rde) => ({
-      rdeId: rde.id,
-      exerciseId: rde.exercise.id,
-      plannedExerciseId: rde.exercise.id,
-      name: rde.exercise.name,
-      restS: rde.rest_s,
-      targetSets: rde.target_sets,
-      repMin: rde.rep_min,
-      repMax: rde.rep_max,
-      sets: Array.from({ length: rde.target_sets }, (_, i) => ({
-        id: crypto.randomUUID(),
-        setNumber: i + 1,
-        weightKg: DEFAULT_START_WEIGHT,
-        reps: rde.rep_max,
-        done: false,
-      })),
-    })),
+    exercises: day.exercises.map((rde) => {
+      const sug = byExercise.get(rde.exercise.id);
+      const startWeight = sug?.suggested_weight_kg ?? DEFAULT_START_WEIGHT;
+      return {
+        rdeId: rde.id,
+        exerciseId: rde.exercise.id,
+        plannedExerciseId: rde.exercise.id,
+        name: rde.exercise.name,
+        restS: rde.rest_s,
+        targetSets: rde.target_sets,
+        repMin: rde.rep_min,
+        repMax: rde.rep_max,
+        suggestion: progressionHint(rde.rep_max, sug),
+        sets: Array.from({ length: rde.target_sets }, (_, i) => ({
+          id: crypto.randomUUID(),
+          setNumber: i + 1,
+          weightKg: startWeight,
+          reps: rde.rep_max,
+          done: false,
+        })),
+      };
+    }),
   };
 }
 
@@ -98,7 +131,13 @@ export function swapExercise(
     exercises: session.exercises.map((ex, i) =>
       i !== exerciseIdx
         ? ex
-        : { ...ex, exerciseId: alt.id, name: alt.name, restS: alt.default_rest_s },
+        : {
+            ...ex,
+            exerciseId: alt.id,
+            name: alt.name,
+            restS: alt.default_rest_s,
+            suggestion: null,
+          },
     ),
   };
 }

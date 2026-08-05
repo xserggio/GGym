@@ -15,6 +15,7 @@ export type SessionOut = Schemas["SessionOut"];
 export type BodyWeightSummary = Schemas["BodyWeightSummary"];
 export type VolumeGroup = Schemas["VolumeGroup"];
 export type RecordOut = Schemas["RecordOut"];
+export type Suggestion = Schemas["Suggestion"];
 export type SessionIn = Schemas["SessionIn"];
 export type SetLogIn = Schemas["SetLogIn"];
 export type BodyWeightIn = Schemas["BodyWeightIn"];
@@ -87,6 +88,8 @@ export const api = {
   logout: () => request<void>("/auth/logout", { method: "POST" }),
   me: () => request<UserOut>("/auth/me"),
   today: () => request<TodayOut>("/me/today"),
+  suggestions: (dayId: string) =>
+    request<Suggestion[]>(`/me/day/${dayId}/suggestions`),
   state: () => request<StateOut>("/me/state"),
   routine: () => request<RoutineOut>("/me/routine"),
   history: () => request<SessionOut[]>("/me/history"),
