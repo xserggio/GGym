@@ -121,6 +121,8 @@ def main() -> int:
     print("== upload ==")
     sftp_mkdirs(sftp, REMOTE_ROOT)
     n = upload_tree(sftp, REPO / "api", f"{REMOTE_ROOT}/api")
+    # Wipe the previous build so stale hashed assets don't accumulate.
+    run(client, f"rm -rf {REMOTE_ROOT}/web/dist")
     n += upload_tree(sftp, dist, f"{REMOTE_ROOT}/web/dist")
     sftp_mkdirs(sftp, f"{REMOTE_ROOT}/deploy")
     for name in ("gym.service", "nginx-gym.conf", "backup.sh", ".env.example"):

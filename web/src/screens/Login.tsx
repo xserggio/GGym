@@ -8,9 +8,27 @@ interface LoginProps {
   onLogin: (user: UserOut) => void;
 }
 
+const REMEMBER_KEY = "gym.remember";
+
+interface Remembered {
+  username: string;
+  password: string;
+}
+
+function loadRemembered(): Remembered | null {
+  try {
+    const raw = localStorage.getItem(REMEMBER_KEY);
+    return raw ? (JSON.parse(raw) as Remembered) : null;
+  } catch {
+    return null;
+  }
+}
+
 export function Login({ onLogin }: LoginProps) {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [saved] = useState(loadRemembered);
+  const [username, setUsername] = useState(saved?.username ?? "");
+  const [password, setPassword] = useState(saved?.password ?? "");
+  const [remember, setRemember] = useState(saved !== null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -19,7 +37,17 @@ export function Login({ onLogin }: LoginProps) {
     setBusy(true);
     setError(null);
     try {
-      onLogin(await api.login(username, password));
+      const user = await api.login(username, password);
+      try {
+        if (remember) {
+          localStorage.setItem(REMEMBER_KEY, JSON.stringify({ username, password }));
+        } else {
+          localStorage.removeItem(REMEMBER_KEY);
+        }
+      } catch {
+        // storage unavailable (private mode) — non-fatal
+      }
+      onLogin(user);
     } catch (err) {
       setError(err instanceof ApiError ? es.login.error : String(err));
       setBusy(false);
@@ -36,6 +64,8 @@ export function Login({ onLogin }: LoginProps) {
             {es.login.user}
           </span>
           <input
+            name="username"
+            autoComplete="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             autoCapitalize="none"
@@ -50,10 +80,22 @@ export function Login({ onLogin }: LoginProps) {
           </span>
           <input
             type="password"
+            name="password"
+            autoComplete="current-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="h-touch rounded-field border border-line bg-paper px-3 text-ink"
           />
+        </label>
+
+        <label className="flex items-center gap-2 text-sm text-gris">
+          <input
+            type="checkbox"
+            checked={remember}
+            onChange={(e) => setRemember(e.target.checked)}
+            className="h-4 w-4 accent-blue"
+          />
+          {es.login.remember}
         </label>
 
         {error && <p className="text-sm text-red">{error}</p>}

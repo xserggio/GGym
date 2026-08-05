@@ -24,6 +24,7 @@ export const es = {
     enter: "entrar",
     error: "usuario o contraseña incorrectos",
     loading: "entrando…",
+    remember: "recordar contraseña en este dispositivo",
   },
   today: {
     now: "toca ahora",
