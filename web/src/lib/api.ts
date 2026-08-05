@@ -93,6 +93,7 @@ export const api = {
   bodyweight: () => request<BodyWeightSummary>("/me/bodyweight"),
   volume: () => request<VolumeGroup[]>("/me/volume"),
   records: () => request<RecordOut[]>("/me/records"),
+  exportData: () => request<Record<string, unknown>>("/me/export"),
   exercises: () => request<ExerciseSummary[]>("/exercises"),
   alternatives: (exerciseId: string) =>
     request<AlternativeOut[]>(`/exercises/${exerciseId}/alternatives`),

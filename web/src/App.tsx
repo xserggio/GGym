@@ -25,6 +25,7 @@ import {
 import { enqueue, flush, startSync, subscribePending } from "./lib/sync";
 import { useRestTimer } from "./lib/useRestTimer";
 import { useStopwatch } from "./lib/useStopwatch";
+import { Ajustes } from "./screens/Ajustes";
 import { Historial } from "./screens/Historial";
 import { Hoy } from "./screens/Hoy";
 import { Login } from "./screens/Login";
@@ -62,22 +63,22 @@ export function App() {
     api.me().then(setUser).catch(() => setUser(null));
   }, []);
 
+  const toggleTema = () => setTema(tema === "clara" ? "oscura" : "clara");
+
   return (
     <div data-tema={tema} className="flex min-h-full justify-center bg-bg">
       <div className="relative flex h-[100dvh] w-full max-w-[390px] flex-col overflow-hidden bg-bg">
-        <button
-          type="button"
-          onClick={() => setTema(tema === "clara" ? "oscura" : "clara")}
-          className="absolute right-2 top-2 z-10 rounded-chip border border-line bg-paper/70 px-2 py-1 font-mono text-[9px] text-gris"
-        >
-          {tema === "clara" ? "oscura" : "clara"}
-        </button>
         {user === undefined ? (
           <div className="flex h-full items-center justify-center font-mono text-xs text-gris">
             …
           </div>
         ) : user ? (
-          <Shell onLogout={() => setUser(null)} />
+          <Shell
+            user={user}
+            tema={tema}
+            onToggleTema={toggleTema}
+            onLogout={() => setUser(null)}
+          />
         ) : (
           <Login onLogin={setUser} />
         )}
@@ -87,10 +88,13 @@ export function App() {
 }
 
 interface ShellProps {
+  user: UserOut;
+  tema: Tema;
+  onToggleTema: () => void;
   onLogout: () => void;
 }
 
-function Shell({ onLogout }: ShellProps) {
+function Shell({ user, tema, onToggleTema, onLogout }: ShellProps) {
   const [today, setToday] = useState<TodayOut | null>(null);
   const [positions, setPositions] = useState(5);
   const [session, setSession] = useState<ActiveSession | null>(null);
@@ -101,6 +105,7 @@ function Shell({ onLogout }: ShellProps) {
   const [weightSheetOpen, setWeightSheetOpen] = useState(false);
   const [weightInput, setWeightInput] = useState(70);
   const [tab, setTab] = useState<Tab>("hoy");
+  const [ajustes, setAjustes] = useState(false);
   const sessionRef = useRef<ActiveSession | null>(null);
   const rest = useRestTimer();
   const treadmill = useStopwatch();
@@ -301,6 +306,18 @@ function Shell({ onLogout }: ShellProps) {
     );
   }
 
+  if (ajustes) {
+    return (
+      <Ajustes
+        user={user}
+        tema={tema}
+        onToggleTema={onToggleTema}
+        onBack={() => setAjustes(false)}
+        onLogout={onLogout}
+      />
+    );
+  }
+
   return (
     <>
       <div className="flex h-full flex-col">
@@ -316,10 +333,10 @@ function Shell({ onLogout }: ShellProps) {
               onTreadmillToggle={toggleTreadmill}
               onLogWeight={openWeightSheet}
               onStart={start}
-              onLogout={onLogout}
+              onSettings={() => setAjustes(true)}
             />
           ) : (
-            <Historial onLogout={onLogout} />
+            <Historial onSettings={() => setAjustes(true)} />
           )}
         </div>
         <BottomNav active={tab} onSelect={setTab} />

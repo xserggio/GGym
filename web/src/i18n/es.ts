@@ -61,6 +61,16 @@ export const es = {
     today: "hoy",
     history: "historial",
   },
+  settings: {
+    title: "ajustes",
+    profile: "perfil",
+    appearance: "apariencia",
+    light: "clara",
+    dark: "oscura",
+    export: "exportar datos (json)",
+    exporting: "exportando…",
+    logout: "salir",
+  },
   history: {
     title: "historial",
     empty:

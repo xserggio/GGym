@@ -16,7 +16,7 @@ from ..schemas import (
     TodayOut,
     VolumeGroup,
 )
-from ..services import bodyweight, stats, wheel
+from ..services import bodyweight, export, stats, wheel
 
 router = APIRouter(prefix="/me", tags=["me"])
 
@@ -87,6 +87,13 @@ def get_history(
         )
         for s, day, count in rows
     ]
+
+
+@router.get("/export")
+def get_export(
+    user: User = Depends(get_current_user), db: OrmSession = Depends(get_db)
+) -> dict:
+    return export.export_all(db, user)
 
 
 @router.get("/volume", response_model=list[VolumeGroup])

@@ -16,7 +16,7 @@ interface HoyProps {
   onTreadmillToggle: () => void;
   onLogWeight: () => void;
   onStart: () => void;
-  onLogout: () => void;
+  onSettings: () => void;
 }
 
 function planLabel(rde: RoutineDayExerciseOut): string {
@@ -34,7 +34,7 @@ export function Hoy({
   onTreadmillToggle,
   onLogWeight,
   onStart,
-  onLogout,
+  onSettings,
 }: HoyProps) {
   const { day } = today;
   const totalSets = day.exercises.reduce((acc, e) => acc + e.target_sets, 0);
@@ -48,8 +48,8 @@ export function Hoy({
             <div className="ml-auto">
               <WheelIndicator positions={positions} current={today.next_position} />
             </div>
-            <Button variant="ghost" onClick={onLogout} className="!min-h-0 !px-3 !py-1.5">
-              {es.actions.logout}
+            <Button variant="ghost" onClick={onSettings} className="!min-h-0 !px-3 !py-1.5">
+              {es.actions.settings}
             </Button>
           </header>
 

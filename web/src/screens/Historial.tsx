@@ -14,7 +14,7 @@ import {
 import { dateShortEs, durationMin, numEs } from "../lib/format";
 
 interface HistorialProps {
-  onLogout: () => void;
+  onSettings: () => void;
 }
 
 interface Data {
@@ -67,7 +67,7 @@ function bodyweightLine(points: BodyWeightSummary["points"]): string | null {
     .join(" ");
 }
 
-export function Historial({ onLogout }: HistorialProps) {
+export function Historial({ onSettings }: HistorialProps) {
   const [data, setData] = useState<Data | null>(null);
 
   useEffect(() => {
@@ -93,8 +93,8 @@ export function Historial({ onLogout }: HistorialProps) {
     <div className="h-full overflow-y-auto px-4 pb-6 pt-4">
       <header className="mb-4 flex items-center">
         <h1 className="font-display text-3xl">{es.history.title}</h1>
-        <Button variant="ghost" onClick={onLogout} className="ml-auto !min-h-0 !px-3 !py-1.5">
-          {es.actions.logout}
+        <Button variant="ghost" onClick={onSettings} className="ml-auto !min-h-0 !px-3 !py-1.5">
+          {es.actions.settings}
         </Button>
       </header>
 
