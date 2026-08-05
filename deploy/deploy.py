@@ -157,7 +157,7 @@ def main() -> int:
     patch_nginx(client, sftp)
 
     print("== health ==")
-    run(client, "sleep 1; curl -s -o /dev/null -w 'backend %{http_code}\\n' http://127.0.0.1:8100/health", check=False)
+    run(client, "sleep 3; curl -s -o /dev/null -w 'backend %{http_code}\\n' http://127.0.0.1:8100/health", check=False)
 
     sftp.close()
     client.close()

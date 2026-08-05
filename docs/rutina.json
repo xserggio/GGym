@@ -1,0 +1,573 @@
+{
+  "$comment": "Seed inicial. Cargar con: python -m app.seed.load seed-rutina.json — Los ids son slugs estables; no cambiarlos una vez en produccion.",
+  "patterns": [
+    "empuje_horizontal",
+    "empuje_vertical",
+    "tiron_horizontal",
+    "tiron_vertical",
+    "cuadriceps",
+    "cadena_posterior",
+    "gluteo",
+    "gemelo",
+    "deltoides_lateral",
+    "triceps",
+    "biceps",
+    "core"
+  ],
+  "exercises": [
+    {
+      "id": "press-banca",
+      "name": "Press banca",
+      "pattern": "empuje_horizontal",
+      "equipment": "barra",
+      "default_rest_s": 120,
+      "description": "Tumbado boca arriba en banco plano, bajas la barra al pecho y empujas hasta estirar los brazos. Trabaja pecho, hombro delantero y triceps."
+    },
+    {
+      "id": "remo-barra",
+      "name": "Remo con barra",
+      "pattern": "tiron_horizontal",
+      "equipment": "barra",
+      "default_rest_s": 120,
+      "description": "Inclinado hacia delante unos 45 grados con la espalda recta, tiras la barra hacia el abdomen. Es el movimiento opuesto al press banca y trabaja toda la espalda."
+    },
+    {
+      "id": "press-militar-pie",
+      "name": "Press militar de pie",
+      "pattern": "empuje_vertical",
+      "equipment": "barra",
+      "default_rest_s": 120,
+      "description": "De pie, con la barra a la altura de las claviculas, empujas por encima de la cabeza sin arquear la espalda. Trabaja los hombros."
+    },
+    {
+      "id": "jalon-neutro",
+      "name": "Jalon agarre neutro",
+      "pattern": "tiron_vertical",
+      "equipment": "polea",
+      "default_rest_s": 90,
+      "description": "Sentado en la polea alta con el agarre en V y las palmas enfrentadas, tiras hasta el pecho. Es la dominada asistida por maquina y trabaja los dorsales."
+    },
+    {
+      "id": "elevaciones-laterales-polea",
+      "name": "Elevaciones laterales en polea",
+      "pattern": "deltoides_lateral",
+      "equipment": "polea",
+      "default_rest_s": 60,
+      "description": "De pie junto a una polea baja, con el brazo casi estirado subes lateralmente hasta la altura del hombro. Peso muy ligero. Es el ejercicio que da anchura a los hombros."
+    },
+    {
+      "id": "sentadilla",
+      "name": "Sentadilla",
+      "pattern": "cuadriceps",
+      "equipment": "barra",
+      "default_rest_s": 150,
+      "description": "Barra apoyada sobre los trapecios, bajas hasta que el muslo pase de la paralela y subes. Trabaja cuadriceps y gluteo."
+    },
+    {
+      "id": "peso-muerto-rumano",
+      "name": "Peso muerto rumano",
+      "pattern": "cadena_posterior",
+      "equipment": "barra",
+      "default_rest_s": 120,
+      "description": "De pie con la barra delante y las piernas casi rectas, bajas empujando la cadera hacia atras hasta notar el estiron detras del muslo. La barra no toca el suelo y la espalda va recta todo el recorrido."
+    },
+    {
+      "id": "prensa",
+      "name": "Prensa",
+      "pattern": "cuadriceps",
+      "equipment": "maquina",
+      "default_rest_s": 120,
+      "description": "Sentado en la maquina inclinada, empujas la plataforma con los pies. Trabaja cuadriceps y gluteo sin cargar la espalda."
+    },
+    {
+      "id": "curl-femoral-tumbado",
+      "name": "Curl femoral tumbado",
+      "pattern": "cadena_posterior",
+      "equipment": "maquina",
+      "default_rest_s": 90,
+      "description": "Boca abajo en la maquina con el rodillo sobre los tobillos, flexionas llevando los talones hacia el gluteo. Trabaja los isquiotibiales."
+    },
+    {
+      "id": "gemelos-pie",
+      "name": "Gemelos de pie",
+      "pattern": "gemelo",
+      "equipment": "maquina",
+      "default_rest_s": 60,
+      "description": "Subes sobre las puntas de los pies con peso encima, con recorrido completo y sin rebotar abajo."
+    },
+    {
+      "id": "rueda-abdominal",
+      "name": "Rueda abdominal",
+      "pattern": "core",
+      "equipment": "peso_corporal",
+      "default_rest_s": 60,
+      "description": "De rodillas, ruedas hacia delante estirando el cuerpo sin arquear la lumbar y vuelves. Trabaja todo el core."
+    },
+    {
+      "id": "press-inclinado-mancuernas",
+      "name": "Press inclinado con mancuernas",
+      "pattern": "empuje_horizontal",
+      "equipment": "mancuernas",
+      "default_rest_s": 120,
+      "description": "Banco a 30 grados, subes las mancuernas desde el pecho hasta estirar los brazos. Enfatiza la parte alta del pecho."
+    },
+    {
+      "id": "press-hombro-maquina",
+      "name": "Press de hombro en maquina",
+      "pattern": "empuje_vertical",
+      "equipment": "maquina",
+      "default_rest_s": 90,
+      "description": "Sentado, empujas los agarres hacia arriba. Mismo movimiento que el press militar pero guiado, para apretar sin preocuparte del equilibrio."
+    },
+    {
+      "id": "cruces-polea",
+      "name": "Cruces en polea",
+      "pattern": "empuje_horizontal",
+      "equipment": "polea",
+      "default_rest_s": 60,
+      "description": "Entre dos poleas, con los brazos abiertos y ligeramente flexionados, los juntas delante del pecho como si abrazaras. Manten el estiramiento en todo el recorrido."
+    },
+    {
+      "id": "elevaciones-laterales-mancuernas",
+      "name": "Elevaciones laterales con mancuernas",
+      "pattern": "deltoides_lateral",
+      "equipment": "mancuernas",
+      "default_rest_s": 60,
+      "description": "De pie con una mancuerna en cada mano, subes lateralmente hasta la altura del hombro. Peso ligero y sin impulso."
+    },
+    {
+      "id": "triceps-polea",
+      "name": "Triceps en polea",
+      "pattern": "triceps",
+      "equipment": "polea",
+      "default_rest_s": 60,
+      "description": "De pie frente a la polea alta con cuerda o barra, estiras los codos hacia abajo manteniendo los brazos pegados al cuerpo."
+    },
+    {
+      "id": "dominadas",
+      "name": "Dominadas",
+      "pattern": "tiron_vertical",
+      "equipment": "peso_corporal",
+      "default_rest_s": 120,
+      "description": "Colgado de la barra, subes hasta pasar la barbilla. Si no salen, usar la maquina asistida o el jalon al pecho."
+    },
+    {
+      "id": "remo-sentado-polea",
+      "name": "Remo sentado en polea",
+      "pattern": "tiron_horizontal",
+      "equipment": "polea",
+      "default_rest_s": 90,
+      "description": "Sentado frente a la polea baja con los pies apoyados, tiras el agarre hacia el ombligo juntando los omoplatos."
+    },
+    {
+      "id": "remo-maquina-pecho-apoyado",
+      "name": "Remo en maquina con pecho apoyado",
+      "pattern": "tiron_horizontal",
+      "equipment": "maquina",
+      "default_rest_s": 90,
+      "description": "Sentado con el pecho contra el respaldo, tiras de los agarres hacia atras. Al estar apoyado la lumbar no trabaja y la espalda se lleva todo el esfuerzo."
+    },
+    {
+      "id": "face-pull",
+      "name": "Face pull",
+      "pattern": "tiron_horizontal",
+      "equipment": "polea",
+      "default_rest_s": 60,
+      "description": "Polea alta con cuerda, tiras hacia la cara separando las manos y terminando con los codos altos. Poco peso. Compensa las horas de escritorio y protege el hombro."
+    },
+    {
+      "id": "curl-barra-z",
+      "name": "Curl con barra Z",
+      "pattern": "biceps",
+      "equipment": "barra",
+      "default_rest_s": 60,
+      "description": "Con la barra ondulada, que es mas amable con la muneca, flexionas los codos sin balancear el cuerpo. Trabaja el biceps."
+    },
+    {
+      "id": "curl-martillo",
+      "name": "Curl martillo",
+      "pattern": "biceps",
+      "equipment": "mancuernas",
+      "default_rest_s": 60,
+      "description": "Con mancuernas y las palmas enfrentadas, como si sujetaras un martillo. Trabaja el braquial, que empuja el biceps hacia arriba y da grosor al brazo."
+    },
+    {
+      "id": "hack-squat",
+      "name": "Hack squat",
+      "pattern": "cuadriceps",
+      "equipment": "maquina",
+      "default_rest_s": 120,
+      "description": "Maquina inclinada donde te apoyas de espaldas con los hombros bajo unas almohadillas y bajas. Es una sentadilla guiada: al no cargar la espalda permite llevar el cuadriceps mucho mas al limite."
+    },
+    {
+      "id": "hip-thrust",
+      "name": "Hip thrust",
+      "pattern": "gluteo",
+      "equipment": "barra",
+      "default_rest_s": 120,
+      "description": "Espalda apoyada en un banco y la barra sobre la cadera con almohadilla, subes hasta alinear tronco y muslos. El mejor ejercicio de gluteo."
+    },
+    {
+      "id": "sentadilla-bulgara",
+      "name": "Sentadilla bulgara",
+      "pattern": "cuadriceps",
+      "equipment": "mancuernas",
+      "default_rest_s": 90,
+      "per_side": true,
+      "description": "Con un pie atras apoyado en un banco, bajas con la pierna de delante. Con poco peso ya es suficiente. Corrige descompensaciones entre piernas."
+    },
+    {
+      "id": "extension-cuadriceps",
+      "name": "Extension de cuadriceps",
+      "pattern": "cuadriceps",
+      "equipment": "maquina",
+      "default_rest_s": 60,
+      "description": "Sentado con el rodillo sobre los tobillos, estiras las piernas hacia arriba. Aislamiento puro de cuadriceps."
+    },
+    {
+      "id": "curl-femoral-sentado",
+      "name": "Curl femoral sentado",
+      "pattern": "cadena_posterior",
+      "equipment": "maquina",
+      "default_rest_s": 90,
+      "description": "Como el curl femoral tumbado pero sentado. Esta version estira mas el isquiotibial."
+    },
+
+    {
+      "id": "press-banca-mancuernas",
+      "name": "Press banca con mancuernas",
+      "pattern": "empuje_horizontal",
+      "equipment": "mancuernas",
+      "default_rest_s": 120,
+      "description": "Press de pecho en banco plano con mancuernas. Mayor recorrido que con barra."
+    },
+    {
+      "id": "press-pecho-maquina",
+      "name": "Press de pecho en maquina",
+      "pattern": "empuje_horizontal",
+      "equipment": "maquina",
+      "default_rest_s": 90,
+      "description": "Press de pecho guiado. Util para apretar sin necesidad de companero de seguridad."
+    },
+    {
+      "id": "fondos-paralelas",
+      "name": "Fondos en paralelas",
+      "pattern": "empuje_horizontal",
+      "equipment": "peso_corporal",
+      "default_rest_s": 120,
+      "description": "Suspendido entre dos barras paralelas, bajas flexionando los codos. Inclinado hacia delante trabaja mas pecho, vertical mas triceps."
+    },
+    {
+      "id": "pec-deck",
+      "name": "Pec deck",
+      "pattern": "empuje_horizontal",
+      "equipment": "maquina",
+      "default_rest_s": 60,
+      "description": "Sentado, juntas los brazos delante del pecho contra la resistencia de la maquina. Aislamiento de pectoral."
+    },
+    {
+      "id": "press-militar-mancuernas",
+      "name": "Press militar con mancuernas",
+      "pattern": "empuje_vertical",
+      "equipment": "mancuernas",
+      "default_rest_s": 120,
+      "description": "Press de hombro con mancuernas, sentado o de pie."
+    },
+    {
+      "id": "press-arnold",
+      "name": "Press Arnold",
+      "pattern": "empuje_vertical",
+      "equipment": "mancuernas",
+      "default_rest_s": 90,
+      "description": "Press de hombro con giro de muneca durante la subida. Involucra mas el deltoides delantero."
+    },
+    {
+      "id": "remo-t",
+      "name": "Remo T",
+      "pattern": "tiron_horizontal",
+      "equipment": "barra",
+      "default_rest_s": 120,
+      "description": "Barra fijada por un extremo al suelo con agarre en V. Mismo movimiento que el remo con barra pero mas comodo para la zona lumbar."
+    },
+    {
+      "id": "remo-mancuerna-unilateral",
+      "name": "Remo con mancuerna a una mano",
+      "pattern": "tiron_horizontal",
+      "equipment": "mancuernas",
+      "default_rest_s": 90,
+      "per_side": true,
+      "description": "Con una rodilla y una mano apoyadas en un banco, tiras la mancuerna hacia la cadera."
+    },
+    {
+      "id": "remo-polea-agarre-ancho",
+      "name": "Remo en polea agarre ancho",
+      "pattern": "tiron_horizontal",
+      "equipment": "polea",
+      "default_rest_s": 90,
+      "description": "Remo sentado con barra ancha y codos abiertos. Enfatiza la espalda alta."
+    },
+    {
+      "id": "jalon-agarre-ancho",
+      "name": "Jalon agarre ancho",
+      "pattern": "tiron_vertical",
+      "equipment": "polea",
+      "default_rest_s": 90,
+      "description": "Jalon al pecho con agarre ancho y palmas hacia delante. Enfatiza la anchura del dorsal."
+    },
+    {
+      "id": "dominadas-asistidas",
+      "name": "Dominadas asistidas",
+      "pattern": "tiron_vertical",
+      "equipment": "maquina",
+      "default_rest_s": 120,
+      "description": "Dominada con contrapeso: te apoyas de rodillas en la plataforma y la maquina te ayuda. A mas peso seleccionado, mas ayuda."
+    },
+    {
+      "id": "pullover-polea",
+      "name": "Pullover en polea",
+      "pattern": "tiron_vertical",
+      "equipment": "polea",
+      "default_rest_s": 60,
+      "description": "De pie frente a la polea alta con los brazos estirados, bajas la barra hasta los muslos sin flexionar los codos. Aislamiento de dorsal."
+    },
+    {
+      "id": "sentadilla-frontal",
+      "name": "Sentadilla frontal",
+      "pattern": "cuadriceps",
+      "equipment": "barra",
+      "default_rest_s": 150,
+      "description": "Sentadilla con la barra apoyada sobre los deltoides delanteros. Mas exigente con el cuadriceps y el core."
+    },
+    {
+      "id": "sentadilla-multipower",
+      "name": "Sentadilla en multipower",
+      "pattern": "cuadriceps",
+      "equipment": "maquina",
+      "default_rest_s": 120,
+      "description": "Sentadilla con la barra guiada en railes. Util cuando el rack esta ocupado o para trabajar sin preocuparse del equilibrio."
+    },
+    {
+      "id": "zancadas-caminando",
+      "name": "Zancadas caminando",
+      "pattern": "cuadriceps",
+      "equipment": "mancuernas",
+      "default_rest_s": 90,
+      "per_side": true,
+      "description": "Avanzas dando zancadas largas bajando la rodilla trasera casi al suelo, con mancuernas en las manos."
+    },
+    {
+      "id": "sentadilla-goblet",
+      "name": "Sentadilla goblet",
+      "pattern": "cuadriceps",
+      "equipment": "mancuernas",
+      "default_rest_s": 90,
+      "description": "Sentadilla sujetando una mancuerna o pesa rusa contra el pecho. Buena para aprender el patron."
+    },
+    {
+      "id": "peso-muerto-rumano-mancuernas",
+      "name": "Peso muerto rumano con mancuernas",
+      "pattern": "cadena_posterior",
+      "equipment": "mancuernas",
+      "default_rest_s": 90,
+      "description": "Mismo movimiento que con barra, con una mancuerna en cada mano."
+    },
+    {
+      "id": "buenos-dias",
+      "name": "Buenos dias",
+      "pattern": "cadena_posterior",
+      "equipment": "barra",
+      "default_rest_s": 120,
+      "description": "Con la barra sobre los trapecios, inclinas el tronco hacia delante con la espalda recta empujando la cadera atras. Poco peso."
+    },
+    {
+      "id": "curl-femoral-pie",
+      "name": "Curl femoral de pie",
+      "pattern": "cadena_posterior",
+      "equipment": "maquina",
+      "default_rest_s": 60,
+      "per_side": true,
+      "description": "Flexion de rodilla de pie, una pierna cada vez."
+    },
+    {
+      "id": "hiperextensiones",
+      "name": "Hiperextensiones",
+      "pattern": "cadena_posterior",
+      "equipment": "maquina",
+      "default_rest_s": 60,
+      "description": "En el banco a 45 grados, bajas el tronco y subes hasta alinearlo con las piernas. Trabaja lumbar, gluteo e isquios."
+    },
+    {
+      "id": "hip-thrust-maquina",
+      "name": "Hip thrust en maquina",
+      "pattern": "gluteo",
+      "equipment": "maquina",
+      "default_rest_s": 90,
+      "description": "Version guiada del hip thrust, sin necesidad de montar la barra y el banco."
+    },
+    {
+      "id": "patada-gluteo-polea",
+      "name": "Patada de gluteo en polea",
+      "pattern": "gluteo",
+      "equipment": "polea",
+      "default_rest_s": 60,
+      "per_side": true,
+      "description": "Con una tobillera en la polea baja, llevas la pierna hacia atras estirada. Aislamiento de gluteo."
+    },
+    {
+      "id": "puente-gluteo",
+      "name": "Puente de gluteo",
+      "pattern": "gluteo",
+      "equipment": "peso_corporal",
+      "default_rest_s": 60,
+      "description": "Tumbado boca arriba con los pies apoyados, subes la cadera. Version sin material del hip thrust."
+    },
+    {
+      "id": "press-frances",
+      "name": "Press frances",
+      "pattern": "triceps",
+      "equipment": "barra",
+      "default_rest_s": 60,
+      "description": "Tumbado, bajas la barra hacia la frente flexionando solo los codos."
+    },
+    {
+      "id": "fondos-banco",
+      "name": "Fondos en banco",
+      "pattern": "triceps",
+      "equipment": "peso_corporal",
+      "default_rest_s": 60,
+      "description": "Con las manos apoyadas en un banco a la espalda, bajas y subes flexionando los codos."
+    },
+    {
+      "id": "extension-triceps-sobre-cabeza",
+      "name": "Extension de triceps sobre la cabeza",
+      "pattern": "triceps",
+      "equipment": "polea",
+      "default_rest_s": 60,
+      "description": "De espaldas a la polea, con la cuerda por detras de la cabeza, estiras los codos hacia arriba. Estira mas la cabeza larga del triceps."
+    },
+    {
+      "id": "curl-mancuernas",
+      "name": "Curl con mancuernas",
+      "pattern": "biceps",
+      "equipment": "mancuernas",
+      "default_rest_s": 60,
+      "description": "Curl de biceps alternando brazos o a la vez."
+    },
+    {
+      "id": "curl-banco-inclinado",
+      "name": "Curl en banco inclinado",
+      "pattern": "biceps",
+      "equipment": "mancuernas",
+      "default_rest_s": 60,
+      "description": "Sentado en un banco inclinado con los brazos colgando atras. Estira mas el biceps."
+    },
+    {
+      "id": "curl-polea-baja",
+      "name": "Curl en polea baja",
+      "pattern": "biceps",
+      "equipment": "polea",
+      "default_rest_s": 60,
+      "description": "Curl de biceps con polea, que mantiene tension constante en todo el recorrido."
+    },
+    {
+      "id": "elevaciones-piernas-colgado",
+      "name": "Elevaciones de piernas colgado",
+      "pattern": "core",
+      "equipment": "peso_corporal",
+      "default_rest_s": 60,
+      "description": "Colgado de la barra, subes las piernas sin balancearte."
+    },
+    {
+      "id": "plancha",
+      "name": "Plancha",
+      "pattern": "core",
+      "equipment": "peso_corporal",
+      "default_rest_s": 60,
+      "description": "Apoyado sobre antebrazos y puntas de los pies, cuerpo alineado. Se mide en segundos, no en repeticiones."
+    },
+    {
+      "id": "crunch-polea",
+      "name": "Crunch en polea",
+      "pattern": "core",
+      "equipment": "polea",
+      "default_rest_s": 60,
+      "description": "De rodillas frente a la polea alta con la cuerda tras la nuca, flexionas el tronco. Permite progresar en carga."
+    }
+  ],
+  "routines": [
+    {
+      "id": "ulppl-5d",
+      "name": "Upper / Lower / Push / Pull / Legs",
+      "progression": {
+        "rule": "all_sets_at_rep_max",
+        "increment_upper_kg": 2.5,
+        "increment_lower_kg": 5.0,
+        "lower_patterns": ["cuadriceps", "cadena_posterior", "gluteo"]
+      },
+      "days": [
+        {
+          "position": 1,
+          "name": "Torso (fuerza)",
+          "suggested_dow": 1,
+          "exercises": [
+            { "exercise_id": "press-banca", "sets": 4, "rep_min": 6, "rep_max": 8 },
+            { "exercise_id": "remo-barra", "sets": 4, "rep_min": 8, "rep_max": 10 },
+            { "exercise_id": "press-militar-pie", "sets": 3, "rep_min": 8, "rep_max": 8 },
+            { "exercise_id": "jalon-neutro", "sets": 3, "rep_min": 10, "rep_max": 10 },
+            { "exercise_id": "elevaciones-laterales-polea", "sets": 3, "rep_min": 15, "rep_max": 15 }
+          ]
+        },
+        {
+          "position": 2,
+          "name": "Pierna (fuerza)",
+          "suggested_dow": 2,
+          "exercises": [
+            { "exercise_id": "sentadilla", "sets": 4, "rep_min": 5, "rep_max": 8 },
+            { "exercise_id": "peso-muerto-rumano", "sets": 3, "rep_min": 8, "rep_max": 10 },
+            { "exercise_id": "prensa", "sets": 3, "rep_min": 12, "rep_max": 12 },
+            { "exercise_id": "curl-femoral-tumbado", "sets": 3, "rep_min": 12, "rep_max": 12 },
+            { "exercise_id": "gemelos-pie", "sets": 4, "rep_min": 12, "rep_max": 12 },
+            { "exercise_id": "rueda-abdominal", "sets": 3, "rep_min": 10, "rep_max": 10 }
+          ]
+        },
+        {
+          "position": 3,
+          "name": "Empuje",
+          "suggested_dow": 4,
+          "exercises": [
+            { "exercise_id": "press-inclinado-mancuernas", "sets": 4, "rep_min": 8, "rep_max": 10 },
+            { "exercise_id": "press-hombro-maquina", "sets": 3, "rep_min": 10, "rep_max": 10 },
+            { "exercise_id": "cruces-polea", "sets": 3, "rep_min": 15, "rep_max": 15 },
+            { "exercise_id": "elevaciones-laterales-mancuernas", "sets": 3, "rep_min": 15, "rep_max": 15 },
+            { "exercise_id": "triceps-polea", "sets": 3, "rep_min": 12, "rep_max": 12 }
+          ]
+        },
+        {
+          "position": 4,
+          "name": "Tiron",
+          "suggested_dow": 5,
+          "exercises": [
+            { "exercise_id": "dominadas", "sets": 4, "rep_min": 8, "rep_max": 8 },
+            { "exercise_id": "remo-sentado-polea", "sets": 4, "rep_min": 10, "rep_max": 10 },
+            { "exercise_id": "remo-maquina-pecho-apoyado", "sets": 3, "rep_min": 12, "rep_max": 12 },
+            { "exercise_id": "face-pull", "sets": 3, "rep_min": 15, "rep_max": 15 },
+            { "exercise_id": "curl-barra-z", "sets": 3, "rep_min": 10, "rep_max": 10 },
+            { "exercise_id": "curl-martillo", "sets": 2, "rep_min": 12, "rep_max": 12 }
+          ]
+        },
+        {
+          "position": 5,
+          "name": "Pierna (hipertrofia)",
+          "suggested_dow": 6,
+          "exercises": [
+            { "exercise_id": "hack-squat", "sets": 4, "rep_min": 10, "rep_max": 12 },
+            { "exercise_id": "hip-thrust", "sets": 3, "rep_min": 10, "rep_max": 10 },
+            { "exercise_id": "sentadilla-bulgara", "sets": 3, "rep_min": 10, "rep_max": 10 },
+            { "exercise_id": "extension-cuadriceps", "sets": 3, "rep_min": 15, "rep_max": 15 },
+            { "exercise_id": "curl-femoral-sentado", "sets": 3, "rep_min": 12, "rep_max": 12 }
+          ]
+        }
+      ]
+    }
+  ]
+}
