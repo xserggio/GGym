@@ -13,7 +13,7 @@ import argparse
 import json
 from pathlib import Path
 
-from sqlalchemy import delete, select
+from sqlalchemy import select
 from sqlalchemy.orm import Session as OrmSession
 
 from app.db import SessionLocal
@@ -61,11 +61,16 @@ def load_catalog(db: OrmSession, data: dict) -> int:
 def load_routine_for_user(
     db: OrmSession, user: User, data: dict, replace: bool = False
 ) -> bool:
-    existing_id = db.scalar(
-        select(Routine.id).where(Routine.user_id == user.id).limit(1)
-    )
-    if existing_id and not replace:
+    existing = db.scalars(
+        select(Routine).where(Routine.user_id == user.id, Routine.active.is_(True))
+    ).all()
+    if existing and not replace:
         return False
+    # Deactivate (never delete) the old routine so past sessions that reference
+    # its days keep working; the new routine becomes the active one.
+    for old in existing:
+        old.active = False
+    db.flush()
 
     template = data["routines"][0]
     routine = Routine(user_id=user.id, name=template["name"], active=True)
@@ -101,21 +106,6 @@ def load_routine_for_user(
     else:
         state.routine_id = routine.id
         state.next_position = 1
-    db.flush()
-
-    # Remove the previous routine now that state no longer references it.
-    if existing_id and replace:
-        old_days = db.scalars(
-            select(RoutineDay.id).where(RoutineDay.routine_id == existing_id)
-        ).all()
-        if old_days:
-            db.execute(
-                delete(RoutineDayExercise).where(
-                    RoutineDayExercise.routine_day_id.in_(old_days)
-                )
-            )
-            db.execute(delete(RoutineDay).where(RoutineDay.id.in_(old_days)))
-        db.execute(delete(Routine).where(Routine.id == existing_id))
     return True
 
 
