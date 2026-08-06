@@ -77,8 +77,17 @@ export function Sesion({
       <div className="mt-3 flex flex-col gap-3">
         {session.exercises.map((ex, exIdx) => {
           const isOpen = open === exIdx;
+          const done = ex.sets.filter((s) => s.done).length;
+          const allDone = ex.sets.length > 0 && done === ex.sets.length;
           return (
-            <Card key={ex.rdeId} className="overflow-hidden">
+            <Card
+              key={ex.rdeId}
+              className="overflow-hidden"
+              style={{
+                borderLeft: allDone ? "3px solid var(--green)" : undefined,
+                background: allDone ? "var(--tint)" : undefined,
+              }}
+            >
               <button
                 type="button"
                 onClick={() => setOpen(isOpen ? -1 : exIdx)}
@@ -89,11 +98,17 @@ export function Sesion({
                   <div className="text-[15px] font-medium leading-tight">
                     {ex.plannedName}
                   </div>
-                  <div className="mt-1 font-mono text-[11px] text-gris">
-                    {exerciseState(ex)}
+                  <div
+                    className="mt-1 font-mono text-[11px]"
+                    style={{ color: allDone ? "var(--green)" : "var(--gris)" }}
+                  >
+                    {allDone ? `✓ ${es.session.completed}` : exerciseState(ex)}
                   </div>
                 </div>
-                <span className="w-4 text-center font-mono text-xs text-gris">
+                <span
+                  className="w-4 text-center font-mono text-xs"
+                  style={{ color: allDone ? "var(--green)" : "var(--gris)" }}
+                >
                   {isOpen ? "−" : "+"}
                 </span>
               </button>

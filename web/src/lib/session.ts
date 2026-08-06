@@ -159,6 +159,52 @@ export function substitute(
   };
 }
 
+export interface SessionSummary {
+  positionLabel: string;
+  durationMin: number;
+  volumeKg: number;
+  setsDone: number;
+  kcal: number | null;
+  exercises: { name: string; weightKg: number; reps: number }[];
+}
+
+/**
+ * Resistance-training MET (Compendium of Physical Activities, code 02050 family:
+ * ~3.5 light … 6.0 vigorous; 5.0 is a defensible whole-session value that already
+ * accounts for rest periods). kcal ≈ MET × body-weight-kg × hours — the standard
+ * method, honest as an estimate. Needs the user's real weight; null without it.
+ */
+const RESISTANCE_MET = 5.0;
+
+export function summarize(
+  session: ActiveSession,
+  bodyweightKg: number | null,
+): Omit<SessionSummary, "positionLabel"> {
+  const doneSets = session.exercises.flatMap((slot) =>
+    slot.sets.filter((s) => s.done),
+  );
+  const setsDone = doneSets.length;
+  const volumeKg = doneSets.reduce((acc, s) => acc + s.weightKg * s.reps, 0);
+  const durationMin = Math.max(
+    1,
+    Math.round((Date.now() - Date.parse(session.startedAt)) / 60000),
+  );
+  const kcal =
+    bodyweightKg != null
+      ? Math.round(RESISTANCE_MET * bodyweightKg * (durationMin / 60))
+      : null;
+
+  // Best set per performed exercise (heaviest, then most reps).
+  const best = new Map<string, { name: string; weightKg: number; reps: number }>();
+  for (const s of doneSets) {
+    const cur = best.get(s.exerciseId);
+    if (!cur || s.weightKg > cur.weightKg || (s.weightKg === cur.weightKg && s.reps > cur.reps)) {
+      best.set(s.exerciseId, { name: s.exerciseName, weightKg: s.weightKg, reps: s.reps });
+    }
+  }
+  return { durationMin, volumeKg, setsDone, kcal, exercises: [...best.values()] };
+}
+
 export function doneCount(session: ActiveSession): number {
   return session.exercises.reduce(
     (acc, ex) => acc + ex.sets.filter((s) => s.done).length,

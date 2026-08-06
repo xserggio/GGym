@@ -62,6 +62,18 @@ export const es = {
     insteadOf: (name: string) => `en lugar de ${name}`,
     notesLabel: "notas de la sesión",
     notesPlaceholder: "dolor, sueño, energía…",
+    completed: "completado",
+  },
+  highlights: {
+    title: "sesión completada",
+    duration: "duración",
+    volume: "peso levantado",
+    sets: "series",
+    kcal: "calorías",
+    approx: "aprox.",
+    min: "min",
+    done: "hecho",
+    bestSet: "mejor serie",
   },
   detail: {
     photoNote: "foto 4:3 · duotono tinta/cemento",

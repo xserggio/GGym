@@ -20,13 +20,16 @@ import {
   sessionIn,
   setLogIn,
   substitute,
+  summarize,
   type ActiveSession,
+  type SessionSummary,
 } from "./lib/session";
 import { enqueue, flush, startSync, subscribePending } from "./lib/sync";
 import { useRestTimer } from "./lib/useRestTimer";
 import { useStopwatch } from "./lib/useStopwatch";
 import { Ajustes } from "./screens/Ajustes";
 import { Detalle } from "./screens/Detalle";
+import { Highlights } from "./screens/Highlights";
 import { Historial } from "./screens/Historial";
 import { Rutina } from "./screens/Rutina";
 import { Hoy } from "./screens/Hoy";
@@ -109,6 +112,7 @@ function Shell({ user, tema, onToggleTema, onLogout }: ShellProps) {
   const [tab, setTab] = useState<Tab>("hoy");
   const [ajustes, setAjustes] = useState(false);
   const [detailId, setDetailId] = useState<string | null>(null);
+  const [highlights, setHighlights] = useState<SessionSummary | null>(null);
   const sessionRef = useRef<ActiveSession | null>(null);
   const rest = useRestTimer();
   const treadmill = useStopwatch();
@@ -253,9 +257,17 @@ function Shell({ user, tema, onToggleTema, onLogout }: ShellProps) {
 
   const end = async () => {
     const active = sessionRef.current;
-    if (active) await enqueue({ sessions: [sessionIn(active, "completed")] });
+    if (!active) return;
+    const summary: SessionSummary = {
+      positionLabel: today
+        ? `${es.today.session} ${today.next_position} · ${today.day.name}`
+        : "",
+      ...summarize(active, bodyweight?.latest ?? null),
+    };
+    await enqueue({ sessions: [sessionIn(active, "completed")] });
     setActive(null);
     rest.skip();
+    setHighlights(summary);
     await flush(); // ensure the completion reaches the server before reloading
     await load().catch(() => undefined);
   };
@@ -266,6 +278,10 @@ function Shell({ user, tema, onToggleTema, onLogout }: ShellProps) {
         …
       </div>
     );
+  }
+
+  if (highlights) {
+    return <Highlights summary={highlights} onDone={() => setHighlights(null)} />;
   }
 
   if (detailId) {
