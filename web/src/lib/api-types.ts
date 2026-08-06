@@ -487,7 +487,7 @@ export interface components {
          * Equipment
          * @enum {string}
          */
-        Equipment: "barra" | "mancuernas" | "maquina" | "polea" | "peso_corporal";
+        Equipment: "barra" | "mancuernas" | "maquina" | "polea" | "peso_corporal" | "banda";
         /** ExerciseAdd */
         ExerciseAdd: {
             /** Exercise Id */
@@ -602,7 +602,7 @@ export interface components {
          * MovementPattern
          * @enum {string}
          */
-        MovementPattern: "empuje_horizontal" | "empuje_vertical" | "tiron_horizontal" | "tiron_vertical" | "cuadriceps" | "cadena_posterior" | "gluteo" | "gemelo" | "deltoides_lateral" | "triceps" | "biceps" | "core";
+        MovementPattern: "empuje_horizontal" | "empuje_vertical" | "tiron_horizontal" | "tiron_vertical" | "cuadriceps" | "cadena_posterior" | "gluteo" | "gemelo" | "deltoides_lateral" | "triceps" | "biceps" | "core" | "abduccion";
         /** OrderBody */
         OrderBody: {
             /** Ids */
@@ -643,6 +643,11 @@ export interface components {
             rep_max: number;
             /** Rest S */
             rest_s: number;
+            /**
+             * Unit
+             * @default reps
+             */
+            unit: string;
             exercise: components["schemas"]["ExerciseSummary"];
         };
         /** RoutineDayOut */

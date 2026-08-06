@@ -125,6 +125,7 @@ def _day_out(db: OrmSession, day: RoutineDay) -> RoutineDayOut:
             rep_min=rde.rep_min,
             rep_max=rde.rep_max,
             rest_s=rde.rest_s if rde.rest_s is not None else ex.default_rest_s,
+            unit=rde.unit,
             exercise=ExerciseSummary.model_validate(ex),
         )
         for rde, ex in rows

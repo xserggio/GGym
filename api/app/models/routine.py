@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from sqlalchemy import Boolean, ForeignKey, Integer, String
+from sqlalchemy import Boolean, ForeignKey, Integer, String, text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from .base import Base, new_uuid
@@ -42,3 +42,7 @@ class RoutineDayExercise(Base):
     rep_max: Mapped[int] = mapped_column(Integer)
     # Null => fall back to Exercise.default_rest_s
     rest_s: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    # "reps" or "seconds" (time-based holds like the plank).
+    unit: Mapped[str] = mapped_column(
+        String(10), default="reps", server_default=text("'reps'")
+    )

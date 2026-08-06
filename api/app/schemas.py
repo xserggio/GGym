@@ -68,6 +68,7 @@ class RoutineDayExerciseOut(BaseModel):
     rep_min: int
     rep_max: int
     rest_s: int  # effective rest (override or exercise default)
+    unit: str = "reps"  # "reps" or "seconds" (time-based holds)
     exercise: ExerciseSummary
 
 

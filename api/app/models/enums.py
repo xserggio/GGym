@@ -21,6 +21,7 @@ class MovementPattern(str, enum.Enum):
     triceps = "triceps"
     biceps = "biceps"
     core = "core"
+    abduccion = "abduccion"
 
 
 class Equipment(str, enum.Enum):
@@ -29,6 +30,7 @@ class Equipment(str, enum.Enum):
     maquina = "maquina"
     polea = "polea"
     peso_corporal = "peso_corporal"
+    banda = "banda"
 
 
 class SessionStatus(str, enum.Enum):

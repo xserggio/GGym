@@ -13,7 +13,7 @@ import argparse
 import json
 from pathlib import Path
 
-from sqlalchemy import select
+from sqlalchemy import delete, select
 from sqlalchemy.orm import Session as OrmSession
 
 from app.db import SessionLocal
@@ -58,9 +58,15 @@ def load_catalog(db: OrmSession, data: dict) -> int:
     return added
 
 
-def load_routine_for_user(db: OrmSession, user: User, data: dict) -> bool:
-    if db.scalar(select(Routine.id).where(Routine.user_id == user.id).limit(1)):
+def load_routine_for_user(
+    db: OrmSession, user: User, data: dict, replace: bool = False
+) -> bool:
+    existing_id = db.scalar(
+        select(Routine.id).where(Routine.user_id == user.id).limit(1)
+    )
+    if existing_id and not replace:
         return False
+
     template = data["routines"][0]
     routine = Routine(user_id=user.id, name=template["name"], active=True)
     db.add(routine)
@@ -84,10 +90,32 @@ def load_routine_for_user(db: OrmSession, user: User, data: dict) -> bool:
                     rep_min=ex["rep_min"],
                     rep_max=ex["rep_max"],
                     rest_s=None,
+                    unit=ex.get("unit", "reps"),
                 )
             )
-    if db.get(UserState, user.id) is None:
+
+    # Point the user's state at the new routine.
+    state = db.get(UserState, user.id)
+    if state is None:
         db.add(UserState(user_id=user.id, routine_id=routine.id, next_position=1))
+    else:
+        state.routine_id = routine.id
+        state.next_position = 1
+    db.flush()
+
+    # Remove the previous routine now that state no longer references it.
+    if existing_id and replace:
+        old_days = db.scalars(
+            select(RoutineDay.id).where(RoutineDay.routine_id == existing_id)
+        ).all()
+        if old_days:
+            db.execute(
+                delete(RoutineDayExercise).where(
+                    RoutineDayExercise.routine_day_id.in_(old_days)
+                )
+            )
+            db.execute(delete(RoutineDay).where(RoutineDay.id.in_(old_days)))
+        db.execute(delete(Routine).where(Routine.id == existing_id))
     return True
 
 
@@ -95,6 +123,9 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="seed", description="Load the JSON seed")
     parser.add_argument("path", nargs="?", help="JSON file (default: bundled routine.json)")
     parser.add_argument("--user", help="seed a routine only for this username")
+    parser.add_argument(
+        "--replace", action="store_true", help="replace the user's existing routine"
+    )
     args = parser.parse_args(argv)
 
     data = load_data(args.path)
@@ -108,7 +139,7 @@ def main(argv: list[str] | None = None) -> int:
         if not users:
             print("no users to seed a routine for (create one with app.cli)")
         for user in users:
-            created = load_routine_for_user(db, user, data)
+            created = load_routine_for_user(db, user, data, replace=args.replace)
             print(f"routine: {'created' if created else 'skipped'} for '{user.username}'")
         db.commit()
     return 0

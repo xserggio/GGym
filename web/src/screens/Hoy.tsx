@@ -23,8 +23,9 @@ interface HoyProps {
 
 function planLabel(rde: RoutineDayExerciseOut): string {
   const reps = rde.rep_min === rde.rep_max ? `${rde.rep_max}` : `${rde.rep_min}-${rde.rep_max}`;
+  const unit = rde.unit === "seconds" ? " s" : "";
   const perSide = rde.exercise.per_side ? ` · ${es.today.perSide}` : "";
-  return `${rde.target_sets}×${reps}${perSide}`;
+  return `${rde.target_sets}×${reps}${unit}${perSide}`;
 }
 
 export function Hoy({
