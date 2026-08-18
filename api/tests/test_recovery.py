@@ -13,7 +13,7 @@ import pytest
 from sqlalchemy import select
 
 from app.db import SessionLocal
-from app.models import Exercise, RoutineDay, Session, SetLog, User
+from app.models import Exercise, RoutineDay, RoutineDayExercise, Session, SetLog, User
 from app.models.enums import SessionStatus
 from app.services import muscles, recovery
 
@@ -217,3 +217,174 @@ def test_every_muscle_and_band_has_wording() -> None:
         assert f"{band}:" in text, band
     for band in ("baja", "equilibrada", "alta", "excesiva"):
         assert f"{band}:" in text, band
+
+
+# --- what today asks for -------------------------------------------------
+
+
+def test_today_names_only_what_the_session_trains() -> None:
+    """A leg day must not mention a sore chest: the point is what you are about
+    to do, not everything that aches."""
+    with SessionLocal() as db:
+        user_id = _user_id(db)
+        log_session(db, user_id, "Press banca", 6, hours_ago=10)
+        items = recovery.recovery(db, user_id, NOW)
+        today = recovery.today_load(db, user_id, items)
+    assert today is not None
+    named = {m.muscle for m in today.muscles}
+    # Session 1 is the upper-body day, so legs have no business here.
+    assert "cuadriceps" not in named
+    assert named & {"pecho", "espalda", "hombro"}
+    # Ordered by how loaded they are, worst first.
+    assert [m.percent for m in today.muscles] == sorted(
+        m.percent for m in today.muscles
+    )
+
+
+def test_today_verdict_follows_the_least_recovered_muscle() -> None:
+    with SessionLocal() as db:
+        user_id = _user_id(db)
+        log_session(db, user_id, "Press banca", 6, hours_ago=4)
+        items = recovery.recovery(db, user_id, NOW)
+        loaded = recovery.today_load(db, user_id, items)
+
+        rested = recovery.today_load(
+            db, user_id, recovery.recovery(db, user_id, NOW + timedelta(days=6))
+        )
+    assert loaded is not None and loaded.verdict == "cargado"
+    assert rested is not None and rested.verdict == "listo"
+
+
+def test_today_is_silent_without_training() -> None:
+    with SessionLocal() as db:
+        assert recovery.today_load(db, _user_id(db), None) is None
+
+
+# --- stalled lifts, and the things it must never say ---------------------
+
+
+def test_never_calls_a_lift_stalled_without_enough_sessions() -> None:
+    """The complaint that matters: an exercise barely touched is not stalled,
+    it is untouched."""
+    with SessionLocal() as db:
+        user_id = _user_id(db)
+        for n in range(recovery.MIN_SESSIONS_FOR_STALL - 1):
+            log_session(db, user_id, "Press banca", 3, hours_ago=24 * (n + 1) * 3)
+        assert recovery.stalled(db, user_id, NOW) == []
+
+
+def test_never_calls_a_lift_stalled_that_is_not_in_the_routine() -> None:
+    with SessionLocal() as db:
+        user_id = _user_id(db)
+        # Plenty of history, but the lift was dropped from the plan.
+        for n in range(8):
+            log_session(db, user_id, "Press banca", 3, hours_ago=24 * (n + 1) * 3)
+        db.query(RoutineDayExercise).filter(
+            RoutineDayExercise.exercise_id == "press-banca"
+        ).delete()
+        db.commit()
+        names = {s.exercise_id for s in recovery.stalled(db, user_id, NOW)}
+    assert "press-banca" not in names
+
+
+def test_never_calls_an_abandoned_lift_stalled() -> None:
+    """Trained hard a year ago and never since: that is abandoned, and calling
+    it stuck would be nonsense."""
+    with SessionLocal() as db:
+        user_id = _user_id(db)
+        for n in range(8):
+            log_session(db, user_id, "Press banca", 3, hours_ago=24 * (200 + n * 3))
+        assert recovery.stalled(db, user_id, NOW) == []
+
+
+def test_a_lift_that_keeps_improving_is_not_stalled() -> None:
+    with SessionLocal() as db:
+        user_id = _user_id(db)
+        day = db.scalar(select(RoutineDay).where(RoutineDay.position == 1))
+        exercise = db.scalar(select(Exercise).where(Exercise.name == "Press banca"))
+        for n in range(8):
+            when = NOW - timedelta(days=(8 - n) * 3)
+            session = Session(
+                user_id=user_id,
+                routine_day_id=day.id,
+                status=SessionStatus.completed,
+                started_at=when,
+                ended_at=when,
+            )
+            db.add(session)
+            db.flush()
+            db.add(
+                SetLog(
+                    session_id=session.id,
+                    exercise_id=exercise.id,
+                    set_number=1,
+                    weight_kg=60 + n * 2.5,  # climbing every session
+                    reps=8,
+                    created_at=when,
+                )
+            )
+        db.commit()
+        assert recovery.stalled(db, user_id, NOW) == []
+
+
+def test_a_genuinely_flat_lift_is_reported() -> None:
+    with SessionLocal() as db:
+        user_id = _user_id(db)
+        for n in range(8):
+            log_session(db, user_id, "Press banca", 3, hours_ago=24 * (n + 1) * 3)
+        found = recovery.stalled(db, user_id, NOW)
+    assert [s.exercise_id for s in found] == ["press-banca"]
+    assert found[0].sessions >= recovery.MIN_SESSIONS_FOR_STALL
+    assert found[0].days_since_best >= 0
+
+
+def test_stalling_stays_quiet_during_a_cut() -> None:
+    """Holding the load in a deficit is the plan working, not a problem."""
+    from app.models import Phase
+    from app.models.phase import PhaseKind
+
+    with SessionLocal() as db:
+        user_id = _user_id(db)
+        for n in range(8):
+            log_session(db, user_id, "Press banca", 3, hours_ago=24 * (n + 1) * 3)
+        assert recovery.stalled(db, user_id, NOW)
+        db.add(
+            Phase(
+                user_id=user_id,
+                kind=PhaseKind.definicion,
+                started_on=NOW.date() - timedelta(days=20),
+                target_rate_pct=-0.6,
+            )
+        )
+        db.commit()
+        assert recovery.stalled(db, user_id, NOW) == []
+
+
+# --- volume over time ----------------------------------------------------
+
+
+def test_trend_covers_every_muscle_and_the_whole_window() -> None:
+    with SessionLocal() as db:
+        user_id = _user_id(db)
+        log_session(db, user_id, "Press banca", 4, hours_ago=24 * 3)
+        rows = recovery.volume_trend(db, user_id, NOW)
+    assert rows is not None
+    assert {r.muscle for r in rows} == set(muscles.MUSCLES)
+    for row in rows:
+        assert len(row.weekly) == recovery.TREND_WEEKS
+        assert row.trend in ("sube", "estable", "baja")
+
+
+def test_trend_sees_a_ramp_and_a_drop() -> None:
+    with SessionLocal() as db:
+        user_id = _user_id(db)
+        # Nothing for a month, then three heavy weeks.
+        for day in range(0, 21, 2):
+            log_session(db, user_id, "Press banca", 6, hours_ago=24 * day + 2)
+        rows = {r.muscle: r for r in recovery.volume_trend(db, user_id, NOW)}
+    assert rows["pecho"].trend == "sube"
+
+
+def test_trend_is_silent_without_any_history() -> None:
+    with SessionLocal() as db:
+        assert recovery.volume_trend(db, _user_id(db), NOW) is None

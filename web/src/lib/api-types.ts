@@ -1096,6 +1096,11 @@ export interface components {
             overall_percent: number | null;
             load: components["schemas"]["LoadOut"] | null;
             confidence: components["schemas"]["ConfidenceOut"];
+            today: components["schemas"]["TodayLoadOut"] | null;
+            /** Stalled */
+            stalled: components["schemas"]["StalledOut"][];
+            /** Trend */
+            trend: components["schemas"]["MuscleTrendOut"][] | null;
         };
         /** LoadOut */
         LoadOut: {
@@ -1163,6 +1168,15 @@ export interface components {
             band: string;
             /** Hours To Fresh */
             hours_to_fresh: number | null;
+        };
+        /** MuscleTrendOut */
+        MuscleTrendOut: {
+            /** Muscle */
+            muscle: string;
+            /** Weekly */
+            weekly: number[];
+            /** Trend */
+            trend: string;
         };
         /** MuscleVolumeOut */
         MuscleVolumeOut: {
@@ -1577,6 +1591,17 @@ export interface components {
              */
             created_at: string;
         };
+        /** StalledOut */
+        StalledOut: {
+            /** Exercise Id */
+            exercise_id: string;
+            /** Exercise Name */
+            exercise_name: string;
+            /** Sessions */
+            sessions: number;
+            /** Days Since Best */
+            days_since_best: number;
+        };
         /** StateOut */
         StateOut: {
             /** Routine Id */
@@ -1649,6 +1674,32 @@ export interface components {
             rejected: components["schemas"]["SyncReject"][];
             /** Events */
             events: components["schemas"]["SyncEventOut"][];
+        };
+        /**
+         * TodayLoadOut
+         * @description What the session the wheel has queued up will actually ask for, against
+         *     how recovered those muscles are. The point of the map, made actionable.
+         */
+        TodayLoadOut: {
+            /** Day Name */
+            day_name: string;
+            /** Position */
+            position: number;
+            /** Muscles */
+            muscles: components["schemas"]["TodayMuscleOut"][];
+            /** Verdict */
+            verdict: string;
+        };
+        /** TodayMuscleOut */
+        TodayMuscleOut: {
+            /** Muscle */
+            muscle: string;
+            /** Percent */
+            percent: number;
+            /** Band */
+            band: string;
+            /** Sets */
+            sets: number;
         };
         /** TodayOut */
         TodayOut: {

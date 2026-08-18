@@ -691,6 +691,36 @@ export const es = {
     sessionsChip: (n: number) => (n === 1 ? "1 sesión" : `${n} sesiones`),
     baselineChip: (days: number) => `${days} días de base`,
     confidenceLabel: "sobre",
+    todayTitle: "lo que toca hoy",
+    todaySub: "la sesión que viene, contra cómo llegas",
+    todayVerdicts: {
+      listo: "llegas listo",
+      justo: "llegas justo",
+      cargado: "llegas cargado",
+    } as Record<string, string>,
+    todayHints: {
+      listo: "los músculos que carga esta sesión están recuperados.",
+      justo: "alguno todavía no está del todo; irá bien, pero no esperes marcas.",
+      cargado:
+        "esta sesión carga algo que aún no se ha recuperado. plantéate cambiar el orden de la rueda o darle un día más.",
+    } as Record<string, string>,
+    todaySets: (n: number) => `${n} series`,
+    stalledTitle: "sin moverse",
+    stalledSub: "llevan sesiones sin mejorar la marca",
+    stalledDetail: (sessions: number, days: number) =>
+      `${sessions} sesiones registradas · ${days} días desde tu mejor marca`,
+    stalledMore: (n: number) =>
+      n === 1 ? "y uno más" : `y ${n} más en la misma situación`,
+    stalledNote:
+      "que un ejercicio se pare un tiempo es normal. si se paran varios a la vez, suele ser fatiga acumulada y conviene una semana más suave.",
+    stalledEmpty: "ninguno lleva parado lo suficiente como para preocuparse.",
+    trendTitle: "volumen por músculo",
+    trendSub: "series efectivas por semana, últimas ocho",
+    trends: {
+      sube: "sube",
+      estable: "estable",
+      baja: "baja",
+    } as Record<string, string>,
     thinNote:
       "con pocas semanas registradas estos números se mueven mucho; tómatelos como un primer indicio.",
   },

@@ -21,6 +21,18 @@ const LOAD_COLOR: Record<string, string> = {
 
 const LOAD_ORDER = ["baja", "equilibrada", "alta", "excesiva"];
 
+/** A wall of stalled lifts is noise. The rest are counted rather than hidden:
+ * a silent cap would read as "only these four", which is not what it means. */
+const STALLED_SHOWN = 4;
+
+/** The verdict about today reuses the recovery bands: the same three states,
+ * said about the session instead of about a muscle. */
+const VERDICT_COLOR: Record<string, string> = {
+  listo: "var(--green-text)",
+  justo: "var(--yellow)",
+  cargado: "var(--red-text)",
+};
+
 export function Laboratorio({ onBack }: LaboratorioProps) {
   const [data, setData] = useState<LabOut | null>(null);
 
@@ -78,6 +90,54 @@ export function Laboratorio({ onBack }: LaboratorioProps) {
                   </span>
                 ))}
               </div>
+            )}
+
+            {data.today && (
+              <section>
+                <h2 className="font-display text-[21px] leading-tight">
+                  {es.lab.todayTitle}
+                </h2>
+                <p className="mb-2.5 mt-0.5 text-[12.5px] text-gris">
+                  {es.lab.todaySub}
+                </p>
+                <Card className="p-4">
+                  <div className="flex items-baseline justify-between gap-3">
+                    <span className="font-display text-[24px] leading-none">
+                      {data.today.day_name}
+                    </span>
+                    <span
+                      className="font-mono text-[12px]"
+                      style={{ color: VERDICT_COLOR[data.today.verdict] }}
+                    >
+                      {es.lab.todayVerdicts[data.today.verdict]}
+                    </span>
+                  </div>
+                  <div className="mt-3 flex flex-col gap-2 border-t border-line pt-3">
+                    {data.today.muscles.map((item) => (
+                      <div key={item.muscle} className="flex items-center gap-2.5">
+                        <span className="w-[88px] shrink-0 text-[14px]">
+                          {muscleName(item.muscle)}
+                        </span>
+                        <span className="h-[7px] flex-1 overflow-hidden rounded-full bg-line">
+                          <span
+                            className="block h-full rounded-full"
+                            style={{
+                              width: `${item.percent}%`,
+                              background: recoveryColor(item.percent),
+                            }}
+                          />
+                        </span>
+                        <b className="w-[76px] shrink-0 whitespace-nowrap text-right font-mono text-[12px] font-normal tabular-nums text-gris">
+                          {Math.round(item.percent)} % · {Math.round(item.sets)}
+                        </b>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="mt-3 text-[12.5px] leading-snug text-gris">
+                    {es.lab.todayHints[data.today.verdict]}
+                  </p>
+                </Card>
+              </section>
             )}
 
             <section>
@@ -215,6 +275,94 @@ export function Laboratorio({ onBack }: LaboratorioProps) {
                 )}
               </Card>
             </section>
+
+            {data.stalled.length > 0 && (
+              <section>
+                <h2 className="font-display text-[21px] leading-tight">
+                  {es.lab.stalledTitle}
+                </h2>
+                <p className="mb-2.5 mt-0.5 text-[12.5px] text-gris">
+                  {es.lab.stalledSub}
+                </p>
+                <Card className="p-4">
+                  <div className="flex flex-col gap-3">
+                    {data.stalled.slice(0, STALLED_SHOWN).map((item) => (
+                      <div key={item.exercise_id}>
+                        <div className="text-[15px] leading-snug">
+                          {item.exercise_name}
+                        </div>
+                        <div className="font-mono text-[11.5px] text-gris">
+                          {es.lab.stalledDetail(item.sessions, item.days_since_best)}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  {data.stalled.length > STALLED_SHOWN && (
+                    <p className="mt-2.5 font-mono text-[11.5px] text-gris">
+                      {es.lab.stalledMore(data.stalled.length - STALLED_SHOWN)}
+                    </p>
+                  )}
+                  <p className="mt-3.5 text-[12px] leading-snug text-gris">
+                    {es.lab.stalledNote}
+                  </p>
+                </Card>
+              </section>
+            )}
+
+            {data.trend && (
+              <section>
+                <h2 className="font-display text-[21px] leading-tight">
+                  {es.lab.trendTitle}
+                </h2>
+                <p className="mb-2.5 mt-0.5 text-[12.5px] text-gris">
+                  {es.lab.trendSub}
+                </p>
+                <Card className="p-4">
+                  <div className="flex flex-col gap-2.5">
+                    {data.trend.map((row) => {
+                      const top = Math.max(...row.weekly, 1);
+                      return (
+                        <div key={row.muscle} className="flex items-center gap-2.5">
+                          <span className="w-[88px] shrink-0 text-[14px]">
+                            {muscleName(row.muscle)}
+                          </span>
+                          {/* Eight weeks, oldest left. Empty weeks stay as a
+                              faint tick: hiding them would flatter the month. */}
+                          <span className="flex h-[22px] flex-1 items-end gap-[2px]">
+                            {row.weekly.map((value, i) => (
+                              <span
+                                key={i}
+                                className="flex-1 rounded-[1px]"
+                                style={{
+                                  height: value > 0 ? `${(value / top) * 100}%` : "2px",
+                                  minHeight: "2px",
+                                  background:
+                                    value > 0 ? "var(--ink)" : "var(--neutral-fill)",
+                                  opacity: value > 0 ? 0.8 : 1,
+                                }}
+                              />
+                            ))}
+                          </span>
+                          <span
+                            className="w-[52px] shrink-0 text-right font-mono text-[11.5px]"
+                            style={{
+                              color:
+                                row.trend === "sube"
+                                  ? "var(--green-text)"
+                                  : row.trend === "baja"
+                                    ? "var(--red-text)"
+                                    : "var(--gris)",
+                            }}
+                          >
+                            {es.lab.trends[row.trend]}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </Card>
+              </section>
+            )}
 
             {confidence && !confidence.solid && data.recovery && (
               <p className="text-[12.5px] leading-snug text-gris">{es.lab.thinNote}</p>

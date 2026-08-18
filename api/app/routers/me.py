@@ -13,6 +13,10 @@ from ..schemas import (
     LabOut,
     LoadOut,
     MuscleRecoveryOut,
+    MuscleTrendOut,
+    StalledOut,
+    TodayLoadOut,
+    TodayMuscleOut,
     ExerciseHistoryEntry,
     RecordOut,
     RoutineOut,
@@ -219,4 +223,20 @@ def lab(
             else None
         ),
         confidence=ConfidenceOut(**vars(recovery.confidence(db, user.id))),
+        today=_today_out(recovery.today_load(db, user.id, items)),
+        stalled=[StalledOut(**vars(s)) for s in recovery.stalled(db, user.id)],
+        trend=(
+            [MuscleTrendOut(**vars(t)) for t in trend] if (trend := recovery.volume_trend(db, user.id)) else None
+        ),
+    )
+
+
+def _today_out(load) -> TodayLoadOut | None:
+    if load is None:
+        return None
+    return TodayLoadOut(
+        day_name=load.day_name,
+        position=load.position,
+        muscles=[TodayMuscleOut(**vars(m)) for m in load.muscles],
+        verdict=load.verdict,
     )

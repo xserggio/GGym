@@ -587,6 +587,38 @@ class ConfidenceOut(BaseModel):
     solid: bool
 
 
+class TodayMuscleOut(BaseModel):
+    muscle: str
+    percent: float
+    band: str
+    sets: float
+
+
+class TodayLoadOut(BaseModel):
+    """What the session the wheel has queued up will actually ask for, against
+    how recovered those muscles are. The point of the map, made actionable."""
+
+    day_name: str
+    position: int
+    muscles: list[TodayMuscleOut]
+    # listo | justo | cargado
+    verdict: str
+
+
+class StalledOut(BaseModel):
+    exercise_id: str
+    exercise_name: str
+    sessions: int
+    days_since_best: int
+
+
+class MuscleTrendOut(BaseModel):
+    muscle: str
+    weekly: list[float]
+    # sube | estable | baja
+    trend: str
+
+
 class LabOut(BaseModel):
     # None until something has been logged — an all-green body would be true
     # and meaningless.
@@ -595,3 +627,9 @@ class LabOut(BaseModel):
     # None until there is enough history for the comparison to hold still.
     load: LoadOut | None
     confidence: ConfidenceOut
+    # None when nothing is queued or the routine trains nothing measurable.
+    today: TodayLoadOut | None
+    # Only lifts that are in the routine, trained enough and recently: an
+    # unearned "stalled" teaches the user to ignore the screen.
+    stalled: list[StalledOut]
+    trend: list[MuscleTrendOut] | None
