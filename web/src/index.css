@@ -24,6 +24,9 @@
   --blue-text: var(--blue);
   --green-text: var(--green);
   --red-text: var(--red);
+  /* The body in the recovery map: present enough to read as a figure, quiet
+     enough that the coloured muscles on top are what you look at. */
+  --neutral-fill: rgba(107, 112, 118, 0.22);
   --thumbA: #dcd9d2;
   --thumbB: #e9e7e2;
   --plate5: #fbfaf7;
@@ -42,6 +45,7 @@
   --blue-text: #5b8dee;
   --green-text: #3fa96e;
   --red-text: #ef5f68;
+  --neutral-fill: rgba(155, 161, 168, 0.2);
   --thumbA: #262a2e;
   --thumbB: #1e2124;
   --plate5: #e8e6e1;

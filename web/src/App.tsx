@@ -33,6 +33,7 @@ import { Cinta } from "./screens/Cinta";
 import { Detalle } from "./screens/Detalle";
 import { Fases } from "./screens/Fases";
 import { Inicio } from "./screens/Inicio";
+import { Laboratorio } from "./screens/Laboratorio";
 import { Peso } from "./screens/Peso";
 import { Highlights } from "./screens/Highlights";
 import { Historial } from "./screens/Historial";
@@ -137,7 +138,7 @@ function Shell({ user, tema, onToggleTema, onLogout }: ShellProps) {
   const [ajustes, setAjustes] = useState(false);
   const [detailId, setDetailId] = useState<string | null>(null);
   // Full-screen views reached from a tab (treadmill and body weight detail).
-  const [subScreen, setSubScreen] = useState<"cinta" | "peso" | "fases" | "asistente" | null>(null);
+  const [subScreen, setSubScreen] = useState<"cinta" | "peso" | "fases" | "asistente" | "lab" | null>(null);
   const [highlights, setHighlights] = useState<SessionSummary | null>(null);
   const sessionRef = useRef<ActiveSession | null>(null);
   const rest = useRestTimer();
@@ -339,6 +340,10 @@ function Shell({ user, tema, onToggleTema, onLogout }: ShellProps) {
     return <Fases onBack={() => setSubScreen(null)} />;
   }
 
+  if (subScreen === "lab") {
+    return <Laboratorio onBack={() => setSubScreen(null)} />;
+  }
+
   if (subScreen === "asistente") {
     return (
       <Asistente
@@ -453,6 +458,7 @@ function Shell({ user, tema, onToggleTema, onLogout }: ShellProps) {
               }}
               onTreadmill={() => setSubScreen("cinta")}
               onWeight={() => setSubScreen("peso")}
+            onLab={() => setSubScreen("lab")}
               onSettings={() => setAjustes(true)}
             />
           ) : tab === "hoy" ? (

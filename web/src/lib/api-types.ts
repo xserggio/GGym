@@ -332,6 +332,30 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/me/lab": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Lab
+         * @description Recovery per muscle, recent load, and how much history both rest on.
+         *
+         *     Everything here is derived from logged sets; nothing is measured. The parts
+         *     that need more history than exists come back as null so the screen can say
+         *     "not yet" rather than print a number that means nothing.
+         */
+        get: operations["lab_me_lab_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/me/notifications": {
         parameters: {
             query?: never;
@@ -871,6 +895,19 @@ export interface components {
             /** After */
             after: string;
         };
+        /**
+         * ConfidenceOut
+         * @description How much history the readings above rest on. Shown next to them rather
+         *     than kept internal: a number is worth less when it comes from two weeks.
+         */
+        ConfidenceOut: {
+            /** Sessions */
+            sessions: number;
+            /** Baseline Days */
+            baseline_days: number;
+            /** Solid */
+            solid: boolean;
+        };
         /** DayRename */
         DayRename: {
             /** Name */
@@ -1051,6 +1088,26 @@ export interface components {
             /** Prev Treadmill Seconds */
             prev_treadmill_seconds: number | null;
         };
+        /** LabOut */
+        LabOut: {
+            /** Recovery */
+            recovery: components["schemas"]["MuscleRecoveryOut"][] | null;
+            /** Overall Percent */
+            overall_percent: number | null;
+            load: components["schemas"]["LoadOut"] | null;
+            confidence: components["schemas"]["ConfidenceOut"];
+        };
+        /** LoadOut */
+        LoadOut: {
+            /** Ratio */
+            ratio: number;
+            /** Band */
+            band: string;
+            /** Acute Sets */
+            acute_sets: number;
+            /** Chronic Weekly Sets */
+            chronic_weekly_sets: number;
+        };
         /** LoginIn */
         LoginIn: {
             /** Username */
@@ -1096,6 +1153,17 @@ export interface components {
          * @enum {string}
          */
         MovementPattern: "empuje_horizontal" | "empuje_vertical" | "tiron_horizontal" | "tiron_vertical" | "cuadriceps" | "cadena_posterior" | "gluteo" | "gemelo" | "deltoides_lateral" | "triceps" | "biceps" | "core" | "abduccion";
+        /** MuscleRecoveryOut */
+        MuscleRecoveryOut: {
+            /** Muscle */
+            muscle: string;
+            /** Percent */
+            percent: number;
+            /** Band */
+            band: string;
+            /** Hours To Fresh */
+            hours_to_fresh: number | null;
+        };
         /** MuscleVolumeOut */
         MuscleVolumeOut: {
             /** Muscle */
@@ -2126,6 +2194,26 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["TreadmillSummary"];
+                };
+            };
+        };
+    };
+    lab_me_lab_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LabOut"];
                 };
             };
         };

@@ -17,6 +17,7 @@ interface InicioProps {
   onStart: () => void;
   onTreadmill: () => void;
   onWeight: () => void;
+  onLab: () => void;
   onSettings: () => void;
 }
 
@@ -109,7 +110,7 @@ const hoursMinutes = (seconds: number) => {
   return h > 0 ? `${h} h ${String(total % 60).padStart(2, "0")}` : `${total}`;
 };
 
-export function Inicio({ onStart, onTreadmill, onWeight, onSettings }: InicioProps) {
+export function Inicio({ onStart, onTreadmill, onWeight, onLab, onSettings }: InicioProps) {
   const [home, setHome] = useState<HomeOut | null>(null);
   const [period, setPeriod] = useState<Period>("7d");
 
@@ -269,6 +270,14 @@ export function Inicio({ onStart, onTreadmill, onWeight, onSettings }: InicioPro
               <>
             {/* Balance is the one place colour states what the number cannot:
                 whether the volume sits inside the useful range. */}
+            <button
+              type="button"
+              onClick={onLab}
+              className="h-touch w-full rounded-card border border-line text-sm text-blue"
+            >
+              {es.lab.open} ›
+            </button>
+
             <section>
               <ZoneLabel>{es.home.balance}</ZoneLabel>
               <Card className="p-4">

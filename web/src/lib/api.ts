@@ -40,6 +40,8 @@ export type FindingOut = Schemas["FindingOut"];
 export type MuscleVolumeOut = Schemas["MuscleVolumeOut"];
 export type RestructureOut = Schemas["RestructureOut"];
 export type ChangeOut = Schemas["ChangeOut"];
+export type LabOut = Schemas["LabOut"];
+export type MuscleRecoveryOut = Schemas["MuscleRecoveryOut"];
 export type RoutineApplyOut = Schemas["RoutineApplyOut"];
 /** What the backend expects from `PushSubscription.toJSON()` (keys required). */
 export interface PushSubscriptionBody {
@@ -214,6 +216,7 @@ export const api = {
       method: "POST",
       body: JSON.stringify(answers),
     }),
+  lab: () => request<LabOut>("/me/lab"),
   phases: () => request<PhasesOut>("/me/phases"),
   setPhasesEnabled: (enabled: boolean) =>
     request<PhasesOut>("/me/phases", {

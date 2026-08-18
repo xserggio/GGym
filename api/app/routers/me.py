@@ -9,6 +9,10 @@ from ..models import RoutineDay, Session, SetLog, User
 from ..models.enums import SessionStatus
 from ..schemas import (
     BodyWeightSummary,
+    ConfidenceOut,
+    LabOut,
+    LoadOut,
+    MuscleRecoveryOut,
     ExerciseHistoryEntry,
     RecordOut,
     RoutineOut,
@@ -25,6 +29,7 @@ from ..services import (
     export,
     home,
     progression,
+    recovery,
     stats,
     treadmill,
     wheel,
@@ -173,3 +178,45 @@ def get_treadmill(
     user: User = Depends(get_current_user), db: OrmSession = Depends(get_db)
 ) -> TreadmillSummary:
     return treadmill.summary(db, user.id)
+
+
+@router.get("/lab", response_model=LabOut)
+def lab(
+    user: User = Depends(get_current_user),
+    db: OrmSession = Depends(get_db),
+) -> LabOut:
+    """Recovery per muscle, recent load, and how much history both rest on.
+
+    Everything here is derived from logged sets; nothing is measured. The parts
+    that need more history than exists come back as null so the screen can say
+    "not yet" rather than print a number that means nothing.
+    """
+    items = recovery.recovery(db, user.id)
+    balance = recovery.load(db, user.id)
+    return LabOut(
+        recovery=(
+            [
+                MuscleRecoveryOut(
+                    muscle=m.muscle,
+                    percent=m.percent,
+                    band=m.band,
+                    hours_to_fresh=m.hours_to_fresh,
+                )
+                for m in items
+            ]
+            if items is not None
+            else None
+        ),
+        overall_percent=recovery.overall(items) if items else None,
+        load=(
+            LoadOut(
+                ratio=balance.ratio,
+                band=balance.band,
+                acute_sets=balance.acute_sets,
+                chronic_weekly_sets=balance.chronic_weekly_sets,
+            )
+            if balance
+            else None
+        ),
+        confidence=ConfidenceOut(**vars(recovery.confidence(db, user.id))),
+    )

@@ -653,6 +653,47 @@ export const es = {
     disclaimer:
       "esto sale de tu rutina y de lo que has contestado, no de una valoración médica. si algo te duele de verdad, míralo con un profesional.",
   },
+  lab: {
+    title: "laboratorio",
+    open: "ver laboratorio",
+    recoveryTitle: "recuperación",
+    recoverySub: "verde está fresco · rojo necesita descanso",
+    bands: {
+      cargado: "cargado",
+      recuperando: "recuperando",
+      fresco: "fresco",
+    } as Record<string, string>,
+    front: "frente",
+    back: "espalda",
+    overall: (n: number) => `${n} % fresco`,
+    mostLoaded: (muscle: string) => `${muscle}, lo más cargado`,
+    toFresh: (hours: number) =>
+      hours >= 24
+        ? `le quedan ~${Math.round(hours / 24)} d para estar fresco`
+        : `le quedan ~${Math.round(hours)} h para estar fresco`,
+    estimateNote:
+      "estimado a partir de las series que registraste y del tiempo que ha pasado, no de cómo te encuentras. si algo te duele, manda tu cuerpo.",
+    empty:
+      "aún no has registrado ningún entrenamiento, así que no hay nada que estimar. en cuanto termines una sesión, esto se llena.",
+    loadTitle: "carga reciente",
+    loadSub: "esta semana frente a tu propia media",
+    loadBands: {
+      baja: "baja",
+      equilibrada: "equilibrada",
+      alta: "alta",
+      excesiva: "excesiva",
+    } as Record<string, string>,
+    loadDetail: (acute: number, weekly: number) =>
+      `${acute} series esta semana frente a ${weekly} de media en las últimas cuatro.`,
+    loadNote: "subir muy rápido es la vía habitual de acabar roto.",
+    loadPending:
+      "hacen falta un par de semanas registradas para comparar esta semana con tu media.",
+    sessionsChip: (n: number) =>
+      n === 1 ? "1 sesión registrada" : `${n} sesiones registradas`,
+    baselineChip: (days: number) => `línea base de ${days} días`,
+    thinNote:
+      "con pocas semanas registradas estos números se mueven mucho; tómatelos como un primer indicio.",
+  },
   units: {
     kg: "kg",
   },

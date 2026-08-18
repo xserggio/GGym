@@ -557,3 +557,41 @@ class RoutineApplyOut(BaseModel):
     # Name of the profile the previous routine was saved as, so the UI can tell
     # the user exactly where to find the undo.
     snapshot: str | None
+
+
+# --- laboratory (recovery, load, confidence) ------------------------------
+
+
+class MuscleRecoveryOut(BaseModel):
+    muscle: str
+    percent: float
+    # cargado | recuperando | fresco — a key the UI translates.
+    band: str
+    hours_to_fresh: float | None
+
+
+class LoadOut(BaseModel):
+    ratio: float
+    # baja | equilibrada | alta | excesiva
+    band: str
+    acute_sets: int
+    chronic_weekly_sets: float
+
+
+class ConfidenceOut(BaseModel):
+    """How much history the readings above rest on. Shown next to them rather
+    than kept internal: a number is worth less when it comes from two weeks."""
+
+    sessions: int
+    baseline_days: int
+    solid: bool
+
+
+class LabOut(BaseModel):
+    # None until something has been logged — an all-green body would be true
+    # and meaningless.
+    recovery: list[MuscleRecoveryOut] | None
+    overall_percent: float | None
+    # None until there is enough history for the comparison to hold still.
+    load: LoadOut | None
+    confidence: ConfidenceOut
