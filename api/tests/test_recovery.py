@@ -372,19 +372,72 @@ def test_trend_covers_every_muscle_and_the_whole_window() -> None:
     assert {r.muscle for r in rows} == set(muscles.MUSCLES)
     for row in rows:
         assert len(row.weekly) == recovery.TREND_WEEKS
-        assert row.trend in ("sube", "estable", "baja")
-
-
-def test_trend_sees_a_ramp_and_a_drop() -> None:
-    with SessionLocal() as db:
-        user_id = _user_id(db)
-        # Nothing for a month, then three heavy weeks.
-        for day in range(0, 21, 2):
-            log_session(db, user_id, "Press banca", 6, hours_ago=24 * day + 2)
-        rows = {r.muscle: r for r in recovery.volume_trend(db, user_id, NOW)}
-    assert rows["pecho"].trend == "sube"
+        assert row.trend in ("sube", "baja", "estable", "nuevo", "sin_trabajo")
 
 
 def test_trend_is_silent_without_any_history() -> None:
     with SessionLocal() as db:
         assert recovery.volume_trend(db, _user_id(db), NOW) is None
+
+
+def test_an_empty_baseline_is_not_a_rise() -> None:
+    """The bug this replaced: an account three weeks old showed every muscle
+    "sube", because the first half of the window was empty for want of history
+    and anything above zero beat it. Nothing rose; there was nothing to compare
+    against, and the screen has to say that instead."""
+    with SessionLocal() as db:
+        user_id = _user_id(db)
+        # Everything inside the recent half, like a freshly seeded account.
+        for day in (3, 8, 13):
+            log_session(db, user_id, "Press banca", 4, hours_ago=24 * day)
+        rows = {r.muscle: r for r in recovery.volume_trend(db, user_id, NOW)}
+    assert rows["pecho"].trend == "nuevo"
+    assert rows["espalda"].trend in ("nuevo", "sin_trabajo")
+
+
+def test_a_muscle_never_trained_says_so() -> None:
+    """Zero across the window is not a steady state, it is no training."""
+    with SessionLocal() as db:
+        user_id = _user_id(db)
+        for day in (3, 8, 13):
+            log_session(db, user_id, "Press banca", 4, hours_ago=24 * day)
+        rows = {r.muscle: r for r in recovery.volume_trend(db, user_id, NOW)}
+    assert rows["cuadriceps"].trend == "sin_trabajo"
+    assert sum(rows["cuadriceps"].weekly) == 0
+
+
+def test_a_real_rise_still_reads_as_a_rise() -> None:
+    """With training in both halves, adding volume must still show up — the fix
+    must not make the whole thing mute."""
+    with SessionLocal() as db:
+        user_id = _user_id(db)
+        for day in range(30, 56, 4):  # a light baseline
+            log_session(db, user_id, "Press banca", 2, hours_ago=24 * day)
+        for day in range(2, 26, 3):  # then noticeably more
+            log_session(db, user_id, "Press banca", 6, hours_ago=24 * day)
+        rows = {r.muscle: r for r in recovery.volume_trend(db, user_id, NOW)}
+    assert rows["pecho"].trend == "sube"
+
+
+def test_starting_a_new_muscle_counts_as_a_rise() -> None:
+    """Training legs for the first time while already training is a genuine
+    rise, not a missing baseline — the two cases must not be confused."""
+    with SessionLocal() as db:
+        user_id = _user_id(db)
+        for day in range(30, 56, 4):
+            log_session(db, user_id, "Press banca", 3, hours_ago=24 * day)
+        for day in range(2, 26, 4):
+            log_session(db, user_id, "Sentadilla", 4, hours_ago=24 * day)
+        rows = {r.muscle: r for r in recovery.volume_trend(db, user_id, NOW)}
+    assert rows["cuadriceps"].trend == "sube"
+
+
+def test_every_trend_state_has_wording() -> None:
+    from pathlib import Path
+
+    i18n = Path(__file__).resolve().parents[2] / "web" / "src" / "i18n" / "es.ts"
+    if not i18n.exists():
+        return
+    text = i18n.read_text(encoding="utf-8")
+    for state in ("sube", "baja", "estable", "nuevo", "sin_trabajo"):
+        assert f"{state}:" in text, state

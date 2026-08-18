@@ -25,6 +25,14 @@ const LOAD_ORDER = ["baja", "equilibrada", "alta", "excesiva"];
  * a silent cap would read as "only these four", which is not what it means. */
 const STALLED_SHOWN = 4;
 
+/** Only a real direction earns colour. "sin base" and "sin trabajo" are
+ * absences of data, and colouring them would give them a weight they have not
+ * earned. */
+const TREND_COLOR: Record<string, string> = {
+  sube: "var(--green-text)",
+  baja: "var(--red-text)",
+};
+
 /** The verdict about today reuses the recovery bands: the same three states,
  * said about the session instead of about a muscle. */
 const VERDICT_COLOR: Record<string, string> = {
@@ -344,15 +352,8 @@ export function Laboratorio({ onBack }: LaboratorioProps) {
                             ))}
                           </span>
                           <span
-                            className="w-[52px] shrink-0 text-right font-mono text-[11.5px]"
-                            style={{
-                              color:
-                                row.trend === "sube"
-                                  ? "var(--green-text)"
-                                  : row.trend === "baja"
-                                    ? "var(--red-text)"
-                                    : "var(--gris)",
-                            }}
+                            className="w-[64px] shrink-0 whitespace-nowrap text-right font-mono text-[11.5px]"
+                            style={{ color: TREND_COLOR[row.trend] ?? "var(--gris)" }}
                           >
                             {es.lab.trends[row.trend]}
                           </span>
@@ -360,6 +361,13 @@ export function Laboratorio({ onBack }: LaboratorioProps) {
                       );
                     })}
                   </div>
+                  {data.trend.some(
+                    (row) => row.trend === "nuevo" || row.trend === "sin_trabajo",
+                  ) && (
+                    <p className="mt-3.5 text-[12px] leading-snug text-gris">
+                      {es.lab.trendNote}
+                    </p>
+                  )}
                 </Card>
               </section>
             )}

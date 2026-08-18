@@ -497,7 +497,13 @@ class MuscleTrend:
     muscle: str
     # Effective sets per week, oldest first; always TREND_WEEKS long.
     weekly: list[float]
-    # sube | estable | baja, comparing the recent half against the earlier one.
+    # sube | baja | estable | nuevo | sin_trabajo.
+    #
+    # The last two exist because the first version of this claimed "sube" for
+    # every muscle on an account three weeks old: the earlier half of the window
+    # was empty for want of history, not for want of training, and anything
+    # above zero beat it. A muscle never trained came out "estable", which reads
+    # as a steady state when it means the opposite.
     trend: str
 
 
@@ -528,13 +534,24 @@ def volume_trend(
             buckets[muscle][index] += count * weight
 
     half = TREND_WEEKS // 2
+    # Whether the baseline half holds any training at all. Without it there is
+    # nothing to compare against, and no direction can honestly be claimed for
+    # any muscle.
+    has_baseline = any(
+        sum(weekly[:half]) > 0 for weekly in buckets.values()
+    )
+
     out: list[MuscleTrend] = []
     for muscle, weekly in buckets.items():
         earlier = sum(weekly[:half]) / half
         recent = sum(weekly[half:]) / half
-        # A tenth either way is noise, not a direction.
         if earlier == 0 and recent == 0:
-            trend = "estable"
+            trend = "sin_trabajo"
+        elif not has_baseline:
+            trend = "nuevo"
+        elif earlier == 0:
+            # The user was training, just not this muscle: that really is a rise.
+            trend = "sube"
         elif recent > earlier * 1.15:
             trend = "sube"
         elif recent < earlier * 0.85:

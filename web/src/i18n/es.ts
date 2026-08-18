@@ -718,9 +718,13 @@ export const es = {
     trendSub: "series efectivas por semana, últimas ocho",
     trends: {
       sube: "sube",
-      estable: "estable",
       baja: "baja",
+      estable: "estable",
+      nuevo: "sin base",
+      sin_trabajo: "sin trabajo",
     } as Record<string, string>,
+    trendNote:
+      "«sin base» significa que aún no hay semanas anteriores con las que comparar, no que estés igual. «sin trabajo», que ese músculo no ha entrado en estas ocho semanas.",
     thinNote:
       "con pocas semanas registradas estos números se mueven mucho; tómatelos como un primer indicio.",
   },
