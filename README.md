@@ -59,6 +59,11 @@ the server.
 
 ## Licence
 
-MIT — see [LICENSE](LICENSE). Exercise photographs come from
+MIT — see [LICENSE](LICENSE).
+
+Exercise photographs come from
 [free-exercise-db](https://github.com/yuhonas/free-exercise-db) (public domain)
-and are processed to a two-tone treatment at build time.
+and are processed to a two-tone treatment at build time. The anatomical outlines
+in the recovery map are adapted from
+[react-body-highlighter](https://github.com/GV79/react-body-highlighter)
+(MIT, © 2020 GV79).

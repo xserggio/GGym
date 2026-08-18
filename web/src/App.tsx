@@ -26,6 +26,7 @@ import {
 } from "./lib/session";
 import { equipmentLabel, patternLabel } from "./lib/labels";
 import { enqueue, flush, startSync, subscribePending } from "./lib/sync";
+import { useBackButton } from "./lib/useBackButton";
 import { useRestTimer } from "./lib/useRestTimer";
 import { useStopwatch } from "./lib/useStopwatch";
 import { Ajustes } from "./screens/Ajustes";
@@ -167,6 +168,20 @@ function Shell({ user, tema, onToggleTema, onLogout }: ShellProps) {
   }, [load, onLogout]);
 
   useEffect(() => subscribePending(setPending), []);
+
+  // The phone's back button, innermost first. An active session deliberately
+  // swallows the press: losing a workout to a stray thumb would be the worst
+  // bug in the app.
+  useBackButton([
+    { open: sheetExIdx !== null, close: () => setSheetExIdx(null) },
+    { open: weightSheetOpen, close: () => setWeightSheetOpen(false) },
+    { open: highlights !== null, close: () => setHighlights(null) },
+    { open: detailId !== null, close: () => setDetailId(null) },
+    { open: ajustes, close: () => setAjustes(false) },
+    { open: subScreen !== null, close: () => setSubScreen(null) },
+    { open: session !== null, close: () => undefined },
+    { open: tab !== "inicio", close: () => setTab("inicio") },
+  ]);
 
   const start = async () => {
     if (!today) return;

@@ -95,13 +95,13 @@ export function Laboratorio({ onBack }: LaboratorioProps) {
                   <Card className="p-4">
                     <div className="flex justify-center gap-1.5">
                       <div>
-                        <BodyMap percentByMuscle={percentByMuscle} side="front" width={148} />
+                        <BodyMap percentByMuscle={percentByMuscle} side="front" width={128} />
                         <p className="mt-1 text-center font-mono text-[9.5px] uppercase tracking-[0.16em] text-gris">
                           {es.lab.front}
                         </p>
                       </div>
                       <div>
-                        <BodyMap percentByMuscle={percentByMuscle} side="back" width={148} />
+                        <BodyMap percentByMuscle={percentByMuscle} side="back" width={128} />
                         <p className="mt-1 text-center font-mono text-[9.5px] uppercase tracking-[0.16em] text-gris">
                           {es.lab.back}
                         </p>
