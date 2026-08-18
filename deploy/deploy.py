@@ -130,8 +130,15 @@ def main() -> int:
     print("== upload ==")
     sftp_mkdirs(sftp, REMOTE_ROOT)
     n = upload_tree(sftp, REPO / "api", f"{REMOTE_ROOT}/api")
-    # Wipe the previous build so stale hashed assets don't accumulate.
-    run(client, f"rm -rf {REMOTE_ROOT}/web/dist")
+    # Keep the last few builds instead of deleting them: rolling the frontend
+    # back then costs one `mv` on the server rather than a rebuild here.
+    run(
+        client,
+        f"cd {REMOTE_ROOT}/web 2>/dev/null && "
+        f'[ -d dist ] && mv dist "dist.bak-$(date +%Y%m%d-%H%M%S)"; '
+        f"ls -1dt dist.bak-* 2>/dev/null | tail -n +4 | xargs -r rm -rf; true",
+        check=False,
+    )
     n += upload_tree(sftp, dist, f"{REMOTE_ROOT}/web/dist")
     sftp_mkdirs(sftp, f"{REMOTE_ROOT}/deploy")
     for name in ("gym.service", "nginx-gym.conf", "backup.sh", ".env.example"):

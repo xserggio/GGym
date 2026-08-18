@@ -45,6 +45,20 @@ set -a && . /opt/gym/.env && set +a
 
 Then open `https://<your-server>/gym/`.
 
+## Rolling back
+
+Every deploy keeps the previous frontend as `dist.bak-<timestamp>` (last three).
+To go back without rebuilding:
+
+```bash
+cd /opt/gym/web && mv dist dist.broken && mv dist.bak-20260818-101500 dist
+```
+
+For the backend, check out the tag you want and re-run the deploy. Note that
+Alembic migrations move forward only in practice: rolling a schema back drops
+the columns a feature added, and the data in them. Turning a feature off in
+Ajustes is the safer undo where one exists.
+
 ## Backups
 
 `deploy/backup.sh` takes a consistent SQLite snapshot and copies it offsite with
