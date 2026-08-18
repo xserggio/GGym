@@ -43,7 +43,7 @@ set -a && . /opt/gym/.env && set +a
 /opt/gym/venv/bin/python -m seed
 ```
 
-Then open `https://your-server/gym/`.
+Then open `https://<your-server>/gym/`.
 
 ## Backups
 

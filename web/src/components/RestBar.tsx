@@ -11,8 +11,12 @@ interface RestBarProps {
 export function RestBar({ seconds, onAdd, onSkip }: RestBarProps) {
   return (
     <div
-      className="absolute inset-x-3 bottom-2 flex items-center gap-2.5 rounded-card px-3 py-2.5"
-      style={{ background: "var(--yellow)", color: "#14161a" }}
+      className="absolute inset-x-3 flex items-center gap-2.5 rounded-card px-3 py-2.5"
+      style={{
+        background: "var(--yellow)",
+        color: "#14161a",
+        bottom: "calc(0.5rem + var(--safe-bottom))",
+      }}
     >
       <span className="font-mono text-[10px] tracking-[0.06em]">{es.session.rest}</span>
       <span className="font-mono text-3xl font-bold leading-none tabular-nums">

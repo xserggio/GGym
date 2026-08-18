@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session as OrmSession
 
@@ -15,10 +15,20 @@ from ..schemas import (
     SessionOut,
     StateOut,
     Suggestion,
+    HomeOut,
     TodayOut,
+    TreadmillSummary,
     VolumeGroup,
 )
-from ..services import bodyweight, export, progression, stats, wheel
+from ..services import (
+    bodyweight,
+    export,
+    home,
+    progression,
+    stats,
+    treadmill,
+    wheel,
+)
 
 router = APIRouter(prefix="/me", tags=["me"])
 
@@ -141,3 +151,25 @@ def get_records(
     user: User = Depends(get_current_user), db: OrmSession = Depends(get_db)
 ) -> list[RecordOut]:
     return stats.records(db, user.id)
+
+
+@router.get("/home", response_model=HomeOut)
+def get_home(
+    period: str = "7d",
+    user: User = Depends(get_current_user),
+    db: OrmSession = Depends(get_db),
+) -> HomeOut:
+    """Everything the Inicio tab shows, in one request (one round trip offline).
+
+    `period` selects the window for the totals: 7d, 30d, 365d or all.
+    """
+    if period not in home.PERIOD_DAYS:
+        raise HTTPException(status.HTTP_422_UNPROCESSABLE_ENTITY, "unknown period")
+    return home.summary(db, user.id, period)
+
+
+@router.get("/treadmill", response_model=TreadmillSummary)
+def get_treadmill(
+    user: User = Depends(get_current_user), db: OrmSession = Depends(get_db)
+) -> TreadmillSummary:
+    return treadmill.summary(db, user.id)

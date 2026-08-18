@@ -32,11 +32,11 @@ EXCLUDE_SUFFIX = (".db", ".db-wal", ".db-shm", ".pyc")
 
 
 def connect() -> paramiko.SSHClient:
-    host = os.environ.get("GYM_SSH_HOST", "your-server")
+    host = os.environ.get("GYM_SSH_HOST", "")
     user = os.environ.get("GYM_SSH_USER", "root")
     password = os.environ.get("GYM_SSH_PASSWORD")
-    if not password:
-        sys.exit("error: set GYM_SSH_PASSWORD (and optionally GYM_SSH_HOST)")
+    if not host or not password:
+        sys.exit("error: set GYM_SSH_HOST and GYM_SSH_PASSWORD")
     client = paramiko.SSHClient()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     client.connect(host, port=22, username=user, password=password, timeout=30)
@@ -114,6 +114,15 @@ def main() -> int:
     dist = REPO / "web" / "dist"
     if not dist.exists():
         sys.exit("error: web/dist not found — run `npm run build` in web/ first")
+    # The native (Capacitor) build writes to the same dist/ but with a root base
+    # and no service worker. Uploading that here serves a site whose assets all
+    # 404 under /gym/, so refuse it rather than ship a blank page.
+    index = (dist / "index.html").read_text(encoding="utf-8")
+    if "/gym/assets/" not in index:
+        sys.exit(
+            "error: web/dist looks like the native build (no /gym/ base).\n"
+            "       rebuild for the web first: cd web && npm run build"
+        )
 
     client = connect()
     sftp = client.open_sftp()

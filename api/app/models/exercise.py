@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from sqlalchemy import Boolean
+from sqlalchemy import JSON, Boolean
 from sqlalchemy import Enum as SAEnum
 from sqlalchemy import Integer, String, Text, text
 from sqlalchemy.orm import Mapped, mapped_column
@@ -24,6 +24,15 @@ class Exercise(Base):
         SAEnum(Equipment, native_enum=False, length=20)
     )
     description: Mapped[str] = mapped_column(Text, default="")
+    # Ordered cues for performing the lift, and the errors that most often
+    # cost reps or cause injury. Lists rather than prose so the detail screen
+    # can number the steps and mark the warnings separately.
+    technique: Mapped[list[str]] = mapped_column(
+        JSON, default=list, server_default=text("'[]'")
+    )
+    mistakes: Mapped[list[str]] = mapped_column(
+        JSON, default=list, server_default=text("'[]'")
+    )
     media_url: Mapped[str | None] = mapped_column(String(255), nullable=True)
     default_rest_s: Mapped[int] = mapped_column(Integer)
     # Logged/performed per leg or per side (e.g. bulgarian split squat).

@@ -11,16 +11,20 @@ from datetime import timedelta
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session as OrmSession
 
-from ..models import Exercise, Session, SetLog
+from ..models import Exercise, Session, SetLog, TreadmillSession
 from ..models.base import utcnow
-from ..schemas import ExerciseHistoryEntry, RecordOut, VolumeGroup
+from ..models.enums import SessionStatus
+from ..schemas import ExerciseHistoryEntry, Milestone, RecordOut, VolumeGroup
 
 _RECORDS_LIMIT = 12
 _HISTORY_LIMIT = 16
 
 
-def weekly_volume(db: OrmSession, user_id: str) -> list[VolumeGroup]:
-    since = utcnow() - timedelta(days=7)
+def weekly_volume(
+    db: OrmSession, user_id: str, days: int | None = 7
+) -> list[VolumeGroup]:
+    """Effective sets per pattern. `days=None` means all time."""
+    since = utcnow() - timedelta(days=days) if days is not None else None
     rows = db.execute(
         select(Exercise.pattern, func.count(SetLog.id))
         .join(Session, Session.id == SetLog.session_id)
@@ -28,7 +32,7 @@ def weekly_volume(db: OrmSession, user_id: str) -> list[VolumeGroup]:
         .where(
             Session.user_id == user_id,
             SetLog.voided.is_(False),
-            SetLog.created_at >= since,
+            *([SetLog.created_at >= since] if since is not None else []),
         )
         .group_by(Exercise.pattern)
     ).all()
@@ -72,6 +76,96 @@ def exercise_history(
         ExerciseHistoryEntry(session_on=started.date(), weight_kg=w, reps=reps)
         for started, w, reps in ordered
     ]
+
+
+def milestones(db: OrmSession, user_id: str) -> list[Milestone]:
+    """All-time bests that a per-exercise 1RM table cannot express: the heaviest
+    single set, the longest and heaviest sessions, the longest treadmill run.
+
+    `kind` is a key the UI translates; the service never returns display text.
+    """
+    out: list[Milestone] = []
+
+    heaviest = db.execute(
+        select(SetLog.weight_kg, SetLog.reps, Exercise.name, SetLog.created_at)
+        .join(Session, Session.id == SetLog.session_id)
+        .join(Exercise, Exercise.id == SetLog.exercise_id)
+        .where(Session.user_id == user_id, SetLog.voided.is_(False))
+        .order_by(SetLog.weight_kg.desc())
+        .limit(1)
+    ).first()
+    if heaviest is not None:
+        weight, reps, name, created = heaviest
+        out.append(
+            Milestone(
+                kind="heaviest_set",
+                value=float(weight),
+                unit="kg",
+                detail=f"{name} · {reps} reps",
+                achieved_on=created.date(),
+            )
+        )
+
+    sessions = db.scalars(
+        select(Session).where(
+            Session.user_id == user_id,
+            Session.status == SessionStatus.completed,
+            Session.ended_at.is_not(None),
+        )
+    ).all()
+    if sessions:
+        longest = max(sessions, key=lambda s: (s.ended_at - s.started_at))
+        out.append(
+            Milestone(
+                kind="longest_session",
+                value=round((longest.ended_at - longest.started_at).total_seconds() / 60),
+                unit="min",
+                detail=None,
+                achieved_on=longest.ended_at.date(),
+            )
+        )
+
+        volumes = db.execute(
+            select(
+                SetLog.session_id,
+                func.sum(SetLog.weight_kg * SetLog.reps),
+            )
+            .where(
+                SetLog.session_id.in_([s.id for s in sessions]),
+                SetLog.voided.is_(False),
+            )
+            .group_by(SetLog.session_id)
+        ).all()
+        if volumes:
+            session_id, volume = max(volumes, key=lambda row: row[1] or 0)
+            when = next((s.ended_at for s in sessions if s.id == session_id), None)
+            out.append(
+                Milestone(
+                    kind="best_session_volume",
+                    value=round(float(volume or 0)),
+                    unit="kg",
+                    detail=None,
+                    achieved_on=when.date() if when else None,
+                )
+            )
+
+    run = db.scalar(
+        select(TreadmillSession)
+        .where(TreadmillSession.user_id == user_id)
+        .order_by(TreadmillSession.duration_s.desc())
+        .limit(1)
+    )
+    if run is not None:
+        out.append(
+            Milestone(
+                kind="longest_run",
+                value=round(run.duration_s / 60),
+                unit="min",
+                detail=None,
+                achieved_on=run.started_at.date(),
+            )
+        )
+    return out
 
 
 def records(db: OrmSession, user_id: str) -> list[RecordOut]:

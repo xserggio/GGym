@@ -1,14 +1,20 @@
+import { useState } from "react";
+
 /**
- * Placeholder for the exercise photo (real images come later). Reproduces the
- * prototype's hatched marker so layouts read correctly meanwhile. The slug hints
- * which image belongs here.
+ * Exercise thumbnail. Loads exercises/<slug>.webp (public/, duotone-processed)
+ * and falls back to the prototype's hatched marker when the image is missing —
+ * so exercises without a picture still lay out correctly.
  */
 interface ExerciseThumbProps {
   name: string;
+  exerciseId?: string;
   size?: number;
 }
 
-export function ExerciseThumb({ name, size = 64 }: ExerciseThumbProps) {
+export function ExerciseThumb({ name, exerciseId, size = 64 }: ExerciseThumbProps) {
+  const [failed, setFailed] = useState(false);
+  const src = exerciseId ? `${import.meta.env.BASE_URL}exercises/${exerciseId}.webp` : null;
+  const showImg = src !== null && !failed;
   return (
     <div
       aria-hidden
@@ -18,7 +24,8 @@ export function ExerciseThumb({ name, size = 64 }: ExerciseThumbProps) {
         borderRadius: 8,
         flex: "none",
         boxSizing: "border-box",
-        padding: 5,
+        overflow: "hidden",
+        padding: showImg ? 0 : 5,
         border: "1px solid var(--line)",
         background:
           "repeating-linear-gradient(135deg, var(--thumbA) 0 3px, var(--thumbB) 3px 6px)",
@@ -26,9 +33,19 @@ export function ExerciseThumb({ name, size = 64 }: ExerciseThumbProps) {
         alignItems: "flex-end",
       }}
     >
-      <span className="font-mono text-[7px] leading-[1.15] text-gris">
-        {name.slice(0, 14)}
-      </span>
+      {showImg ? (
+        <img
+          src={src}
+          alt=""
+          loading="lazy"
+          onError={() => setFailed(true)}
+          style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+        />
+      ) : (
+        <span className="font-mono text-[7px] leading-[1.15] text-gris">
+          {name.slice(0, 14)}
+        </span>
+      )}
     </div>
   );
 }

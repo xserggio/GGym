@@ -51,7 +51,13 @@ export function Sesion({
   const [open, setOpen] = useState(0);
 
   return (
-    <div className="flex h-full flex-col overflow-y-auto px-4 pb-8 pt-4">
+    <div
+      className="flex h-full flex-col overflow-y-auto px-4 pb-8 pt-4"
+      style={{
+        paddingTop: "calc(1rem + var(--safe-top))",
+        paddingBottom: "calc(2rem + var(--safe-bottom))",
+      }}
+    >
       <div className="flex items-start gap-2.5">
         <div className="flex-1">
           <div className="font-display text-[26px] leading-none">{positionLabel}</div>
@@ -93,7 +99,7 @@ export function Sesion({
                 onClick={() => setOpen(isOpen ? -1 : exIdx)}
                 className="flex w-full items-center gap-3 p-2.5 text-left"
               >
-                <ExerciseThumb name={ex.plannedName} />
+                <ExerciseThumb name={ex.plannedName} exerciseId={ex.plannedExerciseId} />
                 <div className="min-w-0 flex-1">
                   <div className="text-[15px] font-medium leading-tight">
                     {ex.plannedName}

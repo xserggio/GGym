@@ -5,8 +5,16 @@ from sqlalchemy.orm import Session as OrmSession
 
 from ..deps import get_current_user, get_db
 from ..models import User
-from ..schemas import DayRename, ExerciseAdd, ExerciseUpdate, OrderBody, RoutineOut
-from ..services import routine_edit, wheel
+from ..schemas import (
+    DayRename,
+    ExerciseAdd,
+    ExerciseUpdate,
+    OrderBody,
+    ProfileName,
+    RoutineOut,
+    RoutineProfileOut,
+)
+from ..services import routine_edit, routine_profiles, wheel
 
 router = APIRouter(prefix="/me/routine", tags=["routine"])
 
@@ -87,3 +95,76 @@ def reorder_days(
     routine_edit.reorder_days(db, user.id, body.ids)
     db.commit()
     return _routine_out(db, user)
+
+
+# ---------- profiles ----------
+# Mounted on the same prefix so the editor and its safety net live together.
+
+
+@router.get("/profiles", response_model=list[RoutineProfileOut])
+def list_profiles(
+    user: User = Depends(get_current_user), db: OrmSession = Depends(get_db)
+) -> list[RoutineProfileOut]:
+    return routine_profiles.list_profiles(db, user.id)
+
+
+@router.post("/profiles/{routine_id}/activate", response_model=list[RoutineProfileOut])
+def activate_profile(
+    routine_id: str,
+    user: User = Depends(get_current_user),
+    db: OrmSession = Depends(get_db),
+) -> list[RoutineProfileOut]:
+    routine_profiles.activate(db, user.id, routine_id)
+    out = routine_profiles.list_profiles(db, user.id)
+    db.commit()
+    return out
+
+
+@router.post("/profiles/{routine_id}/duplicate", response_model=list[RoutineProfileOut])
+def duplicate_profile(
+    routine_id: str,
+    body: ProfileName,
+    user: User = Depends(get_current_user),
+    db: OrmSession = Depends(get_db),
+) -> list[RoutineProfileOut]:
+    routine_profiles.duplicate(db, user.id, routine_id, body.name)
+    out = routine_profiles.list_profiles(db, user.id)
+    db.commit()
+    return out
+
+
+@router.patch("/profiles/{routine_id}", response_model=list[RoutineProfileOut])
+def rename_profile(
+    routine_id: str,
+    body: ProfileName,
+    user: User = Depends(get_current_user),
+    db: OrmSession = Depends(get_db),
+) -> list[RoutineProfileOut]:
+    routine_profiles.rename(db, user.id, routine_id, body.name)
+    out = routine_profiles.list_profiles(db, user.id)
+    db.commit()
+    return out
+
+
+@router.delete("/profiles/{routine_id}", response_model=list[RoutineProfileOut])
+def delete_profile(
+    routine_id: str,
+    user: User = Depends(get_current_user),
+    db: OrmSession = Depends(get_db),
+) -> list[RoutineProfileOut]:
+    routine_profiles.delete(db, user.id, routine_id)
+    out = routine_profiles.list_profiles(db, user.id)
+    db.commit()
+    return out
+
+
+@router.post("/profiles/restore", response_model=list[RoutineProfileOut])
+def restore_default(
+    user: User = Depends(get_current_user), db: OrmSession = Depends(get_db)
+) -> list[RoutineProfileOut]:
+    """Copy the untouched seeded routine into a new active profile. The routine
+    in use is kept as a profile, so restoring is itself reversible."""
+    routine_profiles.restore_original(db, user.id)
+    out = routine_profiles.list_profiles(db, user.id)
+    db.commit()
+    return out

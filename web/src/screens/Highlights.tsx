@@ -93,7 +93,10 @@ export function Highlights({ summary, onDone }: HighlightsProps) {
         )}
       </div>
 
-      <div className="border-t border-line bg-bg px-4 py-3">
+      <div
+        className="border-t border-line bg-bg px-4 py-3"
+        style={{ paddingBottom: "calc(0.75rem + var(--safe-bottom))" }}
+      >
         <Button variant="primary" onClick={onDone} className="w-full">
           {es.highlights.done}
         </Button>

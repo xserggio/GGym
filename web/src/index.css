@@ -18,6 +18,12 @@
   --yellow: #f2c230;
   --red: #d2333c;
   --tint: rgba(46, 139, 87, 0.16);
+  /* The same accents when they carry *text* rather than fill a shape. In light
+     they are identical; in dark they lift, because a hue chosen to hold white
+     text on top of it is too dark to be read as text itself. */
+  --blue-text: var(--blue);
+  --green-text: var(--green);
+  --red-text: var(--red);
   --thumbA: #dcd9d2;
   --thumbB: #e9e7e2;
   --plate5: #fbfaf7;
@@ -31,9 +37,29 @@
   --gris: #9ba1a8;
   --line: rgba(155, 161, 168, 0.24);
   --tint: rgba(46, 139, 87, 0.26);
+  /* Lifted to clear 4.5:1 against --paper; the fills above stay as they are so
+     white text on a blue button keeps its own contrast. */
+  --blue-text: #5b8dee;
+  --green-text: #3fa96e;
+  --red-text: #ef5f68;
   --thumbA: #262a2e;
   --thumbB: #1e2124;
   --plate5: #e8e6e1;
+}
+
+/*
+ * Safe areas. The native build runs edge to edge (forced from Android 15), so
+ * the page extends under the status and navigation bars; on iOS the same is true
+ * for the notch and the home indicator. Two sources are combined with max():
+ * `env()` (browsers and iOS) and `--inset-*`, which the Android activity fills in
+ * with the measured insets because WebView does not always report them. Taking
+ * the larger is correct with either source and never adds them twice.
+ */
+:root {
+  --safe-top: max(env(safe-area-inset-top, 0px), var(--inset-top, 0px));
+  --safe-bottom: max(env(safe-area-inset-bottom, 0px), var(--inset-bottom, 0px));
+  --safe-left: max(env(safe-area-inset-left, 0px), var(--inset-left, 0px));
+  --safe-right: max(env(safe-area-inset-right, 0px), var(--inset-right, 0px));
 }
 
 html,

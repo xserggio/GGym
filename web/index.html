@@ -6,16 +6,22 @@
     <meta name="theme-color" content="#E9E7E2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <link rel="apple-touch-icon" href="/icon-192.png" />
-    <title>Registro de fuerza</title>
+    <link rel="apple-touch-icon" href="%BASE_URL%icon-192.png" />
+    <title>GGym</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Jost:wght@500;600;700&family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
   </head>
   <body>
+    <!-- Apply the saved theme before first paint, or a dark-mode user gets a
+         white flash on every launch. React keeps the attribute in sync after. -->
+    <script>
+      if (localStorage.getItem("tema") === "oscura")
+        document.documentElement.setAttribute("data-tema", "oscura");
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

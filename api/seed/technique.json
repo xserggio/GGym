@@ -1,0 +1,915 @@
+{
+  "_comment": "Execution cues and common errors per exercise, keyed by catalogue slug. Written for this app from standard strength-training practice; no third-party text is reproduced. Voice matches the UI: sentence case, active verbs, no exclamation marks.",
+  "exercises": {
+    "press-banca": {
+      "technique": [
+        "túmbate con los ojos bajo la barra, pies firmes en el suelo y una ligera curva lumbar",
+        "junta las escápulas y mantenlas apretadas contra el banco durante toda la serie",
+        "baja la barra controlada hasta rozar la parte baja del pecho, con los codos a unos 45 grados del torso",
+        "empuja hacia arriba y ligeramente atrás, hasta dejar los codos casi extendidos"
+      ],
+      "mistakes": [
+        "abrir los codos a 90 grados: castiga el hombro sin dar más pecho",
+        "rebotar la barra en el pecho para sacar la repetición",
+        "despegar los glúteos del banco para ayudarte con el arco"
+      ]
+    },
+    "press-inclinado-mancuernas": {
+      "technique": [
+        "ajusta el banco entre 30 y 45 grados: más inclinación pasa el trabajo al hombro",
+        "sube las mancuernas con ayuda de los muslos y colócalas a la altura del pecho alto",
+        "baja hasta notar estiramiento sin que los codos caigan muy por debajo del torso",
+        "empuja juntando ligeramente las mancuernas arriba, sin llegar a chocarlas"
+      ],
+      "mistakes": [
+        "inclinar el banco demasiado y convertirlo en un press de hombro",
+        "bajar tan rápido que el peso te frene de golpe en la posición baja",
+        "arquear la espalda para levantar más peso del que controlas"
+      ]
+    },
+    "press-banca-mancuernas": {
+      "technique": [
+        "escápulas juntas y apoyadas, pies estables en el suelo",
+        "coloca las mancuernas a los lados del pecho con las muñecas firmes",
+        "baja controlado hasta que los codos queden a la altura del torso",
+        "empuja hacia arriba siguiendo un arco suave hacia dentro"
+      ],
+      "mistakes": [
+        "dejar que las mancuernas se separen y pierdas la línea de empuje",
+        "bajar más de la cuenta buscando estiramiento y forzar el hombro",
+        "soltar la tensión de las escápulas al final de la serie"
+      ]
+    },
+    "press-pecho-maquina": {
+      "technique": [
+        "regula el asiento para que las agarraderas queden a la altura del pecho medio",
+        "apoya la espalda completa y mantén las escápulas retraídas",
+        "empuja hasta casi extender, sin bloquear de golpe",
+        "vuelve controlado hasta notar estiramiento sin que el hombro se adelante"
+      ],
+      "mistakes": [
+        "asiento demasiado alto: el recorrido pasa a trabajar el hombro",
+        "separar la espalda del respaldo para empujar más",
+        "soltar el peso de golpe en la vuelta"
+      ]
+    },
+    "cruces-polea": {
+      "technique": [
+        "coloca las poleas altas y da un paso al frente para tener tensión desde el inicio",
+        "inclina ligeramente el torso y mantén una flexión fija de codo",
+        "junta las manos describiendo un arco, como si abrazaras",
+        "abre controlado hasta sentir el pecho estirado, sin perder la postura"
+      ],
+      "mistakes": [
+        "flexionar y estirar el codo, convirtiendolo en un press",
+        "abrir tanto que el hombro quede por detrás del torso",
+        "usar tanto peso que tengas que balancear el cuerpo"
+      ]
+    },
+    "fondos-paralelas": {
+      "technique": [
+        "sujétate en las barras con los brazos extendidos y el cuerpo firme",
+        "inclina el torso hacia delante para dirigir el trabajo al pecho",
+        "baja hasta que el hombro quede a la altura del codo, sin pasarte",
+        "empuja hacia arriba manteniendo la inclinación"
+      ],
+      "mistakes": [
+        "bajar demasiado: el hombro queda en una posición vulnerable",
+        "balancear las piernas para coger impulso",
+        "encoger los hombros hacia las orejas en la posición baja"
+      ]
+    },
+    "pec-deck": {
+      "technique": [
+        "ajusta el asiento para que los brazos queden a la altura del pecho",
+        "apoya la espalda y mantén los codos ligeramente flexionados y fijos",
+        "junta despacio hasta que los apoyos casi se toquen",
+        "abre controlado sin dejar que el peso tire del hombro"
+      ],
+      "mistakes": [
+        "abrir más allá de la línea del torso buscando estiramiento",
+        "dejar que las placas caigan y golpeen al volver",
+        "empujar con las manos en vez de cerrar con los codos"
+      ]
+    },
+    "press-militar-pie": {
+      "technique": [
+        "barra apoyada en la parte alta del pecho, manos algo más anchas que los hombros",
+        "aprieta glúteo y abdomen para no arquear la zona lumbar",
+        "mete ligeramente la cabeza hacia atrás para dejar pasar la barra",
+        "empuja recto hacia arriba y termina con la barra sobre la mitad de la cabeza"
+      ],
+      "mistakes": [
+        "arquear la lumbar para compensar la falta de movilidad de hombro",
+        "empujar la barra hacia delante en vez de en línea vertical",
+        "usar impulso de piernas cuando el ejercicio es estricto"
+      ]
+    },
+    "press-hombro-maquina": {
+      "technique": [
+        "ajusta el asiento para que las agarraderas queden a la altura de los hombros",
+        "espalda apoyada y abdomen firme",
+        "empuja hasta casi extender sin bloquear",
+        "baja controlado hasta que el codo quede algo por debajo del hombro"
+      ],
+      "mistakes": [
+        "bajar demasiado y forzar la articulación en la posición inicial",
+        "despegar la espalda del respaldo",
+        "encoger los hombros al empujar"
+      ]
+    },
+    "press-militar-mancuernas": {
+      "technique": [
+        "siéntate con la espalda apoyada y las mancuernas a la altura de las orejas",
+        "muñecas firmes y codos ligeramente por delante del torso",
+        "empuja hacia arriba sin chocar las mancuernas",
+        "baja controlado hasta la altura de la barbilla"
+      ],
+      "mistakes": [
+        "abrir los codos completamente en línea con el cuerpo",
+        "arquear la espalda al fallar las últimas repeticiones",
+        "dejar caer las mancuernas en la bajada"
+      ]
+    },
+    "press-arnold": {
+      "technique": [
+        "empieza con las palmas mirando hacia ti a la altura del pecho",
+        "sube girando las muñecas hasta acabar con las palmas al frente",
+        "termina el giro justo cuando los brazos llegan arriba",
+        "invierte el recorrido despacio hasta la posición inicial"
+      ],
+      "mistakes": [
+        "girar demasiado pronto y perder la parte útil del movimiento",
+        "usar peso alto: el giro pide cargas más modestas",
+        "arquear la lumbar al empujar"
+      ]
+    },
+    "elevaciones-laterales-mancuernas": {
+      "technique": [
+        "de pie, mancuernas a los lados y codos ligeramente flexionados",
+        "sube por los lados hasta la altura de los hombros, guiando con el codo",
+        "mantén el meñique ligeramente más alto que el pulgar",
+        "baja despacio resistiendo el peso"
+      ],
+      "mistakes": [
+        "balancear el torso para lanzar las mancuernas",
+        "subir por encima del hombro y meter el trapecio",
+        "dejar caer el peso sin controlar la bajada"
+      ]
+    },
+    "elevaciones-laterales-polea": {
+      "technique": [
+        "polea baja, coge el agarre con el brazo más lejano y sepárate un paso",
+        "cruza ligeramente el brazo por delante para empezar con tensión",
+        "sube por el lateral hasta la altura del hombro",
+        "baja controlado sin que la polea tire de ti"
+      ],
+      "mistakes": [
+        "inclinar el cuerpo al lado contrario para ayudarte",
+        "subir por encima del hombro",
+        "flexionar y estirar el codo durante el recorrido"
+      ]
+    },
+    "elevaciones-laterales-maquina": {
+      "technique": [
+        "ajusta el asiento para que el eje de giro quede a la altura del hombro",
+        "apoya los brazos en los soportes con los codos ligeramente flexionados",
+        "sube hasta la altura de los hombros guiando con el codo",
+        "baja despacio sin soltar la tensión"
+      ],
+      "mistakes": [
+        "asiento mal ajustado: el hombro trabaja fuera de su eje",
+        "impulsar con el torso para arrancar el peso",
+        "subir demasiado y encoger los hombros"
+      ]
+    },
+    "remo-barra": {
+      "technique": [
+        "inclina el torso unos 45 grados con la espalda recta y rodillas algo flexionadas",
+        "coge la barra algo más ancha que los hombros",
+        "lleva la barra hacia el ombligo tirando con los codos",
+        "baja controlada hasta extender los brazos sin redondear la espalda"
+      ],
+      "mistakes": [
+        "redondear la zona lumbar, sobre todo en las últimas repeticiones",
+        "incorporarte con cada tirón para dar impulso",
+        "tirar con los bíceps en vez de llevar los codos hacia atrás"
+      ]
+    },
+    "remo-t": {
+      "technique": [
+        "colócate a horcajadas sobre la barra con el torso inclinado y la espalda recta",
+        "agarra el asa y saca pecho antes de tirar",
+        "lleva el peso hacia el abdomen juntando las escápulas",
+        "baja controlado hasta estirar del todo"
+      ],
+      "mistakes": [
+        "usar tanto peso que tengas que erguirte para moverlo",
+        "perder la posición neutra de la espalda",
+        "acortar el recorrido y no llegar a estirar abajo"
+      ]
+    },
+    "remo-sentado-polea": {
+      "technique": [
+        "siéntate con las rodillas ligeramente flexionadas y la espalda recta",
+        "saca pecho y lleva el agarre hacia el abdomen",
+        "junta las escápulas al final del tirón",
+        "vuelve controlado dejando que los brazos se estiren sin encorvarte"
+      ],
+      "mistakes": [
+        "balancear el torso adelante y atrás para mover el peso",
+        "encorvar la espalda al estirar los brazos",
+        "encoger los hombros durante el tirón"
+      ]
+    },
+    "remo-maquina-pecho-apoyado": {
+      "technique": [
+        "ajusta el apoyo para que el pecho quede firme y los brazos lleguen a extender",
+        "agarra las asas y saca pecho sin despegarte del soporte",
+        "tira llevando los codos atrás hasta juntar las escápulas",
+        "vuelve controlado hasta la extensión completa"
+      ],
+      "mistakes": [
+        "despegar el pecho del apoyo para tirar con más peso",
+        "quedarte a medio recorrido y no estirar",
+        "tirar solo con los brazos sin mover las escápulas"
+      ]
+    },
+    "remo-mancuerna-unilateral": {
+      "technique": [
+        "apoya rodilla y mano del mismo lado en el banco, espalda paralela al suelo",
+        "deja colgar la mancuerna y mantén los hombros al mismo nivel",
+        "tira llevando el codo hacia la cadera, pegado al cuerpo",
+        "baja controlado hasta estirar el brazo del todo"
+      ],
+      "mistakes": [
+        "rotar el torso para subir más peso",
+        "separar el codo del cuerpo y convertirlo en un remo abierto",
+        "redondear la espalda al estirar abajo"
+      ]
+    },
+    "remo-polea-agarre-ancho": {
+      "technique": [
+        "usa una barra ancha y siéntate con la espalda recta",
+        "tira llevando la barra hacia la parte alta del abdomen",
+        "abre los codos hacia los lados para implicar la espalda alta",
+        "vuelve controlado sin encorvarte"
+      ],
+      "mistakes": [
+        "usar impulso del torso en cada repetición",
+        "encoger los hombros al tirar",
+        "no llegar a estirar los brazos en la vuelta"
+      ]
+    },
+    "face-pull": {
+      "technique": [
+        "coloca la polea a la altura de la cara con una cuerda",
+        "sepárate hasta tener tensión y da un paso firme",
+        "tira llevando la cuerda hacia la frente, separando las manos",
+        "termina con los codos altos y las escápulas juntas"
+      ],
+      "mistakes": [
+        "usar demasiado peso y tirar con todo el cuerpo",
+        "bajar los codos y convertirlo en un remo",
+        "hacerlo rápido: es un ejercicio de control, no de carga"
+      ]
+    },
+    "jalon-neutro": {
+      "technique": [
+        "fija los muslos bajo el rodillo y coge el agarre neutro",
+        "saca pecho y lleva la barra hacia la parte alta del pecho",
+        "guia el movimiento con los codos hacia abajo y atrás",
+        "sube controlado hasta estirar los brazos del todo"
+      ],
+      "mistakes": [
+        "echar el torso muy atrás y convertirlo en un remo",
+        "tirar de la barra por detrás de la nuca",
+        "soltar el peso de golpe en la subida"
+      ]
+    },
+    "jalon-agarre-ancho": {
+      "technique": [
+        "agarre algo más ancho que los hombros, muslos bien fijados",
+        "saca pecho e inclina el torso ligeramente hacia atrás",
+        "lleva la barra hasta la clavícula tirando con los codos",
+        "vuelve arriba controlado dejando estirar los dorsales"
+      ],
+      "mistakes": [
+        "agarre exageradamente ancho: acorta el recorrido sin ganar nada",
+        "llevar la barra tras la nuca",
+        "balancearte para arrancar cada repetición"
+      ]
+    },
+    "dominadas": {
+      "technique": [
+        "cuélgate con las manos algo más anchas que los hombros y el cuerpo firme",
+        "empieza activando las escápulas hacia abajo antes de flexionar los brazos",
+        "sube hasta pasar la barbilla por encima de la barra",
+        "baja controlado hasta extender del todo"
+      ],
+      "mistakes": [
+        "balancear las piernas para coger impulso",
+        "hacer medias repeticiones sin llegar arriba ni estirar abajo",
+        "encoger los hombros al colgarte"
+      ]
+    },
+    "dominadas-asistidas": {
+      "technique": [
+        "elige la asistencia justa para completar las repeticiones con técnica",
+        "apoya rodillas o pies en la plataforma y mantén el cuerpo firme",
+        "sube hasta pasar la barbilla por encima de la barra",
+        "baja controlado hasta la extensión completa"
+      ],
+      "mistakes": [
+        "poner tanta asistencia que el ejercicio deje de costar",
+        "rebotar en la posición baja",
+        "dejar el cuerpo suelto en vez de mantener el abdomen firme"
+      ]
+    },
+    "pullover-polea": {
+      "technique": [
+        "polea alta, de pie y con el torso ligeramente inclinado",
+        "brazos casi extendidos con una flexión fija de codo",
+        "lleva la barra hacia los muslos describiendo un arco",
+        "vuelve arriba controlado notando el estiramiento del dorsal"
+      ],
+      "mistakes": [
+        "flexionar los codos y convertirlo en una extensión de tríceps",
+        "mover el torso arriba y abajo para ayudarte",
+        "usar un peso que no te deja controlar la vuelta"
+      ]
+    },
+    "curl-barra-z": {
+      "technique": [
+        "de pie, coge la barra por las curvas con las palmas hacia arriba",
+        "codos pegados al costado y fijos durante todo el recorrido",
+        "sube flexionando hasta la altura del pecho",
+        "baja controlado hasta casi extender"
+      ],
+      "mistakes": [
+        "balancear el torso hacia atrás para subir el peso",
+        "adelantar los codos y descargar la tensión arriba",
+        "soltar la bajada en caída libre"
+      ]
+    },
+    "curl-mancuernas": {
+      "technique": [
+        "de pie o sentado, mancuernas a los lados con las palmas al frente",
+        "codos fijos junto al torso",
+        "sube girando ligeramente la muñeca hacia fuera al final",
+        "baja despacio hasta extender el brazo"
+      ],
+      "mistakes": [
+        "usar impulso de cadera en cada repetición",
+        "quedarte a medio recorrido y no estirar abajo",
+        "levantar el codo hacia delante al subir"
+      ]
+    },
+    "curl-martillo": {
+      "technique": [
+        "coge las mancuernas con las palmas mirandose entre si",
+        "codos pegados al cuerpo y muñeca neutra",
+        "sube manteniendo el agarre de martillo todo el recorrido",
+        "baja controlado hasta extender"
+      ],
+      "mistakes": [
+        "girar la muñeca y convertirlo en un curl normal",
+        "balancear el cuerpo para arrancar",
+        "no estirar del todo abajo"
+      ]
+    },
+    "curl-banco-inclinado": {
+      "technique": [
+        "siéntate en un banco inclinado con los brazos colgando por detrás del torso",
+        "deja los codos quietos: esa posición es lo que da el estiramiento",
+        "sube flexionando sin adelantar el hombro",
+        "baja despacio hasta la extensión completa"
+      ],
+      "mistakes": [
+        "adelantar los hombros para ayudarte a subir",
+        "cargar demasiado peso: esta posición pide menos carga",
+        "despegar la espalda del banco"
+      ]
+    },
+    "curl-polea-baja": {
+      "technique": [
+        "de pie frente a la polea baja, un paso atrás para tener tensión",
+        "codos pegados al costado y fijos",
+        "sube flexionando hasta el pecho",
+        "baja controlado sin dejar que la polea tire del brazo"
+      ],
+      "mistakes": [
+        "echar el torso atrás para ayudarte",
+        "adelantar los codos al final del recorrido",
+        "dejar que el peso te estire el brazo de golpe"
+      ]
+    },
+    "triceps-polea": {
+      "technique": [
+        "de pie frente a la polea alta, codos pegados al costado",
+        "torso ligeramente inclinado y abdomen firme",
+        "extiende los codos hasta abajo sin mover los brazos",
+        "vuelve controlado hasta unos 90 grados"
+      ],
+      "mistakes": [
+        "separar los codos del cuerpo y empujar con el hombro",
+        "inclinarte sobre la barra para usar el peso corporal",
+        "subir tanto que pierdas la tensión arriba"
+      ]
+    },
+    "press-frances": {
+      "technique": [
+        "tumbado, barra sobre el pecho con los brazos extendidos",
+        "flexiona solo los codos, bajando la barra hacia la frente",
+        "mantén los brazos apuntando al techo, sin moverlos hacia atrás",
+        "extiende sin bloquear de golpe"
+      ],
+      "mistakes": [
+        "abrir los codos hacia los lados al bajar",
+        "mover los hombros y convertirlo en un pullover",
+        "bajar tan rápido que la barra te caiga hacia la cara"
+      ]
+    },
+    "fondos-banco": {
+      "technique": [
+        "apoya las manos en el borde del banco a la anchura de las caderas",
+        "mantén la espalda cerca del banco durante toda la bajada",
+        "baja flexionando los codos hasta unos 90 grados",
+        "empuja hasta extender sin bloquear bruscamente"
+      ],
+      "mistakes": [
+        "alejar el cuerpo del banco y castigar el hombro",
+        "bajar más de 90 grados de codo",
+        "ayudarte con las piernas más de la cuenta"
+      ]
+    },
+    "extension-triceps-sobre-cabeza": {
+      "technique": [
+        "de espaldas a la polea, cuerda por encima de la cabeza",
+        "codos altos y apuntando al frente, pegados a las orejas",
+        "extiende los brazos hacia delante sin mover los codos",
+        "vuelve controlado notando el estiramiento del tríceps"
+      ],
+      "mistakes": [
+        "abrir los codos hacia los lados",
+        "arquear la lumbar al extender",
+        "bajar tanto que el hombro pierda la posición"
+      ]
+    },
+    "sentadilla": {
+      "technique": [
+        "barra apoyada en la parte alta de la espalda, pies a la anchura de los hombros",
+        "coge aire, aprieta el abdomen y saca pecho antes de bajar",
+        "baja llevando la cadera atrás y abajo, con las rodillas siguiendo la punta del pie",
+        "sube empujando el suelo hasta extender cadera y rodillas"
+      ],
+      "mistakes": [
+        "dejar que las rodillas se metan hacia dentro al subir",
+        "redondear la zona lumbar en el punto más bajo",
+        "levantar los talones del suelo por falta de movilidad de tobillo"
+      ]
+    },
+    "sentadilla-frontal": {
+      "technique": [
+        "barra apoyada en la parte delantera de los hombros con los codos altos",
+        "torso lo más vertical posible durante todo el recorrido",
+        "baja controlado manteniendo los codos arriba",
+        "sube empujando el suelo sin dejar caer el pecho"
+      ],
+      "mistakes": [
+        "bajar los codos: la barra rueda hacia delante",
+        "inclinar el torso como en una sentadilla trasera",
+        "cargar más peso del que te permite mantener la posición"
+      ]
+    },
+    "sentadilla-multipower": {
+      "technique": [
+        "coloca los pies ligeramente adelantados respecto a la barra",
+        "apoya la barra en la parte alta de la espalda y desbloquea",
+        "baja controlado hasta que el muslo quede paralelo al suelo",
+        "sube empujando con el medio del pie"
+      ],
+      "mistakes": [
+        "poner los pies debajo de la barra y cargar la rodilla",
+        "confiarte por la guia y bajar sin control",
+        "no bloquear la barra al terminar la serie"
+      ]
+    },
+    "sentadilla-goblet": {
+      "technique": [
+        "sujeta una mancuerna contra el pecho con ambas manos",
+        "pies a la anchura de los hombros y punta ligeramente abierta",
+        "baja manteniendo el torso vertical y los codos por dentro de las rodillas",
+        "sube empujando el suelo sin adelantar el pecho"
+      ],
+      "mistakes": [
+        "separar la mancuerna del pecho y perder la verticalidad",
+        "meter las rodillas hacia dentro",
+        "acortar el recorrido cuando pesa"
+      ]
+    },
+    "sentadilla-bulgara": {
+      "technique": [
+        "apoya el empeine de la pierna de atrás en un banco",
+        "da un paso suficiente para que la rodilla delantera no se adelante en exceso",
+        "baja vertical hasta que el muslo delantero quede paralelo al suelo",
+        "sube empujando con el talón de la pierna delantera"
+      ],
+      "mistakes": [
+        "quedarte demasiado cerca del banco y cargar la rodilla",
+        "empujar con la pierna de atrás en vez de con la delantera",
+        "perder el equilibrio por mirar al suelo en vez de a un punto fijo"
+      ]
+    },
+    "prensa": {
+      "technique": [
+        "apoya la espalda y la cadera completamente en el respaldo",
+        "pies a la anchura de los hombros en el centro de la plataforma",
+        "baja hasta unos 90 grados de rodilla, sin que la cadera se despegue",
+        "empuja sin bloquear las rodillas de golpe"
+      ],
+      "mistakes": [
+        "bajar tanto que la lumbar se despegue y se redondee",
+        "bloquear las rodillas con fuerza al final",
+        "poner las manos sobre las rodillas en vez de en los agarres"
+      ]
+    },
+    "prensa-pies-altos": {
+      "technique": [
+        "coloca los pies altos y separados en la plataforma",
+        "abre ligeramente la punta de los pies",
+        "baja controlado buscando el estiramiento de glúteo e isquios",
+        "empuja desde el talón sin bloquear la rodilla"
+      ],
+      "mistakes": [
+        "despegar la cadera del respaldo al bajar",
+        "empujar con la punta del pie y perder el trabajo de glúteo",
+        "acortar el recorrido por exceso de peso"
+      ]
+    },
+    "prensa-unilateral": {
+      "technique": [
+        "coloca un solo pie centrado en la plataforma",
+        "sujétate bien y mantén la cadera apoyada y estable",
+        "baja controlado hasta unos 90 grados de rodilla",
+        "empuja sin bloquear y repite con la otra pierna"
+      ],
+      "mistakes": [
+        "dejar que la cadera rote hacia el lado que trabaja",
+        "usar el mismo peso que a dos piernas",
+        "bajar más de lo que controlas"
+      ]
+    },
+    "hack-squat": {
+      "technique": [
+        "espalda y hombros bien apoyados en el respaldo",
+        "pies a la anchura de los hombros en el centro de la plataforma",
+        "baja controlado hasta que el muslo quede paralelo",
+        "sube empujando el suelo sin bloquear de golpe"
+      ],
+      "mistakes": [
+        "despegar la lumbar del respaldo en la posición baja",
+        "meter las rodillas hacia dentro al subir",
+        "poner los pies muy bajos y cargar la rodilla"
+      ]
+    },
+    "extension-cuadriceps": {
+      "technique": [
+        "ajusta el respaldo para que la rodilla coincida con el eje de giro",
+        "el rodillo debe quedar sobre el tobillo, no sobre la espinilla",
+        "extiende hasta casi bloquear y mantén un instante arriba",
+        "baja controlado sin dejar caer el peso"
+      ],
+      "mistakes": [
+        "eje mal ajustado: la rodilla trabaja fuera de su recorrido",
+        "levantar la cadera del asiento para completar la repetición",
+        "soltar el peso de golpe en la bajada"
+      ]
+    },
+    "zancadas-caminando": {
+      "technique": [
+        "de pie con una mancuerna en cada mano y el torso erguido",
+        "da un paso largo y baja vertical hasta casi tocar el suelo con la rodilla de atrás",
+        "empuja con el talón de la pierna delantera para avanzar",
+        "alterna piernas manteniendo el tronco estable"
+      ],
+      "mistakes": [
+        "dar pasos cortos y cargar la rodilla delantera",
+        "inclinar el torso hacia delante",
+        "dejar que la rodilla de atrás golpee el suelo"
+      ]
+    },
+    "step-up-cajon": {
+      "technique": [
+        "elige una altura que deje el muslo casi paralelo al subir",
+        "apoya el pie completo en el cajon, no solo la punta",
+        "sube empujando con la pierna de arriba, sin impulsarte con la de abajo",
+        "baja controlado apoyando primero la punta del pie"
+      ],
+      "mistakes": [
+        "impulsarte con la pierna que queda en el suelo",
+        "usar un cajon tan alto que tengas que saltar",
+        "dejarte caer en la bajada"
+      ]
+    },
+    "peso-muerto-rumano": {
+      "technique": [
+        "de pie con la barra pegada a los muslos y rodillas ligeramente flexionadas",
+        "lleva la cadera hacia atrás manteniendo la espalda recta",
+        "baja la barra rozando la pierna hasta notar tensión en los isquios",
+        "sube empujando la cadera hacia delante y apretando el glúteo"
+      ],
+      "mistakes": [
+        "redondear la espalda al bajar",
+        "flexionar las rodillas como en un peso muerto convencional",
+        "separar la barra del cuerpo y cargar la lumbar"
+      ]
+    },
+    "peso-muerto-rumano-mancuernas": {
+      "technique": [
+        "mancuernas delante de los muslos con las palmas hacia el cuerpo",
+        "rodillas ligeramente flexionadas y espalda recta",
+        "lleva la cadera atrás bajando las mancuernas pegadas a la pierna",
+        "sube extendiendo la cadera y apretando el glúteo arriba"
+      ],
+      "mistakes": [
+        "separar las mancuernas del cuerpo",
+        "bajar más allá de lo que permite tu flexibilidad y redondear la espalda",
+        "convertirlo en una sentadilla flexionando mucho la rodilla"
+      ]
+    },
+    "buenos-dias": {
+      "technique": [
+        "barra apoyada en la parte alta de la espalda, pies a la anchura de la cadera",
+        "rodillas ligeramente flexionadas y abdomen firme",
+        "inclina el torso hacia delante llevando la cadera atrás, con la espalda recta",
+        "sube extendiendo la cadera sin arquear la lumbar"
+      ],
+      "mistakes": [
+        "empezar con demasiado peso: es un ejercicio muy exigente para la lumbar",
+        "redondear la espalda al inclinarte",
+        "bajar más de lo que permite tu flexibilidad de isquios"
+      ]
+    },
+    "curl-femoral-tumbado": {
+      "technique": [
+        "túmbate con la rodilla justo al borde del banco y el rodillo sobre el tendon de Aquiles",
+        "sujétate en los agarres y mantén la cadera pegada al banco",
+        "flexiona llevando el talón hacia el glúteo",
+        "baja controlado sin dejar caer el peso"
+      ],
+      "mistakes": [
+        "levantar la cadera del banco para completar la repetición",
+        "hacer el movimiento a tirones",
+        "colocar el rodillo sobre la pantorrilla en vez del tobillo"
+      ]
+    },
+    "curl-femoral-sentado": {
+      "technique": [
+        "ajusta el respaldo y el rodillo de muslos para quedar bien sujeto",
+        "el rodillo inferior debe apoyar justo encima del tobillo",
+        "flexiona las rodillas llevando los talones hacia atrás",
+        "vuelve controlado sin extender de golpe"
+      ],
+      "mistakes": [
+        "no fijar el rodillo de muslos y despegarte del asiento",
+        "usar impulso del torso",
+        "recorrido corto por exceso de peso"
+      ]
+    },
+    "curl-femoral-pie": {
+      "technique": [
+        "apoya el muslo en el soporte y sujétate firme",
+        "el rodillo queda justo encima del talón",
+        "flexiona la rodilla llevando el talón hacia el glúteo",
+        "baja despacio y repite con la otra pierna"
+      ],
+      "mistakes": [
+        "mover la cadera para ayudarte",
+        "arquear la lumbar al flexionar",
+        "hacerlo con impulso en vez de con control"
+      ]
+    },
+    "hiperextensiones": {
+      "technique": [
+        "ajusta el apoyo justo debajo de la cadera, no sobre el abdomen",
+        "cruza los brazos sobre el pecho y mantén la espalda recta",
+        "baja flexionando la cadera hasta notar tensión en los isquios",
+        "sube hasta alinear el cuerpo, sin pasarte de la horizontal"
+      ],
+      "mistakes": [
+        "hiperextender arriba y arquear la lumbar",
+        "redondear la espalda al bajar",
+        "hacerlo con impulso en vez de controlado"
+      ]
+    },
+    "hip-thrust": {
+      "technique": [
+        "apoya la parte baja de los omóplatos en el banco y coloca la barra sobre la cadera",
+        "pies a la anchura de los hombros, espinilla vertical arriba",
+        "empuja con los talones subiendo la cadera hasta alinear tronco y muslos",
+        "aprieta el glúteo arriba y baja controlado"
+      ],
+      "mistakes": [
+        "arquear la lumbar arriba en vez de terminar con el glúteo",
+        "colocar los pies muy lejos y pasar el trabajo a los isquios",
+        "no llegar a la extensión completa de cadera"
+      ]
+    },
+    "hip-thrust-maquina": {
+      "technique": [
+        "ajusta el respaldo para que el apoyo quede bajo los omóplatos",
+        "coloca el acolchado sobre la cadera y los pies a la anchura de los hombros",
+        "empuja con los talones hasta extender la cadera del todo",
+        "baja controlado sin soltar la tensión"
+      ],
+      "mistakes": [
+        "arquear la lumbar al terminar la extensión",
+        "hacer repeticiones cortas sin llegar arriba",
+        "empujar con la punta del pie"
+      ]
+    },
+    "hip-thrust-mancuerna": {
+      "technique": [
+        "apoya la espalda alta en el banco y coloca la mancuerna sobre la cadera",
+        "sujetala con ambas manos y mantén el mentón ligeramente metido",
+        "sube la cadera hasta alinear tronco y muslos apretando el glúteo",
+        "baja controlado sin apoyar del todo entre repeticiones"
+      ],
+      "mistakes": [
+        "arquear la lumbar en lugar de extender la cadera",
+        "dejar que la mancuerna se desplace hacia el abdomen",
+        "apoyar el glúteo en el suelo y perder la tensión"
+      ]
+    },
+    "patada-gluteo-polea": {
+      "technique": [
+        "coloca la tobillera en la polea baja y sujétate al soporte",
+        "inclina ligeramente el torso hacia delante con la espalda recta",
+        "lleva la pierna hacia atrás extendiendo la cadera",
+        "vuelve controlado sin dejar que la polea tire de ti"
+      ],
+      "mistakes": [
+        "arquear la lumbar para llevar la pierna más atrás",
+        "rotar la cadera hacia fuera",
+        "usar impulso en vez de control"
+      ]
+    },
+    "puente-gluteo": {
+      "technique": [
+        "túmbate boca arriba con las rodillas flexionadas y los pies apoyados",
+        "aprieta el abdomen para no arquear la lumbar",
+        "sube la cadera hasta alinear tronco y muslos",
+        "aprieta el glúteo arriba y baja controlado"
+      ],
+      "mistakes": [
+        "empujar la lumbar hacia arriba en vez de extender la cadera",
+        "poner los pies demasiado lejos y trabajar isquios",
+        "subir a tirones"
+      ]
+    },
+    "pull-through-polea": {
+      "technique": [
+        "de espaldas a la polea baja, pasa la cuerda entre las piernas",
+        "da unos pasos al frente y separa los pies a la anchura de los hombros",
+        "lleva la cadera atrás con la espalda recta hasta notar tensión",
+        "sube empujando la cadera hacia delante y apretando el glúteo"
+      ],
+      "mistakes": [
+        "tirar con los brazos en vez de mover la cadera",
+        "redondear la espalda al llevar la cadera atrás",
+        "quedarte demasiado cerca de la polea y perder tensión"
+      ]
+    },
+    "abductora-maquina": {
+      "technique": [
+        "siéntate con la espalda apoyada y los muslos contra los soportes",
+        "abre las piernas de forma controlada hasta el final del recorrido",
+        "mantén un instante en la apertura máxima",
+        "cierra despacio sin dejar que las placas caigan"
+      ],
+      "mistakes": [
+        "usar impulso y dejar que el peso te cierre las piernas",
+        "despegar la espalda del respaldo",
+        "recorrido corto por exceso de peso"
+      ]
+    },
+    "abduccion-polea": {
+      "technique": [
+        "tobillera en la polea baja, sujétate al soporte con el lado contrario",
+        "mantén el torso erguido y la cadera estable",
+        "separa la pierna del cuerpo sin inclinarte",
+        "vuelve controlado resistiendo la polea"
+      ],
+      "mistakes": [
+        "inclinar el torso al lado contrario para levantar más",
+        "rotar la cadera hacia fuera",
+        "hacerlo con balanceo en vez de con control"
+      ]
+    },
+    "caminata-lateral-banda": {
+      "technique": [
+        "coloca la banda por encima de las rodillas o en los tobillos",
+        "flexiona ligeramente rodillas y cadera en posición de media sentadilla",
+        "da pasos laterales manteniendo la tensión de la banda",
+        "avanza y vuelve el mismo número de pasos a cada lado"
+      ],
+      "mistakes": [
+        "juntar los pies entre pasos y perder la tensión",
+        "erguirte y dejar de trabajar el glúteo medio",
+        "dar pasos con las puntas hacia fuera"
+      ]
+    },
+    "gemelos-pie": {
+      "technique": [
+        "apoya la punta del pie en la plataforma con el talón libre",
+        "baja el talón hasta notar el estiramiento completo",
+        "sube hasta la máxima extensión y mantén un instante arriba",
+        "controla la bajada en vez de rebotar"
+      ],
+      "mistakes": [
+        "rebotar aprovechando el reflejo elástico",
+        "hacer recorridos cortos sin estirar abajo",
+        "flexionar las rodillas para ayudarte"
+      ]
+    },
+    "gemelos-sentado": {
+      "technique": [
+        "coloca el acolchado sobre los muslos, cerca de la rodilla",
+        "apoya la punta del pie con el talón libre",
+        "baja el talón buscando el estiramiento y sube hasta el máximo",
+        "haz una pausa breve arriba en cada repetición"
+      ],
+      "mistakes": [
+        "rebotar sin control",
+        "recorrido corto por poner demasiado peso",
+        "apoyar el pie entero en la plataforma"
+      ]
+    },
+    "gemelos-en-prensa": {
+      "technique": [
+        "coloca la punta de los pies en el borde inferior de la plataforma",
+        "deja las rodillas casi extendidas pero sin bloquear",
+        "empuja con la punta hasta la máxima extensión del tobillo",
+        "baja controlado dejando que el talón caiga por debajo"
+      ],
+      "mistakes": [
+        "bloquear las rodillas del todo",
+        "poner el pie demasiado adentro y perder recorrido",
+        "hacerlo a rebotes"
+      ]
+    },
+    "rueda-abdominal": {
+      "technique": [
+        "arródillate con la rueda bajo los hombros y el abdomen apretado",
+        "mete ligeramente la cadera para no arquear la lumbar",
+        "rueda hacia delante solo hasta donde puedas mantener la espalda plana",
+        "vuelve tirando con el abdomen, no con los brazos"
+      ],
+      "mistakes": [
+        "arquear la lumbar al extenderte: es la causa tipica de molestias",
+        "ir más lejos de lo que puedes controlar en la vuelta",
+        "empujar con los brazos para volver"
+      ]
+    },
+    "elevaciones-piernas-colgado": {
+      "technique": [
+        "cuélgate de la barra con los hombros activos, sin quedarte muerto",
+        "aprieta el abdomen antes de empezar a subir",
+        "sube las piernas llevando la pelvis hacia arriba, no solo la cadera",
+        "baja controlado sin balancearte"
+      ],
+      "mistakes": [
+        "usar balanceo y subir por inercia",
+        "flexionar solo la cadera sin implicar el abdomen",
+        "dejarte caer y arrancar la siguiente repetición con el rebote"
+      ]
+    },
+    "plancha": {
+      "technique": [
+        "apoya antebrazos y puntas de los pies, codos bajo los hombros",
+        "aprieta abdomen y glúteo para alinear cabeza, cadera y talones",
+        "mete ligeramente la pelvis para no arquear la lumbar",
+        "respira con normalidad y mantén el tiempo marcado"
+      ],
+      "mistakes": [
+        "dejar caer la cadera y arquear la lumbar",
+        "subir demasiado la cadera y descargar el abdomen",
+        "aguantar más tiempo del que puedes con la postura correcta"
+      ]
+    },
+    "crunch-polea": {
+      "technique": [
+        "arródillate frente a la polea alta con la cuerda junto a la cabeza",
+        "fija la cadera: el movimiento es solo del tronco",
+        "flexiona llevando los codos hacia los muslos, redondeando la espalda alta",
+        "vuelve controlado sin perder la tensión"
+      ],
+      "mistakes": [
+        "tirar con los brazos en vez de flexionar el tronco",
+        "mover la cadera adelante y atrás",
+        "usar tanto peso que se convierta en un movimiento de espalda"
+      ]
+    }
+  }
+}

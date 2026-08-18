@@ -26,6 +26,11 @@ export default {
       },
       fontFamily: {
         display: ['"Instrument Serif"', "serif"],
+        // Brand voice: a geometric sans built on circles, the same
+        // construction as the drawn G's of the wordmark. Using it for the
+        // screen titles too means the interface is set in the brand's own type
+        // rather than in something merely near it.
+        brand: ["Jost", '"Century Gothic"', "sans-serif"],
         sans: ["Inter", "system-ui", "sans-serif"],
         mono: ['"IBM Plex Mono"', "ui-monospace", "monospace"],
       },

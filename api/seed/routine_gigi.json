@@ -7,15 +7,15 @@
   "exercises": [
     {
       "id": "abductora-maquina",
-      "name": "Abductora en maquina",
+      "name": "Abductora en máquina",
       "pattern": "abduccion",
       "equipment": "maquina",
       "default_rest_s": 60,
-      "description": "Sentada en la maquina, separas las rodillas contra la resistencia. Con el tronco inclinado hacia delante trabaja mucho mas el gluteo medio, que es el que da forma redondeada a la parte alta y lateral. Erguida trabaja bastante menos."
+      "description": "Sentada en la máquina, separas las rodillas contra la resistencia. Con el tronco inclinado hacia delante trabaja mucho más el glúteo medio, que es el que da forma redondeada a la parte alta y lateral. Erguida trabaja bastante menos."
     },
     {
       "id": "abduccion-polea",
-      "name": "Abduccion en polea",
+      "name": "Abducción en polea",
       "pattern": "abduccion",
       "equipment": "polea",
       "default_rest_s": 60,
@@ -28,7 +28,7 @@
       "pattern": "abduccion",
       "equipment": "banda",
       "default_rest_s": 45,
-      "description": "Con una banda por encima de las rodillas y semiflexionada, caminas de lado manteniendo la tension. Buena para activar antes de entrenar pierna."
+      "description": "Con una banda por encima de las rodillas y semiflexionada, caminas de lado manteniendo la tensión. Buena para activar antes de entrenar pierna."
     },
     {
       "id": "prensa-pies-altos",
@@ -36,16 +36,16 @@
       "pattern": "gluteo",
       "equipment": "maquina",
       "default_rest_s": 120,
-      "description": "Prensa colocando los pies en la parte alta de la plataforma y mas separados de lo normal. Desplaza el trabajo del cuadriceps al gluteo y al isquiotibial, y permite bajar mas."
+      "description": "Prensa colocando los pies en la parte alta de la plataforma y más separados de lo normal. Desplaza el trabajo del cuádriceps al glúteo y al isquiotibial, y permite bajar más."
     },
     {
       "id": "step-up-cajon",
-      "name": "Subida al cajon",
+      "name": "Subida al cajón",
       "pattern": "gluteo",
       "equipment": "mancuernas",
       "default_rest_s": 90,
       "per_side": true,
-      "description": "Subes a un cajon alto con una pierna, sin impulsarte con la de abajo. Cuanto mas alto el cajon, mas gluteo. Trabaja el gluteo en posicion estirada."
+      "description": "Subes a un cajon alto con una pierna, sin impulsarte con la de abajo. Cuanto más alto el cajon, más glúteo. Trabaja el glúteo en posición estirada."
     },
     {
       "id": "pull-through-polea",
@@ -53,7 +53,7 @@
       "pattern": "gluteo",
       "equipment": "polea",
       "default_rest_s": 90,
-      "description": "De espaldas a la polea baja, con la cuerda entre las piernas, empujas la cadera hacia atras y vuelves apretando el gluteo. Ensena el patron de bisagra de cadera sin cargar la espalda."
+      "description": "De espaldas a la polea baja, con la cuerda entre las piernas, empujas la cadera hacia atrás y vuelves apretando el glúteo. Ensena el patron de bisagra de cadera sin cargar la espalda."
     },
     {
       "id": "hip-thrust-mancuerna",
@@ -61,7 +61,7 @@
       "pattern": "gluteo",
       "equipment": "mancuernas",
       "default_rest_s": 90,
-      "description": "Version del hip thrust con una mancuerna sobre la cadera, para cuando la barra o el banco estan ocupados. Menos carga maxima."
+      "description": "Version del hip thrust con una mancuerna sobre la cadera, para cuando la barra o el banco estan ocupados. Menos carga máxima."
     },
     {
       "id": "prensa-unilateral",
@@ -70,15 +70,15 @@
       "equipment": "maquina",
       "default_rest_s": 90,
       "per_side": true,
-      "description": "Prensa empujando con una sola pierna. Corrige descompensaciones y permite mas recorrido."
+      "description": "Prensa empujando con una sola pierna. Corrige descompensaciones y permite más recorrido."
     },
     {
       "id": "elevaciones-laterales-maquina",
-      "name": "Elevaciones laterales en maquina",
+      "name": "Elevaciones laterales en máquina",
       "pattern": "deltoides_lateral",
       "equipment": "maquina",
       "default_rest_s": 60,
-      "description": "Version guiada de las elevaciones laterales. Mantiene tension constante y evita el impulso."
+      "description": "Version guiada de las elevaciones laterales. Mantiene tensión constante y evita el impulso."
     },
     {
       "id": "gemelos-sentado",
@@ -86,7 +86,7 @@
       "pattern": "gemelo",
       "equipment": "maquina",
       "default_rest_s": 60,
-      "description": "Elevacion de talon sentada, con las rodillas flexionadas. Enfatiza el soleo, el musculo profundo de la pantorrilla."
+      "description": "Elevacion de talón sentada, con las rodillas flexionadas. Enfatiza el soleo, el musculo profundo de la pantorrilla."
     },
     {
       "id": "gemelos-en-prensa",

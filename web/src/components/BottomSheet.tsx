@@ -23,6 +23,7 @@ export function BottomSheet({ title, subtitle, onClose, children }: BottomSheetP
         aria-label={title}
         onClick={(e) => e.stopPropagation()}
         className="max-h-[80%] w-full overflow-y-auto rounded-t-sheet bg-bg px-4 pb-6 pt-4"
+        style={{ paddingBottom: "calc(1.5rem + var(--safe-bottom))" }}
       >
         <div className="mb-1 flex items-baseline gap-2">
           <span className="font-display text-2xl">{title}</span>

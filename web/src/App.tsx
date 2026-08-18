@@ -24,13 +24,19 @@ import {
   type ActiveSession,
   type SessionSummary,
 } from "./lib/session";
+import { equipmentLabel, patternLabel } from "./lib/labels";
 import { enqueue, flush, startSync, subscribePending } from "./lib/sync";
 import { useRestTimer } from "./lib/useRestTimer";
 import { useStopwatch } from "./lib/useStopwatch";
 import { Ajustes } from "./screens/Ajustes";
+import { Cinta } from "./screens/Cinta";
 import { Detalle } from "./screens/Detalle";
+import { Fases } from "./screens/Fases";
+import { Inicio } from "./screens/Inicio";
+import { Peso } from "./screens/Peso";
 import { Highlights } from "./screens/Highlights";
 import { Historial } from "./screens/Historial";
+import { Asistente } from "./screens/Asistente";
 import { Rutina } from "./screens/Rutina";
 import { Hoy } from "./screens/Hoy";
 import { Login } from "./screens/Login";
@@ -60,7 +66,9 @@ function patchSet(
 
 /** Auth gate + phone frame. */
 export function App() {
-  const [tema, setTema] = useState<Tema>("clara");
+  const [tema, setTema] = useState<Tema>(() =>
+    localStorage.getItem("tema") === "oscura" ? "oscura" : "clara",
+  );
   const [user, setUser] = useState<UserOut | null | undefined>(undefined);
 
   useEffect(() => {
@@ -68,11 +76,27 @@ export function App() {
     api.me().then(setUser).catch(() => setUser(null));
   }, []);
 
+  // The theme lives on <html>: anything inheriting from body (text with no
+  // explicit colour class) must resolve --ink from the themed scope, otherwise
+  // it keeps the light value and renders black on the dark background.
+  useEffect(() => {
+    document.documentElement.setAttribute("data-tema", tema);
+    localStorage.setItem("tema", tema);
+    // The installed app paints its own chrome from this: left fixed it would
+    // show a light bar around a dark screen.
+    document
+      .querySelector('meta[name="theme-color"]')
+      ?.setAttribute("content", tema === "oscura" ? "#16181a" : "#E9E7E2");
+  }, [tema]);
+
   const toggleTema = () => setTema(tema === "clara" ? "oscura" : "clara");
 
   return (
-    <div data-tema={tema} className="flex min-h-full justify-center bg-bg">
-      <div className="relative flex h-[100dvh] w-full max-w-[390px] flex-col overflow-hidden bg-bg">
+    <div className="flex min-h-full justify-center bg-bg">
+      <div
+        className="relative flex h-[100dvh] w-full max-w-[390px] flex-col overflow-hidden bg-bg"
+        style={{ paddingLeft: "var(--safe-left)", paddingRight: "var(--safe-right)" }}
+      >
         {user === undefined ? (
           <div className="flex h-full items-center justify-center font-mono text-xs text-gris">
             …
@@ -109,9 +133,11 @@ function Shell({ user, tema, onToggleTema, onLogout }: ShellProps) {
   const [bodyweight, setBodyweight] = useState<BodyWeightSummary | null>(null);
   const [weightSheetOpen, setWeightSheetOpen] = useState(false);
   const [weightInput, setWeightInput] = useState(70);
-  const [tab, setTab] = useState<Tab>("hoy");
+  const [tab, setTab] = useState<Tab>("inicio");
   const [ajustes, setAjustes] = useState(false);
   const [detailId, setDetailId] = useState<string | null>(null);
+  // Full-screen views reached from a tab (treadmill and body weight detail).
+  const [subScreen, setSubScreen] = useState<"cinta" | "peso" | "fases" | "asistente" | null>(null);
   const [highlights, setHighlights] = useState<SessionSummary | null>(null);
   const sessionRef = useRef<ActiveSession | null>(null);
   const rest = useRestTimer();
@@ -210,24 +236,27 @@ function Shell({ user, tema, onToggleTema, onLogout }: ShellProps) {
     closeSheet();
   };
 
-  const toggleTreadmill = () => {
-    if (treadmill.running) {
-      const result = treadmill.stop();
-      if (result && result.durationS > 0) {
-        void enqueue({
-          treadmill_sessions: [
-            {
-              id: crypto.randomUUID(),
-              started_at: result.startedAt,
-              ended_at: result.endedAt,
-              duration_s: result.durationS,
-            },
-          ],
-        });
-      }
-    } else {
-      treadmill.start();
+  /** Stop the run and queue it. Shared by the Hoy card and the Cinta screen so
+   * a run started in one place can be finished in the other. */
+  const saveTreadmill = () => {
+    const result = treadmill.stop();
+    if (result && result.durationS > 0) {
+      void enqueue({
+        treadmill_sessions: [
+          {
+            id: crypto.randomUUID(),
+            started_at: result.startedAt,
+            ended_at: result.endedAt,
+            duration_s: result.durationS,
+          },
+        ],
+      }).then(() => flush());
     }
+  };
+
+  const toggleTreadmill = () => {
+    if (treadmill.running || treadmill.paused) saveTreadmill();
+    else treadmill.start();
   };
 
   const openWeightSheet = () => {
@@ -254,6 +283,24 @@ function Shell({ user, tema, onToggleTema, onLogout }: ShellProps) {
     bodyweight?.latest != null
       ? Math.round((treadmill.seconds / 60) * 0.053 * bodyweight.latest)
       : null;
+
+  // One sheet, reachable from the Hoy card and from the body-weight screen.
+  const weightSheet = (
+    <BottomSheet title={es.today.bodyweight} onClose={() => setWeightSheetOpen(false)}>
+      <div className="flex items-center justify-between gap-3 py-2">
+        <NumberStepper
+          label={es.today.bodyweight}
+          value={weightInput}
+          step={0.1}
+          onChange={setWeightInput}
+          valueWidth={72}
+        />
+        <Button variant="primary" onClick={() => void saveWeight()} className="flex-1">
+          {es.today.save}
+        </Button>
+      </div>
+    </BottomSheet>
+  );
 
   const end = async () => {
     const active = sessionRef.current;
@@ -288,6 +335,42 @@ function Shell({ user, tema, onToggleTema, onLogout }: ShellProps) {
     return <Detalle exerciseId={detailId} onBack={() => setDetailId(null)} />;
   }
 
+  if (subScreen === "fases") {
+    return <Fases onBack={() => setSubScreen(null)} />;
+  }
+
+  if (subScreen === "asistente") {
+    return (
+      <Asistente
+        onBack={() => setSubScreen(null)}
+        onChanged={() => void load()}
+      />
+    );
+  }
+
+  if (subScreen === "cinta") {
+    return (
+      <Cinta
+        watch={treadmill}
+        onSave={saveTreadmill}
+        onBack={() => setSubScreen(null)}
+      />
+    );
+  }
+
+  if (subScreen === "peso") {
+    return (
+      <>
+        <Peso
+          data={bodyweight}
+          onLog={openWeightSheet}
+          onBack={() => setSubScreen(null)}
+        />
+        {weightSheetOpen && weightSheet}
+      </>
+    );
+  }
+
   if (session) {
     return (
       <>
@@ -309,7 +392,7 @@ function Shell({ user, tema, onToggleTema, onLogout }: ShellProps) {
         {sheetExIdx !== null && (
           <BottomSheet
             title={es.substitutions.title}
-            subtitle={alts[0]?.pattern}
+            subtitle={alts[0] ? patternLabel(alts[0].pattern) : undefined}
             onClose={closeSheet}
           >
             {alts.length === 0 ? (
@@ -323,13 +406,13 @@ function Shell({ user, tema, onToggleTema, onLogout }: ShellProps) {
                     onClick={() => pick(alt)}
                     className="flex items-center gap-3 rounded-card border border-line bg-paper p-2.5 text-left"
                   >
-                    <ExerciseThumb name={alt.name} />
+                    <ExerciseThumb name={alt.name} exerciseId={alt.id} />
                     <div className="min-w-0 flex-1">
                       <div className="text-[15px] font-medium">{alt.name}</div>
                       <div className="mt-1 font-mono text-[11px] text-gris">
                         {alt.substitution_count >= 2
                           ? es.substitutions.oftenSwap
-                          : alt.equipment}
+                          : equipmentLabel(alt.equipment)}
                       </div>
                     </div>
                   </button>
@@ -346,6 +429,10 @@ function Shell({ user, tema, onToggleTema, onLogout }: ShellProps) {
     return (
       <Ajustes
         user={user}
+        onPhases={() => {
+          setAjustes(false);
+          setSubScreen("fases");
+        }}
         tema={tema}
         onToggleTema={onToggleTema}
         onBack={() => setAjustes(false)}
@@ -358,45 +445,43 @@ function Shell({ user, tema, onToggleTema, onLogout }: ShellProps) {
     <>
       <div className="flex h-full flex-col">
         <div className="min-h-0 flex-1">
-          {tab === "hoy" ? (
+          {tab === "inicio" ? (
+            <Inicio
+              onStart={() => {
+                setTab("hoy");
+                void start();
+              }}
+              onTreadmill={() => setSubScreen("cinta")}
+              onWeight={() => setSubScreen("peso")}
+              onSettings={() => setAjustes(true)}
+            />
+          ) : tab === "hoy" ? (
             <Hoy
               today={today}
               positions={positions}
               bodyweight={bodyweight}
               treadmillSeconds={treadmill.seconds}
               treadmillRunning={treadmill.running}
+              treadmillPaused={treadmill.paused}
               treadmillKcal={treadmillKcal}
               onTreadmillToggle={toggleTreadmill}
+              onTreadmillPause={treadmill.paused ? treadmill.resume : treadmill.pause}
+              onTreadmillOpen={() => setSubScreen("cinta")}
               onLogWeight={openWeightSheet}
+              onWeightOpen={() => setSubScreen("peso")}
               onStart={() => void start()}
               onSkip={() => void skip()}
               onExercise={setDetailId}
-              onSettings={() => setAjustes(true)}
             />
           ) : tab === "historial" ? (
-            <Historial onSettings={() => setAjustes(true)} />
+            <Historial />
           ) : (
-            <Rutina onSettings={() => setAjustes(true)} />
+            <Rutina onAssistant={() => setSubScreen("asistente")} />
           )}
         </div>
         <BottomNav active={tab} onSelect={setTab} />
       </div>
-      {weightSheetOpen && (
-        <BottomSheet title={es.today.bodyweight} onClose={() => setWeightSheetOpen(false)}>
-          <div className="flex items-center justify-between gap-3 py-2">
-            <NumberStepper
-              label={es.today.bodyweight}
-              value={weightInput}
-              step={0.1}
-              onChange={setWeightInput}
-              valueWidth={72}
-            />
-            <Button variant="primary" onClick={() => void saveWeight()} className="flex-1">
-              {es.today.save}
-            </Button>
-          </div>
-        </BottomSheet>
-      )}
+      {weightSheetOpen && weightSheet}
     </>
   );
 }

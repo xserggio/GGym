@@ -1,18 +1,30 @@
 from __future__ import annotations
 
-from sqlalchemy import Boolean, ForeignKey, Integer, String, text
+from datetime import datetime
+
+from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String, func, text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from .base import Base, new_uuid
 
 
 class Routine(Base):
+    """A routine profile. A user may keep several and switch between them; only
+    one is `active` at a time. Old profiles are never deleted implicitly —
+    sessions point at their days, and losing them would lose history."""
+
     __tablename__ = "routines"
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=new_uuid)
     user_id: Mapped[str] = mapped_column(ForeignKey("users.id"), index=True)
     name: Mapped[str] = mapped_column(String(120))
     active: Mapped[bool] = mapped_column(Boolean, default=True)
+    # The pristine seeded routine, kept read-only so "restore defaults" always
+    # has something true to copy from. Never edited, never activated directly.
+    is_original: Mapped[bool] = mapped_column(
+        Boolean, default=False, server_default=text("0")
+    )
+    created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
 
 
 class RoutineDay(Base):

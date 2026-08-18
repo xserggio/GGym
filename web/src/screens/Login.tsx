@@ -1,8 +1,9 @@
 import { useState, type FormEvent } from "react";
 
 import { Button } from "../components/Button";
+import { Logo } from "../components/Logo";
 import { es } from "../i18n/es";
-import { ApiError, api, type UserOut } from "../lib/api";
+import { ApiError, api, crossOrigin, setAuthToken, type UserOut } from "../lib/api";
 
 interface LoginProps {
   onLogin: (user: UserOut) => void;
@@ -38,6 +39,8 @@ export function Login({ onLogin }: LoginProps) {
     setError(null);
     try {
       const user = await api.login(username, password);
+      // Native builds have no shared cookie: keep the JWT for the Bearer header.
+      if (crossOrigin) setAuthToken(user.token);
       try {
         if (remember) {
           localStorage.setItem(REMEMBER_KEY, JSON.stringify({ username, password }));
@@ -57,7 +60,9 @@ export function Login({ onLogin }: LoginProps) {
   return (
     <div className="flex min-h-full items-center justify-center bg-bg px-6">
       <form onSubmit={submit} className="flex w-full max-w-[320px] flex-col gap-4">
-        <h1 className="font-display text-3xl">{es.app.title}</h1>
+        <div className="mb-2 flex justify-center">
+          <Logo size="hero" />
+        </div>
 
         <label className="flex flex-col gap-1">
           <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-gris">

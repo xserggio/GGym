@@ -11,7 +11,22 @@ from sqlalchemy.orm import Session as OrmSession
 
 from ..models import Exercise, RoutineDayExercise, Session, SetLog
 from ..models.enums import MovementPattern
+from ..models.phase import PhaseKind
 from ..schemas import Suggestion
+
+
+def _holding_load(db: OrmSession, user_id: str) -> bool:
+    """True while an active deficit phase means loads should be maintained
+    rather than pushed. Imported here to keep the phase feature optional."""
+    from ..models import User
+
+    from . import phases
+
+    user = db.get(User, user_id)
+    if user is None or not user.phases_enabled:
+        return False
+    current = phases.active(db, user_id)
+    return current is not None and current.kind == PhaseKind.definicion
 
 LOWER_PATTERNS = {
     MovementPattern.cuadriceps,
@@ -33,7 +48,11 @@ def suggestion(
     rep_max: int,
     pattern: MovementPattern,
     deload: bool = False,
+    hold_load: bool = False,
 ) -> Suggestion:
+    """`hold_load` is set while the user is in a deficit: adding weight there is
+    a losing game, and a suggestion they keep failing reads as regression when
+    holding the load is in fact the win."""
     last_session_id = db.scalar(
         select(Session.id)
         .join(SetLog, SetLog.session_id == Session.id)
@@ -72,7 +91,7 @@ def suggestion(
     if deload and last_weight is not None:
         # Resuming after a break (spec §5.1): last weight −10%.
         suggested = _round_2_5(last_weight * 0.9)
-    elif all_at_rep_max and last_weight is not None:
+    elif all_at_rep_max and last_weight is not None and not hold_load:
         increment = (
             INCREMENT_LOWER_KG if pattern in LOWER_PATTERNS else INCREMENT_UPPER_KG
         )
@@ -105,7 +124,8 @@ def suggestions_for_day(
         .where(RoutineDayExercise.routine_day_id == day_id)
         .order_by(RoutineDayExercise.order_index)
     ).all()
+    hold = _holding_load(db, user_id)
     return [
-        suggestion(db, user_id, ex.id, rde.rep_max, ex.pattern, deload)
+        suggestion(db, user_id, ex.id, rde.rep_max, ex.pattern, deload, hold)
         for rde, ex in rows
     ]

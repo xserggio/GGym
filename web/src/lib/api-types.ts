@@ -293,6 +293,151 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/me/home": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Home
+         * @description Everything the Inicio tab shows, in one request (one round trip offline).
+         *
+         *     `period` selects the window for the totals: 7d, 30d, 365d or all.
+         */
+        get: operations["get_home_me_home_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/treadmill": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Treadmill */
+        get: operations["get_treadmill_me_treadmill_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/notifications": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read */
+        get: operations["read_me_notifications_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update */
+        patch: operations["update_me_notifications_patch"];
+        trace?: never;
+    };
+    "/me/notifications/subscribe": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Subscribe */
+        post: operations["subscribe_me_notifications_subscribe_post"];
+        /** Unsubscribe */
+        delete: operations["unsubscribe_me_notifications_subscribe_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/phases": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read */
+        get: operations["read_me_phases_get"];
+        put?: never;
+        /** Start */
+        post: operations["start_me_phases_post"];
+        /** Finish */
+        delete: operations["finish_me_phases_delete"];
+        options?: never;
+        head?: never;
+        /**
+         * Toggle
+         * @description Turning the feature off closes any running phase rather than leaving it
+         *     ticking invisibly, so re-enabling never resurrects a stale one.
+         */
+        patch: operations["toggle_me_phases_patch"];
+        trace?: never;
+    };
+    "/me/phases/advice": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Advice
+         * @description Propose a rate from two questions, and check a target date against it.
+         *
+         *     Deliberately deterministic: the same answers always give the same number, so
+         *     the reason can be shown and argued with. Nothing is stored.
+         */
+        post: operations["advice_me_phases_advice_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/phases/assessment": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Assess
+         * @description Suggest which phase to run, how fast and for how long.
+         *
+         *     Deterministic and stateless: the same answers always give the same plan, so
+         *     the reasons can be shown and argued with. The user still decides.
+         */
+        post: operations["assess_me_phases_assessment_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/me/routine/exercises/{rde_id}": {
         parameters: {
             query?: never;
@@ -379,6 +524,185 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/me/routine/profiles": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Profiles */
+        get: operations["list_profiles_me_routine_profiles_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/routine/profiles/{routine_id}/activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Activate Profile */
+        post: operations["activate_profile_me_routine_profiles__routine_id__activate_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/routine/profiles/{routine_id}/duplicate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Duplicate Profile */
+        post: operations["duplicate_profile_me_routine_profiles__routine_id__duplicate_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/routine/profiles/{routine_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete Profile */
+        delete: operations["delete_profile_me_routine_profiles__routine_id__delete"];
+        options?: never;
+        head?: never;
+        /** Rename Profile */
+        patch: operations["rename_profile_me_routine_profiles__routine_id__patch"];
+        trace?: never;
+    };
+    "/me/routine/profiles/restore": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Restore Default
+         * @description Copy the untouched seeded routine into a new active profile. The routine
+         *     in use is kept as a profile, so restoring is itself reversible.
+         */
+        post: operations["restore_default_me_routine_profiles_restore_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/routine/assistant/review": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Review
+         * @description Read the routine and say what is worth changing.
+         *
+         *     Writes nothing. Every finding names a specific exercise in a specific
+         *     session, and the ones that depend on history stay quiet until there is
+         *     enough of it.
+         */
+        post: operations["review_me_routine_assistant_review_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/routine/assistant/preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Preview
+         * @description Exactly what would change, before anything does. Same review the apply
+         *     runs, so what she confirms is what she gets.
+         */
+        post: operations["preview_me_routine_assistant_preview_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/routine/assistant/apply": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Apply
+         * @description Apply the ticked findings, after copying the routine to a dated profile.
+         *
+         *     The request carries only ids; the edits themselves are recomputed here, so a
+         *     client can never ask for a change the assistant did not propose.
+         */
+        post: operations["apply_me_routine_assistant_apply_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/routine/assistant/restructure": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Restructure
+         * @description Build the redistributed split as a new profile and switch to it. The
+         *     routine she had stays untouched, just no longer active.
+         */
+        post: operations["restructure_me_routine_assistant_restructure_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/sync": {
         parameters: {
             query?: never;
@@ -418,6 +742,22 @@ export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
         /**
+         * ActivityPoint
+         * @description One bucket of the activity chart: a day for short windows, a month for
+         *     long ones. `sessions` is 0 on rest days, which the chart draws as a gap.
+         */
+        ActivityPoint: {
+            /**
+             * Bucket
+             * Format: date
+             */
+            bucket: string;
+            /** Sessions */
+            sessions: number;
+            /** Volume Kg */
+            volume_kg: number;
+        };
+        /**
          * AlternativeOut
          * @description A same-pattern swap candidate (spec §5.3). `substitution_count` is how
          *     often this user has already swapped the planned exercise for this one.
@@ -440,6 +780,46 @@ export interface components {
             substitution_count: number;
             /** Default Rest S */
             default_rest_s: number;
+        };
+        /**
+         * AssessmentIn
+         * @description Seven answers. All optional: a partial questionnaire still yields a plan,
+         *     it is just built on the safer defaults.
+         */
+        AssessmentIn: {
+            /** Objetivo */
+            objetivo?: string | null;
+            /** Grasa */
+            grasa?: string | null;
+            /** Experiencia */
+            experiencia?: string | null;
+            /** Dieta Reciente */
+            dieta_reciente?: string | null;
+            /** Fecha */
+            fecha?: string | null;
+            /** Prioridad */
+            prioridad?: string | null;
+            /** Energia */
+            energia?: string | null;
+        };
+        /**
+         * AssessmentOut
+         * @description A suggested plan, plus the reasoning as keys the UI writes out. Nothing is
+         *     stored: it is a template the user may accept, edit or ignore.
+         */
+        AssessmentOut: {
+            kind: components["schemas"]["PhaseKind"];
+            /** Rate Pct */
+            rate_pct: number;
+            /** Weeks */
+            weeks: number;
+            /** Reasons */
+            reasons: string[];
+            /**
+             * Suggested Target Date
+             * Format: date
+             */
+            suggested_target_date: string;
         };
         /** BodyWeightIn */
         BodyWeightIn: {
@@ -477,6 +857,19 @@ export interface components {
             delta_week: number | null;
             /** Points */
             points: components["schemas"]["BodyWeightPoint"][];
+        };
+        /** ChangeOut */
+        ChangeOut: {
+            /** Kind */
+            kind: string;
+            /** Day */
+            day: string;
+            /** Exercise */
+            exercise: string;
+            /** Before */
+            before: string;
+            /** After */
+            after: string;
         };
         /** DayRename */
         DayRename: {
@@ -542,6 +935,10 @@ export interface components {
             description: string;
             /** Default Rest S */
             default_rest_s: number;
+            /** Technique */
+            technique?: string[];
+            /** Mistakes */
+            mistakes?: string[];
         };
         /** ExerciseSummary */
         ExerciseSummary: {
@@ -570,10 +967,89 @@ export interface components {
             /** Rest S */
             rest_s: number | null;
         };
+        /**
+         * FeasibilityOut
+         * @description Whether the date and the weight can both be true. Arithmetic, not opinion.
+         */
+        FeasibilityOut: {
+            /** Weeks */
+            weeks: number;
+            /** Required Rate Pct */
+            required_rate_pct: number;
+            /** Verdict */
+            verdict: string;
+            /** Safe Rate Pct */
+            safe_rate_pct: number;
+            /** Reachable Weight Kg */
+            reachable_weight_kg: number | null;
+            /** Weeks Needed */
+            weeks_needed: number | null;
+        };
+        /** FindingOut */
+        FindingOut: {
+            /** Id */
+            id: string;
+            /** Kind */
+            kind: string;
+            /** Severity */
+            severity: string;
+            /** Detail */
+            detail: {
+                [key: string]: unknown;
+            };
+            /** Action Kind */
+            action_kind: string | null;
+        };
         /** HTTPValidationError */
         HTTPValidationError: {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
+        };
+        /**
+         * HomeOut
+         * @description Rolling 7-day picture plus what's next. Nulls mean "not measurable".
+         */
+        HomeOut: {
+            /** Period */
+            period: string;
+            /** Next Position */
+            next_position: number;
+            /** Next Day Name */
+            next_day_name: string;
+            /** Next Exercises */
+            next_exercises: number;
+            /** Week Sessions */
+            week_sessions: number;
+            /** Week Sets */
+            week_sets: number;
+            /** Week Volume Kg */
+            week_volume_kg: number;
+            /** Week Strength Seconds */
+            week_strength_seconds: number;
+            /** Week Treadmill Seconds */
+            week_treadmill_seconds: number;
+            /** Week Kcal */
+            week_kcal: number | null;
+            /** Bodyweight Avg7 */
+            bodyweight_avg7: number | null;
+            /** Bodyweight Delta Week */
+            bodyweight_delta_week: number | null;
+            /** Last Session At */
+            last_session_at: string | null;
+            /** Volume */
+            volume: components["schemas"]["VolumeGroup"][];
+            /** Records */
+            records: components["schemas"]["RecordOut"][];
+            /** Milestones */
+            milestones: components["schemas"]["Milestone"][];
+            /** Activity */
+            activity: components["schemas"]["ActivityPoint"][];
+            /** Prev Sessions */
+            prev_sessions: number | null;
+            /** Prev Volume Kg */
+            prev_volume_kg: number | null;
+            /** Prev Treadmill Seconds */
+            prev_treadmill_seconds: number | null;
         };
         /** LoginIn */
         LoginIn: {
@@ -599,14 +1075,191 @@ export interface components {
             token: string;
         };
         /**
+         * Milestone
+         * @description An all-time best the 1RM table cannot express (heaviest set, longest
+         *     session, longest run). `kind` is a key; the UI supplies the wording.
+         */
+        Milestone: {
+            /** Kind */
+            kind: string;
+            /** Value */
+            value: number;
+            /** Unit */
+            unit: string;
+            /** Detail */
+            detail: string | null;
+            /** Achieved On */
+            achieved_on: string | null;
+        };
+        /**
          * MovementPattern
          * @enum {string}
          */
         MovementPattern: "empuje_horizontal" | "empuje_vertical" | "tiron_horizontal" | "tiron_vertical" | "cuadriceps" | "cadena_posterior" | "gluteo" | "gemelo" | "deltoides_lateral" | "triceps" | "biceps" | "core" | "abduccion";
+        /** MuscleVolumeOut */
+        MuscleVolumeOut: {
+            /** Muscle */
+            muscle: string;
+            /** Weekly Sets */
+            weekly_sets: number;
+            /** Band */
+            band: string;
+        };
+        /** NotificationIn */
+        NotificationIn: {
+            /** Enabled */
+            enabled: boolean;
+            /** Hour */
+            hour: number;
+            /** Minute */
+            minute: number;
+        };
+        /** NotificationOut */
+        NotificationOut: {
+            /** Enabled */
+            enabled: boolean;
+            /** Hour */
+            hour: number;
+            /** Minute */
+            minute: number;
+            /** Vapid Public Key */
+            vapid_public_key: string;
+            /** Devices */
+            devices: number;
+        };
         /** OrderBody */
         OrderBody: {
             /** Ids */
             ids: string[];
+        };
+        /** PhaseAdviceIn */
+        PhaseAdviceIn: {
+            kind: components["schemas"]["PhaseKind"];
+            /** Training Age */
+            training_age?: string | null;
+            /** Fat Level */
+            fat_level?: string | null;
+            /** Target Weight Kg */
+            target_weight_kg?: number | null;
+            /** Target Date */
+            target_date?: string | null;
+        };
+        /** PhaseAdviceOut */
+        PhaseAdviceOut: {
+            /** Recommended Rate Pct */
+            recommended_rate_pct: number;
+            /** Rationale */
+            rationale: string;
+            /** Current Weight Kg */
+            current_weight_kg: number | null;
+            feasibility: components["schemas"]["FeasibilityOut"] | null;
+        };
+        /** PhaseIn */
+        PhaseIn: {
+            kind: components["schemas"]["PhaseKind"];
+            /** Target Rate Pct */
+            target_rate_pct?: number | null;
+            /** Target Date */
+            target_date?: string | null;
+            /** Target Weight Kg */
+            target_weight_kg?: number | null;
+        };
+        /**
+         * PhaseKind
+         * @description What the body weight is meant to be doing. The app never causes any of
+         *     these — diet does — it only measures whether the outcome matches the
+         *     intent and adapts what it expects from training.
+         * @enum {string}
+         */
+        PhaseKind: "superavit" | "definicion" | "mantenimiento";
+        /**
+         * PhaseLimits
+         * @description What the UI may offer for each phase, straight from the guidelines.
+         */
+        PhaseLimits: {
+            kind: components["schemas"]["PhaseKind"];
+            /** Min Rate Pct */
+            min_rate_pct: number;
+            /** Default Rate Pct */
+            default_rate_pct: number;
+            /** Max Rate Pct */
+            max_rate_pct: number;
+            /** Suggest End Weeks */
+            suggest_end_weeks: number | null;
+        };
+        /** PhaseOut */
+        PhaseOut: {
+            /** Id */
+            id: string;
+            kind: components["schemas"]["PhaseKind"];
+            /**
+             * Started On
+             * Format: date
+             */
+            started_on: string;
+            /** Ended On */
+            ended_on: string | null;
+            /** Target Rate Pct */
+            target_rate_pct: number;
+            /** Target Date */
+            target_date: string | null;
+            /** Target Weight Kg */
+            target_weight_kg: number | null;
+            status: components["schemas"]["PhaseStatus"] | null;
+        };
+        /**
+         * PhaseStatus
+         * @description How the phase is actually going. `verdict` and `duration` are keys the UI
+         *     translates; nulls mean "not enough weigh-ins to say", never zero.
+         */
+        PhaseStatus: {
+            /** Weeks Elapsed */
+            weeks_elapsed: number;
+            /** Measurements */
+            measurements: number;
+            /** Actual Rate Pct */
+            actual_rate_pct: number | null;
+            /** Verdict */
+            verdict: string;
+            /** Duration */
+            duration: string;
+            /** Suggest End Weeks */
+            suggest_end_weeks: number | null;
+            /** Days To Target */
+            days_to_target: number | null;
+        };
+        /** PhasesOut */
+        PhasesOut: {
+            /** Enabled */
+            enabled: boolean;
+            current: components["schemas"]["PhaseOut"] | null;
+            /** History */
+            history: components["schemas"]["PhaseOut"][];
+            /** Limits */
+            limits: components["schemas"]["PhaseLimits"][];
+        };
+        /** PhasesToggle */
+        PhasesToggle: {
+            /** Enabled */
+            enabled: boolean;
+        };
+        /** ProfileName */
+        ProfileName: {
+            /** Name */
+            name: string;
+        };
+        /** PushKeys */
+        PushKeys: {
+            /** P256Dh */
+            p256dh: string;
+            /** Auth */
+            auth: string;
+        };
+        /** PushSubscriptionIn */
+        PushSubscriptionIn: {
+            /** Endpoint */
+            endpoint: string;
+            keys: components["schemas"]["PushKeys"];
         };
         /**
          * RecordOut
@@ -628,6 +1281,56 @@ export interface components {
              * Format: date
              */
             achieved_on: string;
+        };
+        /**
+         * RestructureOut
+         * @description A different split built from the same exercises. `fits` false means the
+         *     work does not go into the time available, which is said rather than hidden.
+         */
+        RestructureOut: {
+            /** Days Per Week */
+            days_per_week: number;
+            /** Sessions */
+            sessions: components["schemas"]["RestructureSessionOut"][];
+            /** Trimmed */
+            trimmed: {
+                [key: string]: unknown;
+            }[];
+            /** Fits */
+            fits: boolean;
+            /** Under Target */
+            under_target: string[];
+            /** Sets Before */
+            sets_before: number;
+            /** Sets After */
+            sets_after: number;
+        };
+        /** RestructureSessionOut */
+        RestructureSessionOut: {
+            /** Name */
+            name: string;
+            /** Total Sets */
+            total_sets: number;
+            /** Minutes */
+            minutes: number;
+            /** Exercises */
+            exercises: string[];
+        };
+        /** RoutineApplyIn */
+        RoutineApplyIn: {
+            answers: components["schemas"]["RoutineReviewIn"];
+            /**
+             * Accepted
+             * @default []
+             */
+            accepted: string[];
+        };
+        /** RoutineApplyOut */
+        RoutineApplyOut: {
+            /** Changed */
+            changed: number;
+            /** Snapshot */
+            snapshot: string | null;
         };
         /** RoutineDayExerciseOut */
         RoutineDayExerciseOut: {
@@ -674,6 +1377,55 @@ export interface components {
             /** Days */
             days: components["schemas"]["RoutineDayOut"][];
         };
+        /** RoutineProfileOut */
+        RoutineProfileOut: {
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+            /** Active */
+            active: boolean;
+            /** Is Original */
+            is_original: boolean;
+            /** Days */
+            days: number;
+            /** Sessions */
+            sessions: number;
+            /** Can Delete */
+            can_delete: boolean;
+        };
+        /**
+         * RoutineReviewIn
+         * @description The five things the routine cannot tell us. All optional: a partial
+         *     questionnaire still yields a review, built on the safer defaults.
+         */
+        RoutineReviewIn: {
+            /** Dias */
+            dias?: number | null;
+            /** Tiempo */
+            tiempo?: string | null;
+            /** Objetivo */
+            objetivo?: string | null;
+            /** Evitar */
+            evitar?: string | null;
+            /**
+             * Prioridad
+             * @default []
+             */
+            prioridad: string[];
+        };
+        /** RoutineReviewOut */
+        RoutineReviewOut: {
+            /** Days Per Week */
+            days_per_week: number;
+            /** Volumes */
+            volumes: components["schemas"]["MuscleVolumeOut"][];
+            /** Session Minutes */
+            session_minutes: components["schemas"]["SessionLengthOut"][];
+            /** Findings */
+            findings: components["schemas"]["FindingOut"][];
+            restructure: components["schemas"]["RestructureOut"] | null;
+        };
         /** SessionIn */
         SessionIn: {
             /** Id */
@@ -691,6 +1443,13 @@ export interface components {
             status: components["schemas"]["SessionStatus"];
             /** Notes */
             notes?: string | null;
+        };
+        /** SessionLengthOut */
+        SessionLengthOut: {
+            /** Name */
+            name: string;
+            /** Minutes */
+            minutes: number;
         };
         /** SessionOut */
         SessionOut: {
@@ -841,6 +1600,20 @@ export interface components {
              */
             resume_after_break: boolean;
         };
+        /** TreadmillEntry */
+        TreadmillEntry: {
+            /** Id */
+            id: string;
+            /**
+             * Started At
+             * Format: date-time
+             */
+            started_at: string;
+            /** Duration S */
+            duration_s: number;
+            /** Kcal */
+            kcal: number | null;
+        };
         /** TreadmillIn */
         TreadmillIn: {
             /** Id */
@@ -854,6 +1627,19 @@ export interface components {
             ended_at?: string | null;
             /** Duration S */
             duration_s: number;
+        };
+        /** TreadmillSummary */
+        TreadmillSummary: {
+            /** Entries */
+            entries: components["schemas"]["TreadmillEntry"][];
+            /** Week Seconds */
+            week_seconds: number;
+            /** Week Kcal */
+            week_kcal: number | null;
+            /** Total Seconds */
+            total_seconds: number;
+            /** Sessions */
+            sessions: number;
         };
         /** UserOut */
         UserOut: {
@@ -1293,6 +2079,344 @@ export interface operations {
             };
         };
     };
+    get_home_me_home_get: {
+        parameters: {
+            query?: {
+                period?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HomeOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_treadmill_me_treadmill_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TreadmillSummary"];
+                };
+            };
+        };
+    };
+    read_me_notifications_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotificationOut"];
+                };
+            };
+        };
+    };
+    update_me_notifications_patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["NotificationIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotificationOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    subscribe_me_notifications_subscribe_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PushSubscriptionIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotificationOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    unsubscribe_me_notifications_subscribe_delete: {
+        parameters: {
+            query: {
+                endpoint: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    read_me_phases_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PhasesOut"];
+                };
+            };
+        };
+    };
+    start_me_phases_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PhaseIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PhasesOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    finish_me_phases_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PhasesOut"];
+                };
+            };
+        };
+    };
+    toggle_me_phases_patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PhasesToggle"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PhasesOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    advice_me_phases_advice_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PhaseAdviceIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PhaseAdviceOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    assess_me_phases_assessment_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AssessmentIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AssessmentOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     remove_exercise_me_routine_exercises__rde_id__delete: {
         parameters: {
             query?: never;
@@ -1484,6 +2608,310 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["RoutineOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_profiles_me_routine_profiles_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoutineProfileOut"][];
+                };
+            };
+        };
+    };
+    activate_profile_me_routine_profiles__routine_id__activate_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                routine_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoutineProfileOut"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    duplicate_profile_me_routine_profiles__routine_id__duplicate_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                routine_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProfileName"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoutineProfileOut"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_profile_me_routine_profiles__routine_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                routine_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoutineProfileOut"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    rename_profile_me_routine_profiles__routine_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                routine_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProfileName"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoutineProfileOut"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    restore_default_me_routine_profiles_restore_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoutineProfileOut"][];
+                };
+            };
+        };
+    };
+    review_me_routine_assistant_review_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RoutineReviewIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoutineReviewOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    preview_me_routine_assistant_preview_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RoutineApplyIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ChangeOut"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    apply_me_routine_assistant_apply_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RoutineApplyIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoutineApplyOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    restructure_me_routine_assistant_restructure_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RoutineReviewIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoutineApplyOut"];
                 };
             };
             /** @description Validation Error */

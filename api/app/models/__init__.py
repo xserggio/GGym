@@ -5,6 +5,8 @@ from __future__ import annotations
 from .base import Base
 from .enums import Equipment, MovementPattern, SessionStatus
 from .exercise import Exercise
+from .notification import NotificationSetting, PushSubscription
+from .phase import Phase, PhaseKind
 from .preference import ExercisePreference
 from .routine import Routine, RoutineDay, RoutineDayExercise
 from .session import Session, SetLog
@@ -20,6 +22,10 @@ __all__ = [
     "SessionStatus",
     "Exercise",
     "ExercisePreference",
+    "NotificationSetting",
+    "Phase",
+    "PhaseKind",
+    "PushSubscription",
     "Routine",
     "RoutineDay",
     "RoutineDayExercise",

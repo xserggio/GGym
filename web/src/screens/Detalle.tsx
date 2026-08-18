@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import { BarbellChart } from "../components/BarbellChart";
 import { Button } from "../components/Button";
+import { Header } from "../components/Header";
 import { es } from "../i18n/es";
 import {
   api,
@@ -9,20 +10,22 @@ import {
   type ExerciseOut,
 } from "../lib/api";
 import { dateShortEs, numEs } from "../lib/format";
+import { equipmentLabel, patternLabel } from "../lib/labels";
 
 interface DetalleProps {
   exerciseId: string;
   onBack: () => void;
 }
 
-const patternLabel = (p: string) => p.replace(/_/g, " ");
 const oneRm = (e: ExerciseHistoryEntry) => e.weight_kg * (1 + e.reps / 30);
 
 export function Detalle({ exerciseId, onBack }: DetalleProps) {
   const [exercise, setExercise] = useState<ExerciseOut | null>(null);
   const [history, setHistory] = useState<ExerciseHistoryEntry[]>([]);
+  const [imgFailed, setImgFailed] = useState(false);
 
   useEffect(() => {
+    setImgFailed(false);
     api.exercise(exerciseId).then(setExercise).catch(() => undefined);
     api.exerciseHistory(exerciseId).then(setHistory).catch(() => undefined);
   }, [exerciseId]);
@@ -35,6 +38,9 @@ export function Detalle({ exerciseId, onBack }: DetalleProps) {
     );
   }
 
+  // The API defaults these to [], but the generated type marks them optional.
+  const technique = exercise.technique ?? [];
+  const mistakes = exercise.mistakes ?? [];
   const weights = history.map((h) => h.weight_kg);
   const min = weights.length ? Math.min(...weights) - 2.5 : 0;
   const max = weights.length ? Math.max(...weights) + 2.5 : 1;
@@ -45,38 +51,89 @@ export function Detalle({ exerciseId, onBack }: DetalleProps) {
       : -1;
 
   return (
-    <div className="h-full overflow-y-auto pb-6">
-      {/* Photo placeholder (real images later), duotono treatment */}
+    <div className="h-full overflow-y-auto pb-6"
+      style={{ paddingBottom: "calc(1.5rem + var(--safe-bottom))" }}
+    >
+      {/* Own bar, not an overlay: on top of the photo the button was unreadable. */}
+      <Header
+        eyebrow={patternLabel(exercise.pattern)}
+        title={exercise.name}
+        leading={
+          <Button variant="ghost" onClick={onBack} className="mb-1 !min-h-0 !px-3 !py-1.5">
+            {es.actions.back}
+          </Button>
+        }
+      />
+
+      {/* Duotone exercise photo; hatched marker shows if the image is missing. */}
       <div
-        className="relative flex aspect-[4/3] w-full items-end p-3"
+        className="relative flex aspect-[4/3] w-full items-end overflow-hidden p-3"
         style={{
           background:
             "repeating-linear-gradient(135deg, var(--thumbA) 0 5px, var(--thumbB) 5px 10px)",
         }}
       >
-        <span className="font-mono text-[10px] text-gris">
-          {es.detail.photoNote} · {exercise.name}
-        </span>
-        <Button
-          variant="ghost"
-          onClick={onBack}
-          className="absolute left-3 top-3 !min-h-0 bg-paper !px-3 !py-1.5"
-        >
-          {es.actions.back}
-        </Button>
+        {!imgFailed && (
+          <img
+            src={`${import.meta.env.BASE_URL}exercises/${exerciseId}.webp`}
+            alt={exercise.name}
+            onError={() => setImgFailed(true)}
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+        )}
+        {imgFailed && (
+          <span className="font-mono text-[10px] text-gris">
+            {es.detail.photoNote} · {exercise.name}
+          </span>
+        )}
       </div>
 
       <div className="flex flex-col gap-4 px-4 pt-4">
-        <div>
-          <h1 className="font-display text-3xl leading-tight">{exercise.name}</h1>
-          <div className="mt-1 font-mono text-[11px] text-gris">
-            {patternLabel(exercise.pattern)} · {exercise.equipment}
-            {exercise.per_side ? ` · ${es.today.perSide}` : ""}
-          </div>
+        <div className="font-mono text-[11px] text-gris">
+          {equipmentLabel(exercise.equipment)}
+          {exercise.per_side ? ` · ${es.today.perSide}` : ""}
         </div>
 
         {exercise.description && (
           <p className="text-[15px] leading-relaxed">{exercise.description}</p>
+        )}
+
+        {technique.length > 0 && (
+          <section>
+            <div className="mb-2 font-mono text-[9px] uppercase tracking-[0.18em] text-gris">
+              {es.detail.technique}
+            </div>
+            <ol className="flex flex-col gap-2.5">
+              {technique.map((step, i) => (
+                <li key={i} className="flex gap-3">
+                  <span className="mt-[3px] flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-chip border border-line font-mono text-[10px] text-gris">
+                    {i + 1}
+                  </span>
+                  <span className="text-[14px] leading-snug">{step}</span>
+                </li>
+              ))}
+            </ol>
+          </section>
+        )}
+
+        {mistakes.length > 0 && (
+          <section>
+            <div className="mb-2 font-mono text-[9px] uppercase tracking-[0.18em] text-gris">
+              {es.detail.mistakes}
+            </div>
+            <ul className="flex flex-col gap-2.5">
+              {mistakes.map((item, i) => (
+                <li key={i} className="flex gap-3">
+                  {/* Amber, not red: these cost you reps, they are not alarms. */}
+                  <span
+                    className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full"
+                    style={{ background: "var(--yellow)" }}
+                  />
+                  <span className="text-[14px] leading-snug">{item}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
         )}
 
         <div className="rounded-card border border-line p-4">

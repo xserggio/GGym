@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 
 import { BarbellChart } from "../components/BarbellChart";
-import { Button } from "../components/Button";
 import { Card } from "../components/Card";
+import { Header } from "../components/Header";
 import { es } from "../i18n/es";
 import {
   api,
@@ -12,10 +12,10 @@ import {
   type VolumeGroup,
 } from "../lib/api";
 import { dateShortEs, durationMin, numEs } from "../lib/format";
+import { patternLabel } from "../lib/labels";
+import { volumeColor } from "../lib/palette";
 
-interface HistorialProps {
-  onSettings: () => void;
-}
+interface HistorialProps {}
 
 interface Data {
   history: SessionOut[];
@@ -26,7 +26,6 @@ interface Data {
 
 const ADHERENCE_DAYS = 28;
 const VOLUME_MAX = 20; // useful-range ceiling for bar scaling
-const patternLabel = (p: string) => p.replace(/_/g, " ");
 
 /** Last-28-days grid: each day filled if a session was completed that day. */
 function adherenceGrid(history: SessionOut[]): { completed: number; days: boolean[] } {
@@ -67,7 +66,7 @@ function bodyweightLine(points: BodyWeightSummary["points"]): string | null {
     .join(" ");
 }
 
-export function Historial({ onSettings }: HistorialProps) {
+export function Historial(_: HistorialProps) {
   const [data, setData] = useState<Data | null>(null);
 
   useEffect(() => {
@@ -90,13 +89,9 @@ export function Historial({ onSettings }: HistorialProps) {
   const line = bodyweightLine(data.bodyweight.points);
 
   return (
-    <div className="h-full overflow-y-auto px-4 pb-6 pt-4">
-      <header className="mb-4 flex items-center">
-        <h1 className="font-display text-3xl">{es.history.title}</h1>
-        <Button variant="ghost" onClick={onSettings} className="ml-auto !min-h-0 !px-3 !py-1.5">
-          {es.actions.settings}
-        </Button>
-      </header>
+    <div className="flex h-full flex-col">
+      <Header title={es.history.title} />
+      <div className="flex-1 overflow-y-auto px-4 pb-6 pt-4">
 
       {data.history.length === 0 ? (
         <Card className="p-5 text-sm text-gris">{es.history.empty}</Card>
@@ -137,8 +132,12 @@ export function Historial({ onSettings }: HistorialProps) {
                     <span className="w-32 shrink-0 text-[13px]">{patternLabel(g.pattern)}</span>
                     <div className="h-2.5 flex-1 rounded-full bg-line">
                       <div
-                        className="h-full rounded-full bg-blue"
-                        style={{ width: `${Math.min(g.sets / VOLUME_MAX, 1) * 100}%` }}
+                        className="h-full rounded-full"
+                        style={{
+                          width: `${Math.min(g.sets / VOLUME_MAX, 1) * 100}%`,
+                          // Amber under 10 sets, green in range, red over 20.
+                          background: volumeColor(g.sets),
+                        }}
                       />
                     </div>
                     <span className="w-6 text-right font-mono text-xs tabular-nums">
@@ -228,6 +227,7 @@ export function Historial({ onSettings }: HistorialProps) {
           </div>
         </div>
       )}
+    </div>
     </div>
   );
 }

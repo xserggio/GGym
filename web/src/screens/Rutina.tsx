@@ -1,18 +1,22 @@
 import { useEffect, useState } from "react";
 
 import { BottomSheet } from "../components/BottomSheet";
-import { Button } from "../components/Button";
 import { Card } from "../components/Card";
+import { Header } from "../components/Header";
 import { es } from "../i18n/es";
 import {
   api,
   type ExerciseSummary,
   type RoutineDayExerciseOut,
   type RoutineOut,
+  type RoutineProfileOut,
 } from "../lib/api";
+import { patternLabel } from "../lib/labels";
+import { sessionColor } from "../lib/palette";
 
 interface RutinaProps {
-  onSettings: () => void;
+  /** Opens the assistant, which may rewrite this routine. */
+  onAssistant: () => void;
 }
 
 type Field = "target_sets" | "rep_min" | "rep_max" | "rest_s";
@@ -101,11 +105,17 @@ function ReorderButtons({
   );
 }
 
-export function Rutina({ onSettings }: RutinaProps) {
+export function Rutina({ onAssistant }: RutinaProps) {
   const [routine, setRoutine] = useState<RoutineOut | null>(null);
   const [openDay, setOpenDay] = useState<string | null>(null);
   const [catalog, setCatalog] = useState<ExerciseSummary[]>([]);
   const [addDayId, setAddDayId] = useState<string | null>(null);
+  const [profiles, setProfiles] = useState<RoutineProfileOut[] | null>(null);
+  const [profilesOpen, setProfilesOpen] = useState(false);
+  const [confirm, setConfirm] = useState<
+    { kind: "restore" } | { kind: "delete"; profile: RoutineProfileOut } | null
+  >(null);
+  const [busy, setBusy] = useState(false);
 
   useEffect(() => {
     api.routine().then((r) => {
@@ -114,6 +124,26 @@ export function Rutina({ onSettings }: RutinaProps) {
     });
     api.exercises().then(setCatalog);
   }, []);
+
+  /** Every profile action can change which routine is active, so the editor is
+   * reloaded from the server rather than patched locally. */
+  const runProfileAction = (action: () => Promise<RoutineProfileOut[]>) => {
+    setBusy(true);
+    void action()
+      .then(async (list) => {
+        setProfiles(list);
+        const r = await api.routine();
+        setRoutine(r);
+        setOpenDay(r.days[0]?.id ?? null);
+        setConfirm(null);
+      })
+      .finally(() => setBusy(false));
+  };
+
+  const openProfiles = () => {
+    setProfilesOpen(true);
+    void api.profiles().then(setProfiles);
+  };
 
   if (!routine) {
     return (
@@ -165,14 +195,26 @@ export function Rutina({ onSettings }: RutinaProps) {
     });
 
   return (
-    <div className="h-full overflow-y-auto px-4 pb-6 pt-4">
-      <header className="mb-2 flex items-center">
-        <h1 className="font-display text-3xl">{es.routine.title}</h1>
-        <Button variant="ghost" onClick={onSettings} className="ml-auto !min-h-0 !px-3 !py-1.5">
-          {es.actions.settings}
-        </Button>
-      </header>
-      <p className="mb-3 text-[13px] text-gris">{es.routine.hint}</p>
+    <div className="flex h-full flex-col">
+      <Header title={es.routine.title} />
+      <div className="flex-1 overflow-y-auto px-4 pb-6 pt-4">
+      <p className="mb-2 text-[13px] text-gris">{es.routine.hint}</p>
+      <div className="mb-3 flex gap-2">
+        <button
+          type="button"
+          onClick={onAssistant}
+          className="h-touch flex-1 rounded-card border border-line text-sm text-blue"
+        >
+          {es.assistant.open}
+        </button>
+        <button
+          type="button"
+          onClick={openProfiles}
+          className="h-touch flex-1 rounded-card border border-line text-sm text-ink"
+        >
+          {es.profiles.open}
+        </button>
+      </div>
 
       <div className="flex flex-col gap-3">
         {routine.days.map((day, dayIdx) => {
@@ -181,7 +223,10 @@ export function Rutina({ onSettings }: RutinaProps) {
           return (
             <Card key={day.id} className="p-3">
               <div className="flex items-center gap-2">
-                <span className="flex h-5 w-5 items-center justify-center rounded-chip bg-ink font-mono text-[11px] text-bg">
+                <span
+                  className="flex h-5 w-5 items-center justify-center rounded-chip font-mono text-[11px]"
+                  style={{ background: sessionColor(day.position), color: "var(--paper)" }}
+                >
                   {day.position}
                 </span>
                 <button
@@ -311,13 +356,157 @@ export function Rutina({ onSettings }: RutinaProps) {
               >
                 <span className="flex-1 text-sm">{ex.name}</span>
                 <span className="font-mono text-[10px] text-gris">
-                  {ex.pattern.replace(/_/g, " ")}
+                  {patternLabel(ex.pattern)}
                 </span>
               </button>
             ))}
           </div>
         </BottomSheet>
       )}
+
+      {profilesOpen && (
+        <BottomSheet
+          title={es.profiles.title}
+          onClose={() => {
+            setProfilesOpen(false);
+            setConfirm(null);
+          }}
+        >
+          <p className="mb-3 text-[13px] leading-snug text-gris">{es.profiles.hint}</p>
+
+          {confirm ? (
+            <div className="flex flex-col gap-3">
+              <p className="text-sm leading-snug">
+                {confirm.kind === "restore"
+                  ? es.profiles.restoreConfirm
+                  : es.profiles.deleteConfirm}
+              </p>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  disabled={busy}
+                  onClick={() =>
+                    runProfileAction(() =>
+                      confirm.kind === "restore"
+                        ? api.restoreProfile()
+                        : api.deleteProfile(confirm.profile.id),
+                    )
+                  }
+                  className="h-touch flex-1 rounded-card border border-ink bg-ink text-sm font-medium text-paper"
+                >
+                  {es.profiles.confirm}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setConfirm(null)}
+                  className="h-touch flex-1 rounded-card border border-line text-sm"
+                >
+                  {es.profiles.cancel}
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-2">
+              {(profiles ?? []).map((p) => (
+                <div
+                  key={p.id}
+                  className="rounded-card border p-3"
+                  style={{
+                    borderColor: p.active ? "var(--ink)" : "var(--line)",
+                    background: p.active ? "var(--tint)" : "transparent",
+                  }}
+                >
+                  <div className="flex items-baseline gap-2">
+                    <span className="min-w-0 flex-1 truncate text-[15px] font-medium">
+                      {p.name}
+                    </span>
+                    {p.active && (
+                      <span className="font-mono text-[10px] uppercase tracking-[0.1em] text-green">
+                        {es.profiles.inUse}
+                      </span>
+                    )}
+                    {p.is_original && (
+                      <span className="font-mono text-[10px] uppercase tracking-[0.1em] text-gris">
+                        {es.profiles.original}
+                      </span>
+                    )}
+                  </div>
+                  <div className="mt-1 font-mono text-[11px] text-gris">
+                    {es.profiles.days(p.days)}
+                    {p.sessions > 0 ? ` · ${es.profiles.trained(p.sessions)}` : ""}
+                  </div>
+                  {p.is_original && (
+                    <p className="mt-1 text-[12px] leading-snug text-gris">
+                      {es.profiles.originalHint}
+                    </p>
+                  )}
+
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {!p.active && !p.is_original && (
+                      <button
+                        type="button"
+                        disabled={busy}
+                        onClick={() => runProfileAction(() => api.activateProfile(p.id))}
+                        className="h-9 rounded-field border border-ink bg-ink px-3 text-[13px] text-paper"
+                      >
+                        {es.profiles.use}
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      disabled={busy}
+                      onClick={() =>
+                        runProfileAction(() =>
+                          api.duplicateProfile(p.id, es.profiles.copyName(p.name)),
+                        )
+                      }
+                      className="h-9 rounded-field border border-line px-3 text-[13px]"
+                    >
+                      {es.profiles.duplicate}
+                    </button>
+                    {!p.is_original && (
+                      <button
+                        type="button"
+                        disabled={busy}
+                        onClick={() => {
+                          const name = window.prompt(es.profiles.namePrompt, p.name);
+                          if (name?.trim()) {
+                            runProfileAction(() => api.renameProfile(p.id, name.trim()));
+                          }
+                        }}
+                        className="h-9 rounded-field border border-line px-3 text-[13px]"
+                      >
+                        {es.profiles.rename}
+                      </button>
+                    )}
+                    {p.can_delete && (
+                      <button
+                        type="button"
+                        disabled={busy}
+                        onClick={() => setConfirm({ kind: "delete", profile: p })}
+                        className="h-9 rounded-field border px-3 text-[13px]"
+                        style={{ borderColor: "var(--red)", color: "var(--red)" }}
+                      >
+                        {es.profiles.delete}
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))}
+
+              <button
+                type="button"
+                disabled={busy}
+                onClick={() => setConfirm({ kind: "restore" })}
+                className="mt-2 h-touch w-full rounded-card border border-line text-sm"
+              >
+                {es.profiles.restore}
+              </button>
+            </div>
+          )}
+        </BottomSheet>
+      )}
+    </div>
     </div>
   );
 }

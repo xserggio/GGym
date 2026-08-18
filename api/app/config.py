@@ -35,8 +35,26 @@ class Settings(BaseSettings):
     # subpath (e.g. /gym), so the cookie is scoped there.
     cookie_path: str = "/"
 
-    # Browsers the mobile PWA/dev server are served from (CORS with credentials).
-    cors_origins: list[str] = ["http://localhost:5173"]
+    # Origins the app is served from (CORS with credentials). The native
+    # Capacitor build runs from the device itself: Android reports
+    # http(s)://localhost, iOS capacitor://localhost. Without these the app
+    # loads but every request fails at the preflight.
+    cors_origins: list[str] = [
+        "http://localhost:5173",
+        "http://localhost",
+        "https://localhost",
+        "capacitor://localhost",
+    ]
+
+    # Web push (spec §7.6). Empty keys disable sending; the settings UI then
+    # reports that reminders are unavailable instead of failing silently.
+    vapid_public_key: str = ""
+    vapid_private_key: str = ""
+    vapid_subject: str = "mailto:admin@example.com"
+
+    # Reminder times are local wall-clock in this zone, independent of the
+    # server's own timezone.
+    timezone: str = "Europe/Madrid"
 
 
 @lru_cache
