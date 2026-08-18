@@ -52,20 +52,20 @@ export function Laboratorio({ onBack }: LaboratorioProps) {
           <div className="flex flex-col gap-6">
             {/* How much history all of this rests on, before any of it. */}
             {confidence && (
-              <div className="flex flex-wrap gap-2">
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-line px-3 py-1.5 font-mono text-[11.5px] text-gris">
-                  <i
-                    className="h-1.5 w-1.5 rounded-full"
-                    style={{
-                      background: confidence.solid
-                        ? "var(--green)"
-                        : "var(--yellow)",
-                    }}
-                  />
-                  {es.lab.sessionsChip(confidence.sessions)}
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-gris">
+                  {es.lab.confidenceLabel}
                 </span>
-                {confidence.baseline_days > 0 && (
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-line px-3 py-1.5 font-mono text-[11.5px] text-gris">
+                {[
+                  es.lab.sessionsChip(confidence.sessions),
+                  ...(confidence.baseline_days > 0
+                    ? [es.lab.baselineChip(confidence.baseline_days)]
+                    : []),
+                ].map((text) => (
+                  <span
+                    key={text}
+                    className="inline-flex items-center gap-1.5 rounded-full border border-line px-2.5 py-1 font-mono text-[11px] text-gris"
+                  >
                     <i
                       className="h-1.5 w-1.5 rounded-full"
                       style={{
@@ -74,9 +74,9 @@ export function Laboratorio({ onBack }: LaboratorioProps) {
                           : "var(--yellow)",
                       }}
                     />
-                    {es.lab.baselineChip(confidence.baseline_days)}
+                    {text}
                   </span>
-                )}
+                ))}
               </div>
             )}
 

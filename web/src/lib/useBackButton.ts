@@ -1,22 +1,22 @@
 import { useEffect, useRef } from "react";
 
+import { App } from "@capacitor/app";
+import { Capacitor } from "@capacitor/core";
+
 /**
- * Makes the phone's back button close what is open instead of leaving the app.
+ * Makes "back" close what is open instead of leaving the app.
  *
- * The app has no router: every screen is React state, so the WebView's history
- * was empty and Android took back to mean "close this". Rather than reach for a
- * Capacitor plugin, this drives the History API, which the native shell, the
- * installed PWA and a plain browser tab all already honour — one mechanism
- * covers the three.
+ * There are two mechanisms because there are two shells, and only doing one of
+ * them is how this shipped broken once: the History API version worked in a
+ * browser tab, so it looked fixed, while the Android build still closed on the
+ * first press. Capacitor does not route the hardware button through the
+ * WebView's history — with no `backButton` listener registered it finishes the
+ * activity — so the native path needs the plugin and the web path needs
+ * history. Both end up calling the same handler.
  *
- * The trick is to only arm the trap while something is open. A permanently
- * pushed entry would mean the first back press on the home screen does nothing,
- * and on Android that reads as a stuck app; here back exits immediately from
- * the root, which is what everyone expects.
- *
- * `layers` are ordered innermost first — a sheet closes before the screen
- * underneath it. A layer whose `close` does nothing swallows the press, which
- * is how an in-progress session avoids being lost to a stray thumb.
+ * `layers` are ordered innermost first: a sheet closes before the screen under
+ * it. A layer whose `close` does nothing swallows the press, which is how an
+ * in-progress session survives a stray thumb.
  */
 export interface BackLayer {
   open: boolean;
@@ -30,7 +30,33 @@ export function useBackButton(layers: BackLayer[]): void {
 
   const anyOpen = layers.some((layer) => layer.open);
 
+  /** Close the innermost open layer. Returns false when nothing was open, which
+   * on Android means the press should leave the app. */
+  const goBack = (): boolean => {
+    const top = latest.current.find((layer) => layer.open);
+    if (!top) return false;
+    top.close();
+    return true;
+  };
+
+  // --- native shell ---
   useEffect(() => {
+    if (!Capacitor.isNativePlatform()) return;
+    const handle = App.addListener("backButton", () => {
+      if (!goBack()) void App.exitApp();
+    });
+    return () => {
+      void handle.then((listener) => listener.remove());
+    };
+    // `goBack` reads through a ref, so the listener never needs re-registering.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // --- browser and installed PWA ---
+  // Only armed while something is open: a permanently pushed entry would make
+  // the first press on the home screen do nothing, which reads as a stuck app.
+  useEffect(() => {
+    if (Capacitor.isNativePlatform()) return;
     if (anyOpen && !armed.current) {
       armed.current = true;
       window.history.pushState({ ggym: true }, "");
@@ -38,14 +64,13 @@ export function useBackButton(layers: BackLayer[]): void {
   }, [anyOpen]);
 
   useEffect(() => {
+    if (Capacitor.isNativePlatform()) return;
     const onPop = () => {
-      // Our sentinel is what just got popped; closing a layer re-arms above if
-      // anything is still open.
-      armed.current = false;
-      const top = latest.current.find((layer) => layer.open);
-      if (top) top.close();
+      armed.current = false; // our sentinel is what just got popped
+      goBack();
     };
     window.addEventListener("popstate", onPop);
     return () => window.removeEventListener("popstate", onPop);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 }

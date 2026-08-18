@@ -688,9 +688,9 @@ export const es = {
     loadNote: "subir muy rápido es la vía habitual de acabar roto.",
     loadPending:
       "hacen falta un par de semanas registradas para comparar esta semana con tu media.",
-    sessionsChip: (n: number) =>
-      n === 1 ? "1 sesión registrada" : `${n} sesiones registradas`,
-    baselineChip: (days: number) => `línea base de ${days} días`,
+    sessionsChip: (n: number) => (n === 1 ? "1 sesión" : `${n} sesiones`),
+    baselineChip: (days: number) => `${days} días de base`,
+    confidenceLabel: "sobre",
     thinNote:
       "con pocas semanas registradas estos números se mueven mucho; tómatelos como un primer indicio.",
   },
