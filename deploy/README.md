@@ -21,7 +21,7 @@ From the repo root:
 
 ```bash
 cd web && npm run build && cd ..
-GYM_SSH_HOST=your-server GYM_SSH_PASSWORD='***' \
+GYM_SSH_HOST=your-server GYM_SSH_PASSWORD='***' GYM_SSH_PORT=22 \
     ./.venv/Scripts/python deploy/deploy.py
 ```
 

@@ -35,11 +35,14 @@ def connect() -> paramiko.SSHClient:
     host = os.environ.get("GYM_SSH_HOST", "")
     user = os.environ.get("GYM_SSH_USER", "root")
     password = os.environ.get("GYM_SSH_PASSWORD")
+    # Hosts that move sshd off 22 are common; hardcoding the port meant the only
+    # symptom was a timeout indistinguishable from the machine being down.
+    port = int(os.environ.get("GYM_SSH_PORT", "22"))
     if not host or not password:
         sys.exit("error: set GYM_SSH_HOST and GYM_SSH_PASSWORD")
     client = paramiko.SSHClient()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    client.connect(host, port=22, username=user, password=password, timeout=30)
+    client.connect(host, port=port, username=user, password=password, timeout=30)
     return client
 
 
